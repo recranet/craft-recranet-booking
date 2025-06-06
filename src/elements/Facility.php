@@ -12,12 +12,15 @@ use craft\web\CpScreenResponseBehavior;
 use recranet\craftrecranetbooking\elements\conditions\FacilityCondition;
 use recranet\craftrecranetbooking\elements\db\FacilityQuery;
 use yii\web\Response;
+use recranet\craftrecranetbooking\records\Facility as FacilityRecord;
 
 /**
  * Facility element type
  */
 class Facility extends Element
 {
+    public int $recranetBookingId = 0;
+
     public static function displayName(): string
     {
         return Craft::t('_recranet-booking', 'Facility');
@@ -55,7 +58,7 @@ class Facility extends Element
 
     public static function hasUris(): bool
     {
-        return true;
+        return false;
     }
 
     public static function isLocalized(): bool
@@ -70,7 +73,7 @@ class Facility extends Element
 
     public static function find(): ElementQueryInterface
     {
-        return Craft::createObject(FacilityQuery::class, [static::class]);
+        return new FacilityQuery(static::class);
     }
 
     public static function createCondition(): ElementConditionInterface
@@ -129,23 +132,22 @@ class Facility extends Element
     protected static function defineTableAttributes(): array
     {
         return [
+            'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
             'slug' => ['label' => Craft::t('app', 'Slug')],
             'uri' => ['label' => Craft::t('app', 'URI')],
-            'link' => ['label' => Craft::t('app', 'Link'), 'icon' => 'world'],
             'id' => ['label' => Craft::t('app', 'ID')],
             'uid' => ['label' => Craft::t('app', 'UID')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
-            // ...
         ];
     }
 
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
-            'link',
             'dateCreated',
-            // ...
+            'dateUpdated',
+            'recranetBookingId',
         ];
     }
 
@@ -158,7 +160,6 @@ class Facility extends Element
 
     public function getUriFormat(): ?string
     {
-        // If facilities should have URLs, define their URI format here
         return null;
     }
 
@@ -179,14 +180,7 @@ class Facility extends Element
 
     protected function route(): array|string|null
     {
-        // Define how facilities should be routed when their URLs are requested
-        return [
-            'templates/render',
-            [
-                'template' => 'site/template/path',
-                'variables' => ['facility' => $this],
-            ]
-        ];
+        return null;
     }
 
     public function canView(User $user): bool
@@ -232,7 +226,7 @@ class Facility extends Element
 
     protected function cpEditUrl(): ?string
     {
-        return sprintf('facilities/%s', $this->getCanonicalId());
+        return null;
     }
 
     public function getPostEditUrl(): ?string
@@ -254,7 +248,16 @@ class Facility extends Element
     public function afterSave(bool $isNew): void
     {
         if (!$this->propagating) {
-            // todo: update the `facilities` table
+            $record = FacilityRecord::findOne($this->id);
+            if (!$record) {
+                $record = new FacilityRecord();
+                $record->id = $this->id;
+            }
+
+            $record->title = $this->title;
+            $record->recranetBookingId = $this->recranetBookingId;
+
+            $record->save();
         }
 
         parent::afterSave($isNew);
