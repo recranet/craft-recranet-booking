@@ -23,7 +23,7 @@ class SettingsController extends Controller
         $body = Craft::$app->getRequest()->getBodyParams();
 
         Craft::$app->getPlugins()->savePluginSettings($plugin, [
-            'recranetBookingOrganizationId' => (string) $body['general']['recranetBookingOrganizationId'] ?? '',
+            'organizationId' => (string) $body['general']['organizationId'] ?? '',
             'bookPageEntry' => isset($body['general']['bookPageEntry'][0]) ? (int) $body['general']['bookPageEntry'][0] : 0,
         ]);
 

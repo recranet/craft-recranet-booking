@@ -11,7 +11,7 @@ use craft\elements\Entry;
  */
 class Settings extends Model
 {
-    public int $recranetBookingOrganizationId = 0;
+    public int $organizationId = 0;
     public int $bookPageEntry = 0;
 
     public function getBookPageEntry(): ?Entry

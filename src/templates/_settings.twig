@@ -23,9 +23,9 @@
         {% namespace 'general' %}
             {{ forms.autosuggestField({
                 label: "Organization ID"|t("_recranet-booking"),
-                id: "recranetBookingOrganizationId",
-                name: "recranetBookingOrganizationId",
-                value: settings.recranetBookingOrganizationId ?? '',
+                id: "organizationId",
+                name: "organizationId",
+                value: settings.organizationId ?? '',
                 suggestEnvVars: true,
             }) }}
 
