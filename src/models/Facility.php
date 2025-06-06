@@ -10,8 +10,8 @@ use craft\base\Model;
  */
 class Facility extends Model
 {
+    public string $title;
     public int $recranetBookingId;
-    public int $title;
 
     protected function defineRules(): array
     {
