@@ -262,4 +262,13 @@ class Facility extends Element
 
         parent::afterSave($isNew);
     }
+
+    public function afterDelete(): void
+    {
+        parent::afterDelete();
+
+        Craft::$app->db->createCommand()
+            ->delete('{{%_recranet-booking_facilities}}', ['recranetBookingId' => $this->recranetBookingId])
+            ->execute();
+    }
 }
