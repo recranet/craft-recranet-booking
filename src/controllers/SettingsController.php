@@ -22,11 +22,21 @@ class SettingsController extends Controller
         $plugin = RecranetBooking::getInstance();
         $body = Craft::$app->getRequest()->getBodyParams();
 
-        Craft::$app->getPlugins()->savePluginSettings($plugin, [
-            'organizationId' => (string) $body['general']['organizationId'] ?? '',
-            'bookPageEntry' => isset($body['general']['bookPageEntry'][0]) ? (int) $body['general']['bookPageEntry'][0] : 0,
-            'sitemapEnabled' => (bool) ($body['sitemap']['sitemapEnabled'] ?? false),
-        ]);
+        $settings = $plugin->getSettings();
+
+        $settings->organizationId = !empty($body['general']['organizationId']) ? (int) $body['general']['organizationId'] : null;
+        $settings->bookPageEntry = isset($body['general']['bookPageEntry'][0]) ? (int) $body['general']['bookPageEntry'][0] : null;
+        $settings->sitemapEnabled = (bool) ($body['sitemap']['sitemapEnabled'] ?? false);
+
+        if (!$settings->validate()) {
+            Craft::$app->getSession()->setError(Craft::t('app', 'Couldn’t save settings.'));
+
+            return $this->renderTemplate('_recranet-booking/_settings', [
+                'settings' => $settings,
+            ]);
+        }
+
+        Craft::$app->getPlugins()->savePluginSettings($plugin, $settings->toArray());
 
         // Clear cache to ensure settings are updated
         Craft::$app->getCache()->flush();

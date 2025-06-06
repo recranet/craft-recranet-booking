@@ -20,9 +20,11 @@
             {{ forms.autosuggestField({
                 label: "Organization ID"|t("_recranet-booking"),
                 id: "organizationId",
+                required: true,
                 name: "organizationId",
                 value: settings.organizationId ?? '',
                 suggestEnvVars: true,
+                errors: settings.getErrors('organizationId'),
             }) }}
 
             {{ forms.elementSelectField({
@@ -34,6 +36,7 @@
                 required: true,
                 limit: 1,
                 elements: settings.getBookPageEntry() ? [settings.getBookPageEntry()] : [],
+                errors: settings.getErrors('bookPageEntry'),
             }) }}
         {% endnamespace %}
     </div>
