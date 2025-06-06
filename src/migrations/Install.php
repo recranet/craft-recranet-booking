@@ -1,6 +1,6 @@
 <?php
 
-namespace elloro\craftrecruitee\migrations;
+namespace recranet\craftrecranetbooking\migrations;
 
 use craft\db\Migration;
 
