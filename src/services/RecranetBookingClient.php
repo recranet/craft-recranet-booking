@@ -3,6 +3,7 @@
 namespace recranet\craftrecranetbooking\services;
 
 use Craft;
+use recranet\craftrecranetbooking\RecranetBooking;
 use Throwable;
 use yii\base\Component;
 
@@ -13,9 +14,15 @@ class RecranetBookingClient extends Component
 {
     public function fetchFacilities(): ?array
     {
+        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+
+        if (!$organizationId) {
+            return [];
+        }
+
         try {
             $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/facilities', [
-                'query' => ['organization' => 1079],
+                'query' => ['organization' => $organizationId],
             ]);
         } catch (Throwable $e) {
             return [];
