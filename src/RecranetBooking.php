@@ -10,6 +10,7 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\services\Elements;
 use craft\services\Fields;
 use craft\web\UrlManager;
+use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\models\Settings;
@@ -63,6 +64,11 @@ class RecranetBooking extends Plugin
         $navItem['url'] = 'recranet-booking';
         $navItem['icon'] = '@recranet/craftrecranetbooking/icon-dashboard.svg';
         $navItem['subnav'] = [
+            'accommodations' => [
+                'url' => 'recranet-booking/accommodations',
+                'badgeCount' => Accommodation::find()->count(),
+                'label' => Craft::t('_recranet-booking', 'Accommodations'),
+            ],
             'facilities' => [
                 'url' => 'recranet-booking/facilities',
                 'badgeCount' => Facility::find()->count(),
@@ -99,12 +105,20 @@ class RecranetBooking extends Plugin
         });
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules['recranet-booking'] = ['template' => '_recranet-booking/_index.twig'];
+            $event->rules['recranet-booking/accommodations'] = ['template' => '_recranet-booking/accommodations/_index.twig'];
             $event->rules['recranet-booking/facilities'] = ['template' => '_recranet-booking/facilities/_index.twig'];
             $event->rules['recranet-booking/settings'] = ['template' => '_recranet-booking/_settings.twig'];
             $event->rules['actions/_recranet-booking/settings/save-settings'] = '_recranet-booking/settings/save-settings';
         });
         Event::on(Fields::class, Fields::EVENT_REGISTER_FIELD_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = FacilitySelect::class;
+        });
+        Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
+            $event->types[] = Accommodation::class;
+        });
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
+            $event->rules['accommodations'] = ['template' => '_recranet-booking/accommodations/_index.twig'];
+            $event->rules['accommodations/<elementId:\d+>'] = 'elements/edit';
         });
     }
 }

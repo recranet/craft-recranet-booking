@@ -2,23 +2,24 @@
 
 namespace recranet\craftrecranetbooking\console\controllers;
 
+use Craft;
 use craft\console\Controller;
 use recranet\craftrecranetbooking\RecranetBooking;
 use yii\console\ExitCode;
 
 /**
- * Facilities controller
+ * Accommodations controller
  */
-class FacilitiesController extends Controller
+class AccommodationsController extends Controller
 {
     public $defaultAction = 'index';
 
     /**
-     * _recranet-booking/facilities command
+     * _recranet-booking/accommodations command
      */
     public function actionIndex(): int
     {
-        RecranetBooking::getInstance()->import->importFacilities();
+        RecranetBooking::getInstance()->import->importAccommodations();
 
         return ExitCode::OK;
     }

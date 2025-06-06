@@ -1,32 +1,23 @@
 <?php
 
-namespace elloro\craftrecruitee\migrations;
+namespace recranet\craftrecranetbooking\migrations;
 
+use Craft;
 use craft\db\Migration;
 
 /**
- * Install migration.
+ * m250606_104113_create_accommodations_table migration.
  */
-class Install extends Migration
+class m250606_104113_create_accommodations_table extends Migration
 {
     /**
      * @inheritdoc
      */
     public function safeUp(): bool
     {
-        $this->createTable('{{%_recranet-booking_facilities}}', [
-            'id' => $this->primaryKey(),
-            'title' => $this->string()->notNull(),
-            'recranetBookingId' => $this->integer()->notNull(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
-        ]);
-
         $this->createTable('{{%_recranet-booking_accommodations}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
-            'slug' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -41,7 +32,6 @@ class Install extends Migration
      */
     public function safeDown(): bool
     {
-        $this->dropTableIfExists('{{%_recranet-booking_facilities}}');
         $this->dropTableIfExists('{{%_recranet-booking_accommodations}}');
         return true;
     }
