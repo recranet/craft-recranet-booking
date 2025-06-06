@@ -25,6 +25,7 @@ class SettingsController extends Controller
         Craft::$app->getPlugins()->savePluginSettings($plugin, [
             'organizationId' => (string) $body['general']['organizationId'] ?? '',
             'bookPageEntry' => isset($body['general']['bookPageEntry'][0]) ? (int) $body['general']['bookPageEntry'][0] : 0,
+            'sitemapEnabled' => (bool) ($body['sitemap']['sitemapEnabled'] ?? false),
         ]);
 
         // Clear cache to ensure settings are updated

@@ -6,6 +6,7 @@
 
 {% set tabs = {
     "general": { label: "General"|t('_recranet-booking'), url: "#general" },
+    "sitemap": { label: "Sitemap"|t('_recranet-booking'), url: "#sitemap" },
 } %}
 
 {% block content %}
@@ -13,11 +14,6 @@
 
     {% set recranetBookingPlugin = craft.app.plugins.getPlugin('_recranet-booking') %}
     {% set settings = recranetBookingPlugin.getSettings() %}
-
-    {#
-    Feature
-    * Save submission to database
-    #}
 
     <div id="general">
         {% namespace 'general' %}
@@ -38,6 +34,16 @@
                 required: true,
                 limit: 1,
                 elements: settings.getBookPageEntry() ? [settings.getBookPageEntry()] : [],
+            }) }}
+        {% endnamespace %}
+    </div>
+    <div id="sitemap" class="hidden">
+        {% namespace 'sitemap' %}
+            {{ forms.lightswitchField({
+                label: "Generate accommodations sitemap"|t("_recruitee"),
+                id: "sitemapEnabled",
+                name: "sitemapEnabled",
+                on: settings.sitemapEnabled,
             }) }}
         {% endnamespace %}
     </div>

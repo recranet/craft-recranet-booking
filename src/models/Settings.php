@@ -13,6 +13,7 @@ class Settings extends Model
 {
     public int $organizationId = 0;
     public int $bookPageEntry = 0;
+    public bool $sitemapEnabled = true;
 
     public function getBookPageEntry(): ?Entry
     {

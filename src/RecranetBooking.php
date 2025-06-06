@@ -6,10 +6,12 @@ use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterTemplateRootsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\services\Elements;
 use craft\services\Fields;
 use craft\web\UrlManager;
+use craft\web\View;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
@@ -48,9 +50,8 @@ class RecranetBooking extends Plugin
         parent::init();
 
         $this->attachEventHandlers();
+        $this->_registerTemplateRoots();
 
-        // Any code that creates an element query or loads Twig should be deferred until
-        // after Craft is fully initialized, to avoid conflicts with other plugins/modules
         Craft::$app->onInit(function() {
             // ...
         });
@@ -116,9 +117,15 @@ class RecranetBooking extends Plugin
         Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = Accommodation::class;
         });
-        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
-            $event->rules['accommodations'] = ['template' => '_recranet-booking/accommodations/_index.twig'];
-            $event->rules['accommodations/<elementId:\d+>'] = 'elements/edit';
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) {
+            $event->rules['sitemap-accommodations.xml'] = '_recranet-booking/sitemap';
+        });
+    }
+
+    private function _registerTemplateRoots(): void
+    {
+        Event::on(View::class, View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS, function(RegisterTemplateRootsEvent $event) {
+            $event->roots[$this->id] = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates';
         });
     }
 }
