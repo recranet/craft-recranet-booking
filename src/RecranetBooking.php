@@ -8,8 +8,10 @@ use craft\base\Plugin;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\services\Elements;
+use craft\services\Fields;
 use craft\web\UrlManager;
 use recranet\craftrecranetbooking\elements\Facility;
+use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\models\Settings;
 use recranet\craftrecranetbooking\services\Facility as FacilityAlias;
 use recranet\craftrecranetbooking\services\Import;
@@ -100,6 +102,9 @@ class RecranetBooking extends Plugin
             $event->rules['recranet-booking/facilities'] = ['template' => '_recranet-booking/facilities/_index.twig'];
             $event->rules['recranet-booking/settings'] = ['template' => '_recranet-booking/_settings.twig'];
             $event->rules['actions/_recranet-booking/settings/save-settings'] = '_recranet-booking/settings/save-settings';
+        });
+        Event::on(Fields::class, Fields::EVENT_REGISTER_FIELD_TYPES, function (RegisterComponentTypesEvent $event) {
+            $event->types[] = FacilitySelect::class;
         });
     }
 }
