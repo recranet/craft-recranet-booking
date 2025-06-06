@@ -53,7 +53,7 @@ class RecranetBooking extends Plugin
 
         $navItem['label'] = Craft::t('_recranet-booking', 'Recranet Booking');
         $navItem['url'] = 'recranet-booking';
-        $navItem['icon'] = '@recranet/craftrecranetbooking/icon.svg';
+        $navItem['icon'] = '@recranet/craftrecranetbooking/icon-dashboard.svg';
         $navItem['subnav'] = [
             'facilities' => [
                 'url' => 'recranet-booking/facilities',
@@ -85,14 +85,13 @@ class RecranetBooking extends Plugin
     {
         Craft::setAlias('@recranet/craftrecranetbooking', __DIR__);
 
-        // Register event handlers here ...
-        // (see https://craftcms.com/docs/5.x/extend/events.html to get started)
         Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = Facility::class;
         });
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
-            $event->rules['facilities'] = ['template' => '_recranet-booking/facilities/_index.twig'];
-            $event->rules['facilities/<elementId:\d+>'] = 'elements/edit';
+            $event->rules['recranet-booking'] = ['template' => '_recranet-booking/_index.twig'];
+            $event->rules['recranet-booking/facilities'] = ['template' => '_recranet-booking/facilities/_index.twig'];
+            $event->rules['recranet-booking/settings'] = ['template' => '_recranet-booking/_settings.twig'];
         });
     }
 }
