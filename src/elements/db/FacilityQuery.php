@@ -12,11 +12,13 @@ class FacilityQuery extends ElementQuery
 {
     protected function beforePrepare(): bool
     {
-        // todo: join the `facilities` table
-        // $this->joinElementTable('facilities');
+        $this->joinElementTable('_recranet-booking_facilities');
 
-        // todo: apply any custom query params
-        // ...
+        $this->query->select([
+            '_recranet-booking_facilities.dateCreated',
+            '_recranet-booking_facilities.dateUpdated',
+            '_recranet-booking_facilities.recranetBookingId',
+        ]);
 
         return parent::beforePrepare();
     }
