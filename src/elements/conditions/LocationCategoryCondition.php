@@ -1,0 +1,19 @@
+<?php
+
+namespace recranet\craftrecranetbooking\elements\conditions;
+
+use Craft;
+use craft\elements\conditions\ElementCondition;
+
+/**
+ * Location Category condition
+ */
+class LocationCategoryCondition extends ElementCondition
+{
+    protected function selectableConditionRules(): array
+    {
+        return array_merge(parent::selectableConditionRules(), [
+            // ...
+        ]);
+    }
+}

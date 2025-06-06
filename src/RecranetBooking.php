@@ -13,7 +13,9 @@ use craft\services\Fields;
 use craft\web\UrlManager;
 use craft\web\View;
 use recranet\craftrecranetbooking\elements\Accommodation;
+use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
+use recranet\craftrecranetbooking\elements\LocationCategory;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\models\Settings;
 use recranet\craftrecranetbooking\services\Facility as FacilityAlias;
@@ -119,6 +121,20 @@ class RecranetBooking extends Plugin
         });
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules['sitemap-accommodations.xml'] = '_recranet-booking/sitemap';
+        });
+        Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
+            $event->types[] = AccommodationCategory::class;
+        });
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
+            $event->rules['accommodation-categories'] = ['template' => '_recranet-booking/accommodation-categories/_index.twig'];
+            $event->rules['accommodation-categories/<elementId:\d+>'] = 'elements/edit';
+        });
+        Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
+            $event->types[] = LocationCategory::class;
+        });
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
+            $event->rules['location-categories'] = ['template' => '_recranet-booking/location-categories/_index.twig'];
+            $event->rules['location-categories/<elementId:\d+>'] = 'elements/edit';
         });
     }
 
