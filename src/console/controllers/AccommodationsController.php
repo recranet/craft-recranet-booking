@@ -15,6 +15,7 @@ class AccommodationsController extends Controller
     public $defaultAction = 'index';
 
     /**
+     * This command imports accommodations from the Recranet Booking API based off organization ID.
      * _recranet-booking/accommodations command
      */
     public function actionIndex(): int

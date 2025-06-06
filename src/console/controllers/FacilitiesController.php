@@ -14,7 +14,8 @@ class FacilitiesController extends Controller
     public $defaultAction = 'index';
 
     /**
-     * _recranet-booking/facilities command
+     * This command imports facilities from the Recranet Booking API based off organization ID.
+     * _recranet-booking/facilities
      */
     public function actionIndex(): int
     {

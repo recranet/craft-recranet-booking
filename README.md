@@ -25,3 +25,12 @@ You can install the Recruitee plugin via Composer, first add the repository to y
 ```
 
 After this you can run `composer require recranet/craft-recranet-booking` to install the plugin. Don't forget to install and enalbe the plugin in the Craft CMS control panel or CLI.
+
+## Commands
+
+You can run the following command to synchronize the bookings:
+
+```bash
+php craft _recranet-booking/facilities
+php craft _recranet-booking/accommodations
+```
