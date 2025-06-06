@@ -1,6 +1,44 @@
-{# @var plugin \recranet\craftrecranetbooking\RecranetBooking #}
-{# @var settings \recranet\craftrecranetbooking\models\Settings #}
+{% set title = 'Settings' %}
+{% set fullPageForm = true %}
 
-{% import '_includes/forms.twig' as forms %}
+{% extends "_layouts/cp.twig" %}
+{% import "_includes/forms.twig" as forms %}
 
-{# ... #}
+{% set tabs = {
+    "general": { label: "General"|t('_recranet-booking'), url: "#general" },
+} %}
+
+{% block content %}
+    <input type="hidden" name="action" value="_recranet-booking/settings/save-settings">
+
+    {% set recranetBookingPlugin = craft.app.plugins.getPlugin('_recranet-booking') %}
+    {% set settings = recranetBookingPlugin.getSettings() %}
+
+    {#
+    Feature
+    * Save submission to database
+    #}
+
+    <div id="general">
+        {% namespace 'general' %}
+            {{ forms.autosuggestField({
+                label: "Organization ID"|t("_recranet-booking"),
+                id: "recranetBookingOrganizationId",
+                name: "recranetBookingOrganizationId",
+                value: settings.recranetBookingOrganizationId ?? '',
+                suggestEnvVars: true,
+            }) }}
+
+            {{ forms.elementSelectField({
+                label: "Book page"|t("_recranet-booking"),
+                id: "bookPageEntry",
+                name: "bookPageEntry",
+                elementType: 'craft\\elements\\Entry',
+                selectionLabel: "Choose an entry"|t("_recranet-booking"),
+                required: true,
+                limit: 1,
+                elements: settings.getBookPageEntry() ? [settings.getBookPageEntry()] : [],
+            }) }}
+        {% endnamespace %}
+    </div>
+{% endblock %}

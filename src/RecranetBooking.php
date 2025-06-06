@@ -63,6 +63,7 @@ class RecranetBooking extends Plugin
         $navItem['subnav'] = [
             'facilities' => [
                 'url' => 'recranet-booking/facilities',
+                'badgeCount' => Facility::find()->count(),
                 'label' => Craft::t('_recranet-booking', 'Facilities'),
             ],
             'settings' => [
@@ -98,6 +99,7 @@ class RecranetBooking extends Plugin
             $event->rules['recranet-booking'] = ['template' => '_recranet-booking/_index.twig'];
             $event->rules['recranet-booking/facilities'] = ['template' => '_recranet-booking/facilities/_index.twig'];
             $event->rules['recranet-booking/settings'] = ['template' => '_recranet-booking/_settings.twig'];
+            $event->rules['actions/_recranet-booking/settings/save-settings'] = '_recranet-booking/settings/save-settings';
         });
     }
 }
