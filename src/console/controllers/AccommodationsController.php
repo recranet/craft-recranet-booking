@@ -20,6 +20,13 @@ class AccommodationsController extends Controller
      */
     public function actionIndex(): int
     {
+        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+
+        if (!$organizationId) {
+            $this->stderr('Organization ID is not set in the plugin settings.', ExitCode::UNSPECIFIED_ERROR);
+            return ExitCode::UNSPECIFIED_ERROR;
+        }
+
         RecranetBooking::getInstance()->import->importAccommodations();
 
         return ExitCode::OK;
