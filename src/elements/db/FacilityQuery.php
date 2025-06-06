@@ -10,9 +10,15 @@ use craft\elements\db\ElementQuery;
  */
 class FacilityQuery extends ElementQuery
 {
+    public int $recranetBookingId = 0;
+
     protected function beforePrepare(): bool
     {
         $this->joinElementTable('_recranet-booking_facilities');
+
+        if ($this->recranetBookingId) {
+            $this->subQuery->andWhere(['recranetBookingId' => $this->recranetBookingId]);
+        }
 
         $this->query->select([
             '_recranet-booking_facilities.dateCreated',
@@ -21,5 +27,11 @@ class FacilityQuery extends ElementQuery
         ]);
 
         return parent::beforePrepare();
+    }
+
+    public function recranetBookingId($value): self
+    {
+        $this->recranetBookingId = $value;
+        return $this;
     }
 }
