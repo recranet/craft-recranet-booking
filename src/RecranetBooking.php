@@ -11,6 +11,9 @@ use craft\services\Elements;
 use craft\web\UrlManager;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\models\Settings;
+use recranet\craftrecranetbooking\services\Facility as FacilityAlias;
+use recranet\craftrecranetbooking\services\Import;
+use recranet\craftrecranetbooking\services\RecranetBookingClient;
 use yii\base\Event;
 
 /**
@@ -18,6 +21,8 @@ use yii\base\Event;
  *
  * @method static RecranetBooking getInstance()
  * @method Settings getSettings()
+ * @property-read RecranetBookingClient $recranetBookingClient
+ * @property-read Import $import
  */
 class RecranetBooking extends Plugin
 {
@@ -29,7 +34,8 @@ class RecranetBooking extends Plugin
     {
         return [
             'components' => [
-                // Define component configs here...
+                'recranetBookingClient' => RecranetBookingClient::class,
+                'import' => Import::class
             ],
         ];
     }
