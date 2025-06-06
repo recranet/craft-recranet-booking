@@ -2,6 +2,7 @@
   "name": "recranet/craft-recranet-booking",
   "description": "Synchronizes various Recranet Booking sources to Craft CMS",
   "type": "craft-plugin",
+  "license": "proprietary",
   "require": {
     "php": ">=8.2",
     "craftcms/cms": "^5.7.0"
