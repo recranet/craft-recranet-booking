@@ -8,7 +8,7 @@ This plugin requires Craft CMS 5.7.0 or later, and PHP 8.2 or later.
 
 ## Installation
 
-You can install the Recruitee plugin via Composer, first add the repository to your `composer.json` file and add it as a dependency:
+You can install the Recranet Booking plugin via Composer, first add the repository to your `composer.json` file and add it as a dependency:
 
 ```json
 {
