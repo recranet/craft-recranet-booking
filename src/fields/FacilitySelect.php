@@ -15,7 +15,7 @@ class FacilitySelect extends BaseRelationField
 {
     public static function displayName(): string
     {
-        return Craft::t('_recranet-booking', 'Facility Select');
+        return Craft::t('_recranet-booking', 'Facilities');
     }
 
     public static function icon(): string
@@ -35,6 +35,6 @@ class FacilitySelect extends BaseRelationField
 
     public static function defaultSelectionLabel(): string
     {
-        return Craft::t('_recranet-booking', 'Add one or more facilities');
+        return Craft::t('_recranet-booking', 'Add facilities');
     }
 }
