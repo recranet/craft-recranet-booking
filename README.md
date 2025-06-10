@@ -33,4 +33,6 @@ You can run the following command to synchronize the bookings:
 ```bash
 php craft _recranet-booking/facilities
 php craft _recranet-booking/accommodations
+php craft _recranet-booking/locality-category
+php craft _recranet-booking/accommodation-category
 ```
