@@ -60,10 +60,6 @@ class RecranetBooking extends Plugin
         if ($this->getSettings()->sitemapEnabled) {
             $this->_registerSitemapUrlRule();
         }
-
-        Craft::$app->onInit(function() {
-            // ...
-        });
     }
 
     public function getCpNavItem(): ?array
