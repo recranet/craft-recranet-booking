@@ -16,7 +16,7 @@ class AccommodationCategoryController extends Controller
 
     /**
      * This command imports accommodation categories from the Recranet Booking API based off organization ID.
-     * _recranet-booking/facilities
+     * _recranet-booking/accommodation-category
      */
     public function actionIndex(): int
     {

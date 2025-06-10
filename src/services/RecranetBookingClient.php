@@ -50,7 +50,7 @@ class RecranetBookingClient extends Component
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function fetchLocationCategories(): ?array
+    public function fetchLocalityCategories(): ?array
     {
         $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
 

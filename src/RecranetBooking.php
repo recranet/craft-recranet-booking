@@ -15,7 +15,7 @@ use craft\web\View;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
-use recranet\craftrecranetbooking\elements\LocationCategory;
+use recranet\craftrecranetbooking\elements\LocalityCategory;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\models\Settings;
 use recranet\craftrecranetbooking\services\Facility as FacilityAlias;
@@ -83,9 +83,9 @@ class RecranetBooking extends Plugin
                 'badgeCount' => AccommodationCategory::find()->count(),
                 'label' => Craft::t('_recranet-booking', 'Types'),
             ],
-            'location-categories' => [
-                'url' => 'recranet-booking/location-categories',
-                'badgeCount' => LocationCategory::find()->count(),
+            'locality-categories' => [
+                'url' => 'recranet-booking/locality-categories',
+                'badgeCount' => LocalityCategory::find()->count(),
                 'label' => Craft::t('_recranet-booking', 'Localities'),
             ],
             'settings' => [
@@ -119,7 +119,7 @@ class RecranetBooking extends Plugin
             $event->rules['recranet-booking/accommodations'] = ['template' => '_recranet-booking/accommodations/_index.twig'];
             $event->rules['recranet-booking/facilities'] = ['template' => '_recranet-booking/facilities/_index.twig'];
             $event->rules['recranet-booking/accommodation-categories'] = ['template' => '_recranet-booking/accommodation-categories/_index.twig'];
-            $event->rules['recranet-booking/location-categories'] = ['template' => '_recranet-booking/location-categories/_index.twig'];
+            $event->rules['recranet-booking/locality-categories'] = ['template' => '_recranet-booking/locality-categories/_index.twig'];
             $event->rules['recranet-booking/settings'] = ['template' => '_recranet-booking/_settings.twig'];
             $event->rules['actions/_recranet-booking/settings/save-settings'] = '_recranet-booking/settings/save-settings';
         });
@@ -148,7 +148,7 @@ class RecranetBooking extends Plugin
             $event->types[] = AccommodationCategory::class;
         });
         Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
-            $event->types[] = LocationCategory::class;
+            $event->types[] = LocalityCategory::class;
         });
         Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = Facility::class;

@@ -8,7 +8,7 @@ use craft\elements\conditions\ElementCondition;
 /**
  * Location Category condition
  */
-class LocationCategoryCondition extends ElementCondition
+class LocalityCategoryCondition extends ElementCondition
 {
     protected function selectableConditionRules(): array
     {

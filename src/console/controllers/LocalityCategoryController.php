@@ -10,13 +10,13 @@ use yii\console\ExitCode;
 /**
  * Location Category controller
  */
-class LocationCategoryController extends Controller
+class LocalityCategoryController extends Controller
 {
     public $defaultAction = 'index';
 
     /**
      * This command imports locality categories from the Recranet Booking API based off organization ID.
-     * _recranet-booking/facilities
+     * _recranet-booking/locality-category
      */
     public function actionIndex(): int
     {
@@ -27,7 +27,7 @@ class LocationCategoryController extends Controller
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        RecranetBooking::getInstance()->import->importLocationCategories();
+        RecranetBooking::getInstance()->import->importLocalityCategories();
 
         return ExitCode::OK;
     }

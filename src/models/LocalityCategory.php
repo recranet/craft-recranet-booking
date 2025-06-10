@@ -8,7 +8,7 @@ use craft\base\Model;
 /**
  * Location Category model
  */
-class LocationCategory extends Model
+class LocalityCategory extends Model
 {
     public string $title;
     public int $recranetBookingId;

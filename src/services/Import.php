@@ -7,12 +7,13 @@ use craft\helpers\ElementHelper;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
-use recranet\craftrecranetbooking\elements\LocationCategory;
+use recranet\craftrecranetbooking\elements\LocalityCategory;
 use recranet\craftrecranetbooking\RecranetBooking;
 use yii\base\Component;
 use recranet\craftrecranetbooking\models\Facility as FacilityModel;
 use recranet\craftrecranetbooking\models\Accommodation as AccommodationModel;
 use recranet\craftrecranetbooking\models\AccommodationCategory as AccommodationCategoryModel;
+use recranet\craftrecranetbooking\models\LocalityCategory as LocalityCategoryModel;
 
 /**
  * Import service
@@ -83,16 +84,16 @@ class Import extends Component
         }
     }
 
-    public function importLocationCategories(): void
+    public function importLocalityCategories(): void
     {
-        $locationCategories = RecranetBooking::getInstance()->recranetBookingClient->fetchLocationCategories();
+        $localityCategories = RecranetBooking::getInstance()->recranetBookingClient->fetchLocalityCategories();
 
-        if (!$locationCategories) {
+        if (!$localityCategories) {
             return;
         }
 
-        foreach ($locationCategories as $categoryData) {
-            $existingCategory = LocationCategory::find()
+        foreach ($localityCategories as $categoryData) {
+            $existingCategory = LocalityCategory::find()
                 ->recranetBookingId($categoryData['id'])
                 ->one();
 
@@ -100,16 +101,16 @@ class Import extends Component
                 continue;
             }
 
-            $locationCategory = new LocationCategory([
+            $localityCategory = new LocalityCategoryModel([
                 'title' => $categoryData['displayName'],
                 'recranetBookingId' => $categoryData['id'],
             ]);
 
-            $locationCategory->validate();
+            $localityCategory->validate();
 
-            $categoryElement = new LocationCategory();
-            $categoryElement->title = $locationCategory->title;
-            $categoryElement->recranetBookingId = $locationCategory->recranetBookingId;
+            $categoryElement = new LocalityCategory();
+            $categoryElement->title = $localityCategory->title;
+            $categoryElement->recranetBookingId = $localityCategory->recranetBookingId;
 
             Craft::$app->elements->saveElement($categoryElement);
         }

@@ -9,40 +9,42 @@ use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
-use recranet\craftrecranetbooking\elements\conditions\LocationCategoryCondition;
-use recranet\craftrecranetbooking\elements\db\LocationCategoryQuery;
+use recranet\craftrecranetbooking\elements\conditions\LocalityCategoryCondition;
+use recranet\craftrecranetbooking\elements\db\LocalityCategoryQuery;
 use yii\web\Response;
+use recranet\craftrecranetbooking\records\LocalityCategory as LocalityCategoryRecord;
+use recranet\craftrecranetbooking\models\LocalityCategory as LocalityCategoryModel;
 
 /**
- * Location Category element type
+ * Locality Category element type
  */
-class LocationCategory extends Element
+class LocalityCategory extends Element
 {
     public int $recranetBookingId = 0;
 
     public static function displayName(): string
     {
-        return Craft::t('_recranet-booking', 'Location category');
+        return Craft::t('_recranet-booking', 'Locality category');
     }
 
     public static function lowerDisplayName(): string
     {
-        return Craft::t('_recranet-booking', 'location category');
+        return Craft::t('_recranet-booking', 'locality category');
     }
 
     public static function pluralDisplayName(): string
     {
-        return Craft::t('_recranet-booking', 'Location categories');
+        return Craft::t('_recranet-booking', 'Locality categories');
     }
 
     public static function pluralLowerDisplayName(): string
     {
-        return Craft::t('_recranet-booking', 'location categories');
+        return Craft::t('_recranet-booking', 'locality categories');
     }
 
     public static function refHandle(): ?string
     {
-        return 'locationcategory';
+        return 'localitycategory';
     }
 
     public static function trackChanges(): bool
@@ -57,7 +59,7 @@ class LocationCategory extends Element
 
     public static function hasUris(): bool
     {
-        return true;
+        return false;
     }
 
     public static function isLocalized(): bool
@@ -72,12 +74,12 @@ class LocationCategory extends Element
 
     public static function find(): ElementQueryInterface
     {
-        return Craft::createObject(LocationCategoryQuery::class, [static::class]);
+        return new LocalityCategoryQuery(static::class);
     }
 
     public static function createCondition(): ElementConditionInterface
     {
-        return Craft::createObject(LocationCategoryCondition::class, [static::class]);
+        return Craft::createObject(LocalityCategoryCondition::class, [static::class]);
     }
 
     protected static function defineSources(string $context): array
@@ -85,7 +87,7 @@ class LocationCategory extends Element
         return [
             [
                 'key' => '*',
-                'label' => Craft::t('_recranet-booking', 'All location categories'),
+                'label' => Craft::t('_recranet-booking', 'All locality categories'),
             ],
         ];
     }
@@ -131,6 +133,7 @@ class LocationCategory extends Element
     protected static function defineTableAttributes(): array
     {
         return [
+            'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
             'slug' => ['label' => Craft::t('app', 'Slug')],
             'uri' => ['label' => Craft::t('app', 'URI')],
             'link' => ['label' => Craft::t('app', 'Link'), 'icon' => 'world'],
@@ -145,9 +148,9 @@ class LocationCategory extends Element
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
-            'link',
             'dateCreated',
-            // ...
+            'dateUpdated',
+            'recranetBookingId',
         ];
     }
 
@@ -160,7 +163,6 @@ class LocationCategory extends Element
 
     public function getUriFormat(): ?string
     {
-        // If location categories should have URLs, define their URI format here
         return null;
     }
 
@@ -181,14 +183,7 @@ class LocationCategory extends Element
 
     protected function route(): array|string|null
     {
-        // Define how location categories should be routed when their URLs are requested
-        return [
-            'templates/render',
-            [
-                'template' => 'site/template/path',
-                'variables' => ['locationCategory' => $this],
-            ]
-        ];
+        return null;
     }
 
     public function canView(User $user): bool
@@ -197,7 +192,7 @@ class LocationCategory extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('viewLocationCategories');
+        return $user->can('viewLocalityCategories');
     }
 
     public function canSave(User $user): bool
@@ -206,7 +201,7 @@ class LocationCategory extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('saveLocationCategories');
+        return $user->can('saveLocalityCategories');
     }
 
     public function canDuplicate(User $user): bool
@@ -215,7 +210,7 @@ class LocationCategory extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('saveLocationCategories');
+        return $user->can('saveLocalityCategories');
     }
 
     public function canDelete(User $user): bool
@@ -224,7 +219,7 @@ class LocationCategory extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('deleteLocationCategories');
+        return $user->can('deleteLocalityCategories');
     }
 
     public function canCreateDrafts(User $user): bool
@@ -234,12 +229,12 @@ class LocationCategory extends Element
 
     protected function cpEditUrl(): ?string
     {
-        return sprintf('location-categories/%s', $this->getCanonicalId());
+        return null;
     }
 
     public function getPostEditUrl(): ?string
     {
-        return UrlHelper::cpUrl('location-categories');
+        return UrlHelper::cpUrl('locality-categories');
     }
 
     public function prepareEditScreen(Response $response, string $containerId): void
@@ -248,7 +243,7 @@ class LocationCategory extends Element
         $response->crumbs([
             [
                 'label' => self::pluralDisplayName(),
-                'url' => UrlHelper::cpUrl('location-categories'),
+                'url' => UrlHelper::cpUrl('locality-categories'),
             ],
         ]);
     }
@@ -256,9 +251,27 @@ class LocationCategory extends Element
     public function afterSave(bool $isNew): void
     {
         if (!$this->propagating) {
-            // todo: update the `locationcategories` table
+            $record = LocalityCategoryRecord::findOne($this->id);
+            if (!$record) {
+                $record = new LocalityCategoryRecord();
+                $record->id = $this->id;
+            }
+
+            $record->title = $this->title;
+            $record->recranetBookingId = $this->recranetBookingId;
+
+            $record->save();
         }
 
         parent::afterSave($isNew);
+    }
+
+    public function afterDelete(): void
+    {
+        parent::afterDelete();
+
+        Craft::$app->db->createCommand()
+            ->delete('{{%_recranet-booking_locality_categories}}', ['recranetBookingId' => $this->recranetBookingId])
+            ->execute();
     }
 }
