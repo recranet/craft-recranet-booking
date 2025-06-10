@@ -16,9 +16,10 @@ use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
+use recranet\craftrecranetbooking\fields\AccommodationCategorySelect;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
+use recranet\craftrecranetbooking\fields\LocalityCategorySelect;
 use recranet\craftrecranetbooking\models\Settings;
-use recranet\craftrecranetbooking\services\Facility as FacilityAlias;
 use recranet\craftrecranetbooking\services\Import;
 use recranet\craftrecranetbooking\services\RecranetBookingClient;
 use yii\base\Event;
@@ -52,8 +53,9 @@ class RecranetBooking extends Plugin
         parent::init();
 
         $this->attachEventHandlers();
-        $this->_registerElementTypes();
         $this->_registerTemplateRoots();
+        $this->_registerElementTypes();
+        $this->_registerFields();
 
         Craft::$app->onInit(function() {
             // ...
@@ -136,21 +138,21 @@ class RecranetBooking extends Plugin
         });
     }
 
-    private function _registerElementTypes(): void
+    private function _registerFields(): void
     {
         Event::on(Fields::class, Fields::EVENT_REGISTER_FIELD_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = FacilitySelect::class;
+            $event->types[] = LocalityCategorySelect::class;
+            $event->types[] = AccommodationCategorySelect::class;
         });
+    }
+
+    private function _registerElementTypes(): void
+    {
         Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = Accommodation::class;
-        });
-        Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = AccommodationCategory::class;
-        });
-        Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = LocalityCategory::class;
-        });
-        Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = Facility::class;
         });
     }
