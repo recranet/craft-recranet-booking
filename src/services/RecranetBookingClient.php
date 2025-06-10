@@ -31,6 +31,44 @@ class RecranetBookingClient extends Component
         return json_decode($response->getBody()->getContents(), true);
     }
 
+    public function fetchAccommodationCategories(): ?array
+    {
+        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+
+        if (!$organizationId) {
+            return [];
+        }
+
+        try {
+            $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/accommodation_categories', [
+                'query' => ['organization' => $organizationId],
+            ]);
+        } catch (Throwable $e) {
+            return [];
+        }
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    public function fetchLocationCategories(): ?array
+    {
+        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+
+        if (!$organizationId) {
+            return [];
+        }
+
+        try {
+            $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/locality_categories', [
+                'query' => ['organization' => $organizationId],
+            ]);
+        } catch (Throwable $e) {
+            return [];
+        }
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
     public function fetchAccommodations(): ?array
     {
         $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;

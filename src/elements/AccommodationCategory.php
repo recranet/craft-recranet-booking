@@ -12,12 +12,15 @@ use craft\web\CpScreenResponseBehavior;
 use recranet\craftrecranetbooking\elements\conditions\AccommodationCategoryCondition;
 use recranet\craftrecranetbooking\elements\db\AccommodationCategoryQuery;
 use yii\web\Response;
+use recranet\craftrecranetbooking\records\AccommodationCategory as AccommodationCategoryRecord;
 
 /**
  * Accommodation Category element type
  */
 class AccommodationCategory extends Element
 {
+    public int $recranetBookingId = 0;
+
     public static function displayName(): string
     {
         return Craft::t('_recranet-booking', 'Accommodation category');
@@ -55,7 +58,7 @@ class AccommodationCategory extends Element
 
     public static function hasUris(): bool
     {
-        return true;
+        return false;
     }
 
     public static function isLocalized(): bool
@@ -70,7 +73,7 @@ class AccommodationCategory extends Element
 
     public static function find(): ElementQueryInterface
     {
-        return Craft::createObject(AccommodationCategoryQuery::class, [static::class]);
+        return new AccommodationCategoryQuery(static::class);
     }
 
     public static function createCondition(): ElementConditionInterface
@@ -83,7 +86,7 @@ class AccommodationCategory extends Element
         return [
             [
                 'key' => '*',
-                'label' => Craft::t('_recranet-booking', 'All accommodation categories'),
+                'label' => Craft::t('_recranet-booking', 'All categories'),
             ],
         ];
     }
@@ -129,23 +132,22 @@ class AccommodationCategory extends Element
     protected static function defineTableAttributes(): array
     {
         return [
+            'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
             'slug' => ['label' => Craft::t('app', 'Slug')],
             'uri' => ['label' => Craft::t('app', 'URI')],
-            'link' => ['label' => Craft::t('app', 'Link'), 'icon' => 'world'],
             'id' => ['label' => Craft::t('app', 'ID')],
             'uid' => ['label' => Craft::t('app', 'UID')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
-            // ...
         ];
     }
 
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
-            'link',
             'dateCreated',
-            // ...
+            'dateUpdated',
+            'recranetBookingId',
         ];
     }
 
@@ -158,7 +160,6 @@ class AccommodationCategory extends Element
 
     public function getUriFormat(): ?string
     {
-        // If accommodation categories should have URLs, define their URI format here
         return null;
     }
 
@@ -179,14 +180,7 @@ class AccommodationCategory extends Element
 
     protected function route(): array|string|null
     {
-        // Define how accommodation categories should be routed when their URLs are requested
-        return [
-            'templates/render',
-            [
-                'template' => 'site/template/path',
-                'variables' => ['accommodationCategory' => $this],
-            ]
-        ];
+        return null;
     }
 
     public function canView(User $user): bool
@@ -232,7 +226,7 @@ class AccommodationCategory extends Element
 
     protected function cpEditUrl(): ?string
     {
-        return sprintf('accommodation-categories/%s', $this->getCanonicalId());
+        return null;
     }
 
     public function getPostEditUrl(): ?string
@@ -253,10 +247,29 @@ class AccommodationCategory extends Element
 
     public function afterSave(bool $isNew): void
     {
+
         if (!$this->propagating) {
-            // todo: update the `accommodationcategories` table
+            $record = AccommodationCategoryRecord::findOne($this->id);
+            if (!$record) {
+                $record = new AccommodationCategoryRecord();
+                $record->id = $this->id;
+            }
+
+            $record->title = $this->title;
+            $record->recranetBookingId = $this->recranetBookingId;
+
+            $record->save();
         }
 
         parent::afterSave($isNew);
+    }
+
+    public function afterDelete(): void
+    {
+        parent::afterDelete();
+
+        Craft::$app->db->createCommand()
+            ->delete('{{%_recranet-booking_accommodation_categories}}', ['recranetBookingId' => $this->recranetBookingId])
+            ->execute();
     }
 }

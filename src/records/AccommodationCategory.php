@@ -12,6 +12,6 @@ class AccommodationCategory extends ActiveRecord
 {
     public static function tableName()
     {
-        return '{{%_recranet-booking_accommodationcategories}}';
+        return '{{%_recranet-booking_accommodation_categories}}';
     }
 }

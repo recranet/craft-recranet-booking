@@ -18,6 +18,8 @@ use yii\web\Response;
  */
 class LocationCategory extends Element
 {
+    public int $recranetBookingId = 0;
+
     public static function displayName(): string
     {
         return Craft::t('_recranet-booking', 'Location category');
