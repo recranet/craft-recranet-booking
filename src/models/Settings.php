@@ -11,8 +11,8 @@ use craft\elements\Entry;
  */
 class Settings extends Model
 {
-    public int|null $organizationId;
-    public int|null $bookPageEntry;
+    public int|null $organizationId = null;
+    public int|null $bookPageEntry = null;
     public bool $sitemapEnabled = true;
 
     public function getBookPageEntry(): ?Entry
