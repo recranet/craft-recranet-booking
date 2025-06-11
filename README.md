@@ -15,23 +15,9 @@ This plugin requires Craft CMS 5.7.0 or later, and PHP 8.2 or later.
 
 ## Installation
 
-1. You can install the Recranet Booking plugin via Composer, first add the repository to your `composer.json` file and add it as a dependency:
-
-```json
-{
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:recranet/craft-recranet-booking.git"
-    }
-  ],
-  "require": {
-    "recranet/craft-recranet-booking": "^1.0"
-  }
-}
+```bash 
+composer require recranet/craft-recranet-booking && php craft plugin/install _recranet-booking
 ```
-
-2. After this you can run `composer require recranet/craft-recranet-booking` to install the plugin. Don't forget to install and enable the plugin in the Craft CMS control panel or CLI.
 
 ## Commands
 
