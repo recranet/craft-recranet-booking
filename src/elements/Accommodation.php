@@ -21,6 +21,9 @@ class Accommodation extends Element
 {
     public int $recranetBookingId = 0;
     public null|string $slug = '';
+    public null|string $slugDe = '';
+    public null|string $slugEn = '';
+    public null|string $slugFr = '';
 
     public static function displayName(): string
     {
@@ -135,6 +138,9 @@ class Accommodation extends Element
         return [
             'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
             'slug' => ['label' => Craft::t('app', 'Slug')],
+            'slugDe' => ['label' => Craft::t('app', 'Slug (DE)')],
+            'slugEn' => ['label' => Craft::t('app', 'Slug (EN)')],
+            'slugFr' => ['label' => Craft::t('app', 'Slug (FR)')],
             'uri' => ['label' => Craft::t('app', 'URI')],
             'link' => ['label' => Craft::t('app', 'Link'), 'icon' => 'world'],
             'id' => ['label' => Craft::t('app', 'ID')],
@@ -266,8 +272,12 @@ class Accommodation extends Element
             }
 
             $record->title = $this->title;
-            $record->slug = $this->slug;
             $record->recranetBookingId = $this->recranetBookingId;
+
+            $record->slug = $this->slug;
+            $record->slugDe = $this->slugDe;
+            $record->slugEn = $this->slugEn;
+            $record->slugFr = $this->slugFr;
 
             $record->save();
         }

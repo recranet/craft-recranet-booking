@@ -118,7 +118,7 @@ class Import extends Component
 
     public function importAccommodations(): void
     {
-        $accommodations = RecranetBooking::getInstance()->recranetBookingClient->fetchAccommodations();
+        $accommodations = RecranetBooking::getInstance()->recranetBookingClient->fetchAccommodations('nl');
 
         if (!$accommodations) {
             return;
@@ -147,6 +147,57 @@ class Import extends Component
             $accommodationElement->recranetBookingId = $accommodation->recranetBookingId;
 
             Craft::$app->elements->saveElement($accommodationElement);
+        }
+
+        $this->importTranslatedAccommodationSlugs();
+    }
+
+    public function importTranslatedAccommodationSlugs(): void
+    {
+        $locales = ['de', 'en', 'fr'];
+        $translatedAccommodations = [];
+
+        foreach ($locales as $locale) {
+            $accommodations = RecranetBooking::getInstance()->recranetBookingClient->fetchAccommodations($locale);
+
+            if (!$accommodations) {
+                continue;
+            }
+
+            $translatedAccommodations[$locale] = array_map(function ($accommodation) {
+                return [
+                    'id' => $accommodation['id'],
+                    'title' => $accommodation['title'],
+                    'slug' => $accommodation['slug'] ?? ElementHelper::generateSlug($accommodation['title']),
+                ];
+            }, $accommodations);
+        }
+
+        foreach ($translatedAccommodations as $locale => $accommodations) {
+            foreach ($accommodations as $accommodationData) {
+                $existingAccommodation = Accommodation::find()
+                    ->recranetBookingId($accommodationData['id'])
+                    ->one();
+
+                if (!$existingAccommodation) {
+                    continue;
+                }
+
+                switch ($locale) {
+                    case 'de':
+                        $existingAccommodation->slugDe = $accommodationData['slug'];
+                        break;
+                    case 'en':
+                        $existingAccommodation->slugEn = $accommodationData['slug'];
+                        break;
+                    case 'fr':
+                        $existingAccommodation->slugFr = $accommodationData['slug'];
+                        break;
+                }
+
+
+                Craft::$app->elements->saveElement($existingAccommodation);
+            }
         }
     }
 }

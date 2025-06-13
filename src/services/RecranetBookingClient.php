@@ -69,7 +69,7 @@ class RecranetBookingClient extends Component
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function fetchAccommodations(): ?array
+    public function fetchAccommodations(string $locale): ?array
     {
         $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
 
@@ -79,7 +79,10 @@ class RecranetBookingClient extends Component
 
         try {
             $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/accommodations', [
-                'query' => ['organization' => $organizationId],
+                'query' => [
+                    'organization' => $organizationId,
+                    'locale' => $locale
+                ],
             ]);
         } catch (Throwable $e) {
             return [];
