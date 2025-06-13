@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 {% if accommodations|length and baseUrl %}
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        {% for accommodation in accommodations %}
-            <url>
-                <loc>{{ baseUrl.url }}/{{ accommodation.slug }}</loc>
-                <changefreq>weekly</changefreq>
-                <priority>0.75</priority>
-            </url>
-        {% endfor %}
+    {% set locale = craft.app.language|slice(0,2) %}
+    {% for accommodation in accommodations %}
+        {% set slug = (locale == 'nl') ? accommodation.slug : attribute(accommodation, 'slug' ~ locale|capitalize) %}
+        <url>
+            <loc>{{ baseUrl.url }}/{{ slug }}</loc>
+            <changefreq>weekly</changefreq>
+            <priority>0.75</priority>
+        </url>
+    {% endfor %}
     </urlset>
 {% endif %}
