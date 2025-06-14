@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed an issue on first install where the plugin settings were not initialized correctly.
 - 
-## [5.0.2] - 2025-06-11
+## [5.0.2] - 2025-06-14
 ### Added
 - Added import of multi-language accommodation slugs.
+
+## [5.0.3] - 2025-06-14
+### Added
+- Added accommodation select field-type.
