@@ -17,6 +17,7 @@ use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
 use recranet\craftrecranetbooking\fields\AccommodationCategorySelect;
+use recranet\craftrecranetbooking\fields\AccommodationSelect;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\fields\LocalityCategorySelect;
 use recranet\craftrecranetbooking\models\Settings;
@@ -147,6 +148,7 @@ class RecranetBooking extends Plugin
             $event->types[] = FacilitySelect::class;
             $event->types[] = LocalityCategorySelect::class;
             $event->types[] = AccommodationCategorySelect::class;
+            $event->types[] = AccommodationSelect::class;
         });
     }
 
