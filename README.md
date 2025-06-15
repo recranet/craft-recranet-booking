@@ -29,3 +29,11 @@ php craft _recranet-booking/accommodations
 php craft _recranet-booking/locality-category
 php craft _recranet-booking/accommodation-category
 ```
+
+## Variables
+
+You can run the use the following variables in your templates to access the data:
+
+```twig
+{{ craft.recranetBooking.organizationId }}
+```

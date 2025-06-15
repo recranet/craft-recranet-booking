@@ -17,3 +17,11 @@ All notable changes to this project will be documented in this file.
 ## [5.0.3] - 2025-06-14
 ### Added
 - Added accommodation select field-type.
+
+## [5.0.4] - 2025-06-16
+### Fixed
+- Fixed an issue where organization ID was not being saved correctly in the plugin settings.
+
+## [5.0.5] - 2025-06-16
+### Added
+- Added a new variable `craft.recranetBooking.organizationid` to access the organization ID in templates.
