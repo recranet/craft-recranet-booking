@@ -14,7 +14,7 @@
 
     {% set recranetBookingPlugin = craft.app.plugins.getPlugin('_recranet-booking') %}
     {% set settings = recranetBookingPlugin.getSettings() %}
-
+    
     <div id="general">
         {% namespace 'general' %}
             {{ forms.autosuggestField({

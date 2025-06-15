@@ -11,7 +11,7 @@ use craft\elements\Entry;
  */
 class Settings extends Model
 {
-    public int|null $organizationId = null;
+    public string $organizationId = '';
     public int|null $bookPageEntry = null;
     public bool $sitemapEnabled = true;
 
@@ -24,7 +24,7 @@ class Settings extends Model
     {
         return [
             [['bookPageEntry', 'organizationId'], 'required'],
-            [['organizationId', 'bookPageEntry'], 'integer'],
+            [['bookPageEntry'], 'integer'],
             [['sitemapEnabled'], 'boolean'],
             [['sitemapEnabled'], 'default', 'value' => true],
         ];
