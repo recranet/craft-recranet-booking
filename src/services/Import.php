@@ -4,6 +4,7 @@ namespace recranet\craftrecranetbooking\services;
 
 use Craft;
 use craft\helpers\ElementHelper;
+use DateTime;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
@@ -124,32 +125,37 @@ class Import extends Component
             return;
         }
 
+        $updatedAccommodations = [];
+
         foreach ($accommodations as $accommodationData) {
-            $existingAccommodation = Accommodation::find()
+            $accommodation = Accommodation::find()
                 ->recranetBookingId($accommodationData['id'])
                 ->one();
 
-            if ($existingAccommodation) {
-                continue;
-            }
-
-            $accommodation = new AccommodationModel([
+            $accommodationModel = new AccommodationModel([
                 'title' => $accommodationData['title'],
                 'slug' => $accommodationData['slug'] ?? ElementHelper::generateSlug($accommodationData['title']),
                 'recranetBookingId' => $accommodationData['id'],
             ]);
 
-            $accommodation->validate();
+            $accommodationModel->validate();
 
-            $accommodationElement = new Accommodation();
-            $accommodationElement->title = $accommodation->title;
-            $accommodationElement->slug = $accommodation->slug;
-            $accommodationElement->recranetBookingId = $accommodation->recranetBookingId;
+            if (!$accommodation) {
+                $accommodation = new Accommodation();
+            }
 
-            Craft::$app->elements->saveElement($accommodationElement);
+            $accommodation->title = $accommodationModel->title;
+            $accommodation->slug = $accommodationModel->slug;
+            $accommodation->recranetBookingId = $accommodationModel->recranetBookingId;
+
+            Craft::$app->elements->saveElement($accommodation);
+
+            // I need to keep track of the imported accommodations
+            $updatedAccommodations[] = $accommodation->id;
         }
 
         $this->importTranslatedAccommodationSlugs();
+        $this->removeAccommodations($updatedAccommodations);
     }
 
     public function importTranslatedAccommodationSlugs(): void
@@ -195,8 +201,18 @@ class Import extends Component
                         break;
                 }
 
-
                 Craft::$app->elements->saveElement($existingAccommodation);
+            }
+        }
+    }
+
+    private function removeAccommodations(array $accommodations): void
+    {
+        $allAccommodations = Accommodation::find()->all();
+
+        foreach ($allAccommodations as $accommodation) {
+            if (!in_array($accommodation->id, $accommodations)) {
+                Craft::$app->elements->deleteElement($accommodation);
             }
         }
     }

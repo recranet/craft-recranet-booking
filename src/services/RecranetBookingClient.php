@@ -3,6 +3,7 @@
 namespace recranet\craftrecranetbooking\services;
 
 use Craft;
+use craft\helpers\App;
 use recranet\craftrecranetbooking\RecranetBooking;
 use Throwable;
 use yii\base\Component;
@@ -71,7 +72,7 @@ class RecranetBookingClient extends Component
 
     public function fetchAccommodations(string $locale): ?array
     {
-        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+        $organizationId = App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
 
         if (!$organizationId) {
             return [];
