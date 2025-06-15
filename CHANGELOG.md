@@ -25,3 +25,7 @@ All notable changes to this project will be documented in this file.
 ## [5.0.5] - 2025-06-16
 ### Added
 - Added a new variable `craft.recranetBooking.organizationid` to access the organization ID in templates.
+
+## [5.0.6] - 2025-06-16
+### Fixed
+- Fixed an issue where accommodations no longer present in the API response were not being deleted.
