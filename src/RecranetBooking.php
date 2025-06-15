@@ -10,6 +10,7 @@ use craft\events\RegisterTemplateRootsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\services\Elements;
 use craft\services\Fields;
+use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 use recranet\craftrecranetbooking\elements\Accommodation;
@@ -23,6 +24,7 @@ use recranet\craftrecranetbooking\fields\LocalityCategorySelect;
 use recranet\craftrecranetbooking\models\Settings;
 use recranet\craftrecranetbooking\services\Import;
 use recranet\craftrecranetbooking\services\RecranetBookingClient;
+use recranet\craftrecranetbooking\variables\RecranetBookingVariable;
 use yii\base\Event;
 
 /**
@@ -56,6 +58,7 @@ class RecranetBooking extends Plugin
         $this->attachEventHandlers();
         $this->_registerTemplateRoots();
         $this->_registerElementTypes();
+        $this->_registerTwigVariables();
         $this->_registerFields();
 
         if ($this->getSettings()->sitemapEnabled) {
@@ -150,6 +153,17 @@ class RecranetBooking extends Plugin
             $event->types[] = AccommodationCategorySelect::class;
             $event->types[] = AccommodationSelect::class;
         });
+    }
+
+    private function _registerTwigVariables(): void
+    {
+        Event::on(
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            function (Event $event) {
+                $event->sender->set('recranetBooking', RecranetBookingVariable::class);
+            }
+        );
     }
 
     private function _registerElementTypes(): void
