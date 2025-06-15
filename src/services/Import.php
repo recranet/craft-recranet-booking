@@ -4,7 +4,6 @@ namespace recranet\craftrecranetbooking\services;
 
 use Craft;
 use craft\helpers\ElementHelper;
-use DateTime;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
