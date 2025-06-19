@@ -37,3 +37,7 @@ All notable changes to this project will be documented in this file.
 ## [5.0.8] - 2025-06-19
 ### Added
 - Made 'accommodations' available in twig templates via the `craft.accommodations()` variable.
+
+## [5.0.9] - 2025-06-19
+### Hotfix
+- Fixed a typo in sitemap template
