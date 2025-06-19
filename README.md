@@ -4,8 +4,8 @@ Synchronizes various Recranet Booking sources to Craft CMS
 
 ## Features
 
-- Synchronizes facilities, accommodations, locality categories, and accommodation categories from Recranet Booking to Craft CMS.
-- Supports custom fields for facilities, accommodation categories and locality categories.
+- Synchronizes facilities, accommodations, locality categories accommodation categories and package specification categories from Recranet Booking to Craft CMS.
+- Supports custom fields for facilities, accommodation categories, locality categories and package specification categories.
 - Generates an accommodation sitemap.xml route
 - Stores the organization ID and 'reservation' page in the Craft CMS settings for easy access.
 
@@ -28,6 +28,7 @@ php craft _recranet-booking/facilities
 php craft _recranet-booking/accommodations
 php craft _recranet-booking/locality-category
 php craft _recranet-booking/accommodation-category
+php craft _recranet-booking/package-specification-category
 ```
 
 ## Variables
