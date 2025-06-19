@@ -15,7 +15,7 @@ class RecranetBookingClient extends Component
 {
     public function fetchFacilities(): ?array
     {
-        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+        $organizationId = App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
 
         if (!$organizationId) {
             return [];
@@ -34,7 +34,7 @@ class RecranetBookingClient extends Component
 
     public function fetchAccommodationCategories(): ?array
     {
-        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+        $organizationId = App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
 
         if (!$organizationId) {
             return [];
@@ -53,7 +53,7 @@ class RecranetBookingClient extends Component
 
     public function fetchLocalityCategories(): ?array
     {
-        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+        $organizationId = App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
 
         if (!$organizationId) {
             return [];
@@ -61,6 +61,25 @@ class RecranetBookingClient extends Component
 
         try {
             $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/locality_categories', [
+                'query' => ['organization' => $organizationId],
+            ]);
+        } catch (Throwable $e) {
+            return [];
+        }
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    public function fetchPackageSpecificationCategories(): ?array
+    {
+        $organizationId = App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
+
+        if (!$organizationId) {
+            return [];
+        }
+
+        try {
+            $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/package_specification_categories', [
                 'query' => ['organization' => $organizationId],
             ]);
         } catch (Throwable $e) {

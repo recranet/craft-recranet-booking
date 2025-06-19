@@ -10,13 +10,14 @@ use craft\events\RegisterTemplateRootsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\services\Elements;
 use craft\services\Fields;
-use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
+use craft\web\twig\variables\CraftVariable;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
+use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
 use recranet\craftrecranetbooking\fields\AccommodationCategorySelect;
 use recranet\craftrecranetbooking\fields\AccommodationSelect;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
@@ -94,6 +95,11 @@ class RecranetBooking extends Plugin
                 'badgeCount' => LocalityCategory::find()->count(),
                 'label' => Craft::t('_recranet-booking', 'Localities'),
             ],
+            'package-specification-categories' => [
+                'url' => 'recranet-booking/package-specification-categories',
+                'badgeCount' => PackageSpecificationCategory::find()->count(),
+                'label' => Craft::t('_recranet-booking', 'Package groups'),
+            ],
             'settings' => [
                 'url' => 'recranet-booking/settings',
                 'label' => Craft::t('_recranet-booking', 'Settings'),
@@ -128,6 +134,7 @@ class RecranetBooking extends Plugin
             $event->rules['recranet-booking/locality-categories'] = ['template' => '_recranet-booking/locality-categories/_index.twig'];
             $event->rules['recranet-booking/settings'] = ['template' => '_recranet-booking/_settings.twig'];
             $event->rules['actions/_recranet-booking/settings/save-settings'] = '_recranet-booking/settings/save-settings';
+            $event->rules['recranet-booking/package-specification-categories'] = ['template' => '_recranet-booking/package-specification-categories/_index.twig'];
         });
     }
 
@@ -152,6 +159,7 @@ class RecranetBooking extends Plugin
             $event->types[] = LocalityCategorySelect::class;
             $event->types[] = AccommodationCategorySelect::class;
             $event->types[] = AccommodationSelect::class;
+            $event->types[] = PackageSpecificationCategory::class;
         });
     }
 

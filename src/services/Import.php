@@ -8,12 +8,14 @@ use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
+use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
 use recranet\craftrecranetbooking\RecranetBooking;
 use yii\base\Component;
 use recranet\craftrecranetbooking\models\Facility as FacilityModel;
 use recranet\craftrecranetbooking\models\Accommodation as AccommodationModel;
 use recranet\craftrecranetbooking\models\AccommodationCategory as AccommodationCategoryModel;
 use recranet\craftrecranetbooking\models\LocalityCategory as LocalityCategoryModel;
+use recranet\craftrecranetbooking\models\PackageSpecificationCategory as PackageSpecificationCategoryModel;
 
 /**
  * Import service
@@ -113,6 +115,38 @@ class Import extends Component
             $categoryElement->recranetBookingId = $localityCategory->recranetBookingId;
 
             Craft::$app->elements->saveElement($categoryElement);
+        }
+    }
+
+    public function importPackageSpecificationCategories(): void
+    {
+        $packageSpecificationCategories = RecranetBooking::getInstance()->recranetBookingClient->fetchPackageSpecificationCategories();
+
+        if (!$packageSpecificationCategories) {
+            return;
+        }
+
+        foreach ($packageSpecificationCategories as $categoryData) {
+            $existingCategory = PackageSpecificationCategory::find()
+                ->recranetBookingId($categoryData['id'])
+                ->one();
+
+            if ($existingCategory) {
+                continue;
+            }
+
+            $packageSpecificationCategory = new PackageSpecificationCategoryModel([
+                'title' => $categoryData['description'],
+                'recranetBookingId' => $categoryData['id'],
+            ]);
+
+            $packageSpecificationCategory->validate();
+
+            $packageSpecificationElement = new PackageSpecificationCategory();
+            $packageSpecificationElement->title = $packageSpecificationCategory['title'];
+            $packageSpecificationElement->recranetBookingId = $packageSpecificationCategory['recranetBookingId'];
+
+            Craft::$app->elements->saveElement($packageSpecificationElement);
         }
     }
 
