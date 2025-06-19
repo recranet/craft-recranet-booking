@@ -22,6 +22,7 @@ use recranet\craftrecranetbooking\fields\AccommodationCategorySelect;
 use recranet\craftrecranetbooking\fields\AccommodationSelect;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\fields\LocalityCategorySelect;
+use recranet\craftrecranetbooking\fields\PackageSpecificationCategorySelect;
 use recranet\craftrecranetbooking\models\Settings;
 use recranet\craftrecranetbooking\services\Import;
 use recranet\craftrecranetbooking\services\RecranetBookingClient;
@@ -159,7 +160,7 @@ class RecranetBooking extends Plugin
             $event->types[] = LocalityCategorySelect::class;
             $event->types[] = AccommodationCategorySelect::class;
             $event->types[] = AccommodationSelect::class;
-            $event->types[] = PackageSpecificationCategory::class;
+            $event->types[] = PackageSpecificationCategorySelect::class;
         });
     }
 
