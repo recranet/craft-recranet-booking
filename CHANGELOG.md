@@ -29,7 +29,11 @@ All notable changes to this project will be documented in this file.
 ## [5.0.6] - 2025-06-16
 ### Fixed
 - Fixed an issue where accommodations no longer present in the API response were not being deleted.
-- 
+
 ## [5.0.7] - 2025-06-19
 ### Added
-- Added a new elemnt type 'Package Specification Category' to the plugin.
+- Added a new element type 'Package Specification Category' to the plugin.
+
+## [5.0.8] - 2025-06-19
+### Added
+- Made 'accommodations' available in twig templates via the `craft.accommodations()` variable.

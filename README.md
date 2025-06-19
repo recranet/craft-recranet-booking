@@ -8,6 +8,7 @@ Synchronizes various Recranet Booking sources to Craft CMS
 - Supports custom fields for facilities, accommodation categories, locality categories and package specification categories.
 - Generates an accommodation sitemap.xml route
 - Stores the organization ID and 'reservation' page in the Craft CMS settings for easy access.
+- Exposes accommodations in twig templates via the `craft.accommodations()` variable.
 
 ## Requirements
 
