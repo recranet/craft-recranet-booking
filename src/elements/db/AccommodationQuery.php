@@ -2,8 +2,8 @@
 
 namespace recranet\craftrecranetbooking\elements\db;
 
-use Craft;
 use craft\elements\db\ElementQuery;
+use recranet\craftrecranetbooking\elements\Accommodation;
 
 /**
  * Accommodation query
@@ -14,6 +14,15 @@ class AccommodationQuery extends ElementQuery
     public ?string $slugDe = '';
     public ?string $slugEn = '';
     public ?string $slugFr = '';
+
+    public function __construct(string $elementType = null, array $config = [])
+    {
+        if ($elementType === null) {
+            $elementType = Accommodation::class;
+        }
+
+        parent::__construct($elementType, $config);
+    }
 
     protected function beforePrepare(): bool
     {

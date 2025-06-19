@@ -11,6 +11,5 @@ class RecranetBookingVariable
     {
 
         return App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
-        ;
     }
 }

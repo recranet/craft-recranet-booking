@@ -15,6 +15,7 @@ use craft\web\View;
 use craft\web\twig\variables\CraftVariable;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
+use recranet\craftrecranetbooking\elements\db\AccommodationQuery;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
 use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
@@ -171,6 +172,7 @@ class RecranetBooking extends Plugin
             CraftVariable::EVENT_INIT,
             function (Event $event) {
                 $event->sender->set('recranetBooking', RecranetBookingVariable::class);
+                $event->sender->set('accommodations', AccommodationQuery::class);
             }
         );
     }
