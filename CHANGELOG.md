@@ -41,3 +41,9 @@ All notable changes to this project will be documented in this file.
 ## [5.0.9] - 2025-06-19
 ### Hotfix
 - Fixed a typo in sitemap template
+
+## [5.1.0] - 2025-06-30
+### Added
+- Added new commands to delete all facilities, accommodations, locality categories, accommodation categories, and package specification categories.
+### Fixed
+- Fixed an issue with missing translated slugs from accommodations
