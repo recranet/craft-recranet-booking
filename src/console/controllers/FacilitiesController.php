@@ -30,4 +30,13 @@ class FacilitiesController extends Controller
 
         return ExitCode::OK;
     }
+
+    public function actionDeleteAll(): int
+    {
+        $this->stdout("Deleting all facilities...\n");
+
+        RecranetBooking::getInstance()->facilityService->deleteAll();
+
+        return ExitCode::OK;
+    }
 }

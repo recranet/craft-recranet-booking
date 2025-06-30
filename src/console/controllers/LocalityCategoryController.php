@@ -31,4 +31,13 @@ class LocalityCategoryController extends Controller
 
         return ExitCode::OK;
     }
+
+    public function actionDeleteAll(): int
+    {
+        $this->stdout("Deleting all locality categories...\n");
+
+        RecranetBooking::getInstance()->localityCategoryService->deleteAll();
+
+        return ExitCode::OK;
+    }
 }

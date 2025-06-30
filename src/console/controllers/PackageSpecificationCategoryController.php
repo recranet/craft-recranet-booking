@@ -30,4 +30,13 @@ class PackageSpecificationCategoryController extends Controller
 
         return ExitCode::OK;
     }
+
+    public function actionDeleteAll(): int
+    {
+        $this->stdout("Deleting all package specification categories...\n");
+
+        RecranetBooking::getInstance()->packageSpecificationCategoryService->deleteAll();
+
+        return ExitCode::OK;
+    }
 }

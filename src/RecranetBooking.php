@@ -15,17 +15,22 @@ use craft\web\View;
 use craft\web\twig\variables\CraftVariable;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
-use recranet\craftrecranetbooking\elements\db\AccommodationQuery;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
 use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
+use recranet\craftrecranetbooking\elements\db\AccommodationQuery;
 use recranet\craftrecranetbooking\fields\AccommodationCategorySelect;
 use recranet\craftrecranetbooking\fields\AccommodationSelect;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\fields\LocalityCategorySelect;
 use recranet\craftrecranetbooking\fields\PackageSpecificationCategorySelect;
 use recranet\craftrecranetbooking\models\Settings;
+use recranet\craftrecranetbooking\services\AccommodationCategory as AccommodationCategoryService;
+use recranet\craftrecranetbooking\services\Accommodation as AccommodationService;
+use recranet\craftrecranetbooking\services\Facility as FacilityService;
 use recranet\craftrecranetbooking\services\Import;
+use recranet\craftrecranetbooking\services\LocalityCategory as LocalityCategoryService;
+use recranet\craftrecranetbooking\services\PackageSpecificationCategory as PackageSpecificationCategoryService;
 use recranet\craftrecranetbooking\services\RecranetBookingClient;
 use recranet\craftrecranetbooking\variables\RecranetBookingVariable;
 use yii\base\Event;
@@ -37,6 +42,11 @@ use yii\base\Event;
  * @method Settings getSettings()
  * @property-read RecranetBookingClient $recranetBookingClient
  * @property-read Import $import
+ * @property-read AccommodationService $accommodationService
+ * @property-read AccommodationCategoryService $accommodationCategoryService
+ * @property-read FacilityService $facilityService
+ * @property-read LocalityCategoryService $localityCategoryService
+ * @property-read PackageSpecificationCategoryService $packageSpecificationCategoryService
  */
 class RecranetBooking extends Plugin
 {
@@ -49,7 +59,12 @@ class RecranetBooking extends Plugin
         return [
             'components' => [
                 'recranetBookingClient' => RecranetBookingClient::class,
-                'import' => Import::class
+                'import' => Import::class,
+                'accommodationService' => AccommodationService::class,
+                'accommodationCategoryService' => AccommodationCategoryService::class,
+                'facilityService' => FacilityService::class,
+                'localityCategoryService' => LocalityCategoryService::class,
+                'packageSpecificationCategoryService' => PackageSpecificationCategoryService::class
             ],
         ];
     }

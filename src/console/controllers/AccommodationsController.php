@@ -31,4 +31,13 @@ class AccommodationsController extends Controller
 
         return ExitCode::OK;
     }
+
+    public function actionDeleteAll(): int
+    {
+        $this->stdout("Deleting all accommodations...\n");
+
+        RecranetBooking::getInstance()->accommodationService->deleteAll();
+
+        return ExitCode::OK;
+    }
 }
