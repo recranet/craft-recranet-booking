@@ -25,21 +25,21 @@ composer require recranet/craft-recranet-booking && php craft plugin/install _re
 You can run the following command to synchronize the different sources:
 
 ```bash
-php craft _recranet-booking/facilities
-php craft _recranet-booking/accommodations
-php craft _recranet-booking/locality-category
-php craft _recranet-booking/accommodation-category
-php craft _recranet-booking/package-specification-category
+ddev php craft _recranet-booking/facilities
+ddev php craft _recranet-booking/accommodations
+ddev php craft _recranet-booking/locality-category
+ddev php craft _recranet-booking/accommodation-category
+ddev php craft _recranet-booking/package-specification-category
 ```
 
 You can run the following command to delete the different sources:
 
 ```bash
-php craft _recranet-booking/facilities/delete-all
-php craft _recranet-booking/accommodations/delete-all
-php craft _recranet-booking/locality-category/delete-all
-php craft _recranet-booking/accommodation-category/delete-all
-php craft _recranet-booking/package-specification-category/delete-all
+ddev php craft _recranet-booking/facilities/delete-all
+ddev php craft _recranet-booking/accommodations/delete-all
+ddev php craft _recranet-booking/locality-category/delete-all
+ddev php craft _recranet-booking/accommodation-category/delete-all
+ddev php craft _recranet-booking/package-specification-category/delete-all
 ```
 
 ## Variables
