@@ -30,6 +30,8 @@ class Import extends Component
             return;
         }
 
+        $updatedFacilities = [];
+
         foreach ($facilities as $facilityData) {
             $existingFacility = Facility::find()
                 ->recranetBookingId($facilityData['facilitySpecification']['id'])
@@ -51,7 +53,10 @@ class Import extends Component
             $facilityElement->recranetBookingId = $facility->recranetBookingId;
 
             Craft::$app->elements->saveElement($facilityElement);
+            $updatedFacilities[] = $facilityElement->id;
         }
+
+        $this->removeFacilities($updatedFacilities);
     }
 
     public function importAccommodationCategories(): void
@@ -61,6 +66,8 @@ class Import extends Component
         if (!$accommodationCategories) {
             return;
         }
+
+        $updatedAccommodationCategories = [];
 
         foreach ($accommodationCategories as $categoryData) {
             $existingCategory = AccommodationCategory::find()
@@ -83,7 +90,10 @@ class Import extends Component
             $categoryElement->recranetBookingId = $accommodationCategory->recranetBookingId;
 
             Craft::$app->elements->saveElement($categoryElement);
+            $updatedAccommodationCategories[] = $categoryElement->id;
         }
+
+        $this->removeAccommodationCategories($updatedAccommodationCategories);
     }
 
     public function importLocalityCategories(): void
@@ -93,6 +103,8 @@ class Import extends Component
         if (!$localityCategories) {
             return;
         }
+
+        $updatedLocalityCategories = [];
 
         foreach ($localityCategories as $categoryData) {
             $existingCategory = LocalityCategory::find()
@@ -115,7 +127,10 @@ class Import extends Component
             $categoryElement->recranetBookingId = $localityCategory->recranetBookingId;
 
             Craft::$app->elements->saveElement($categoryElement);
+            $updatedLocalityCategories[] = $categoryElement->id;
         }
+
+        $this->removeLocalityCategories($updatedLocalityCategories);
     }
 
     public function importPackageSpecificationCategories(): void
@@ -125,6 +140,8 @@ class Import extends Component
         if (!$packageSpecificationCategories) {
             return;
         }
+
+        $updatedPackageSpecificationCategories = [];
 
         foreach ($packageSpecificationCategories as $categoryData) {
             $existingCategory = PackageSpecificationCategory::find()
@@ -147,7 +164,10 @@ class Import extends Component
             $packageSpecificationElement->recranetBookingId = $packageSpecificationCategory['recranetBookingId'];
 
             Craft::$app->elements->saveElement($packageSpecificationElement);
+            $updatedPackageSpecificationCategories[] = $packageSpecificationElement->id;
         }
+
+        $this->removePackageSpecificationCategories($updatedPackageSpecificationCategories);
     }
 
     public function importAccommodations(): void
@@ -239,6 +259,17 @@ class Import extends Component
         }
     }
 
+    private function removeFacilities(array $facilities): void
+    {
+        $allFacilities = Facility::find()->all();
+
+        foreach ($allFacilities as $facility) {
+            if (!in_array($facility->id, $facilities)) {
+                Craft::$app->elements->deleteElement($facility);
+            }
+        }
+    }
+
     private function removeAccommodations(array $accommodations): void
     {
         $allAccommodations = Accommodation::find()->all();
@@ -246,6 +277,39 @@ class Import extends Component
         foreach ($allAccommodations as $accommodation) {
             if (!in_array($accommodation->id, $accommodations)) {
                 Craft::$app->elements->deleteElement($accommodation);
+            }
+        }
+    }
+
+    private function removeLocalityCategories(array $localityCategories): void
+    {
+        $allLocalityCategories = LocalityCategory::find()->all();
+
+        foreach ($allLocalityCategories as $category) {
+            if (!in_array($category->id, $localityCategories)) {
+                Craft::$app->elements->deleteElement($category);
+            }
+        }
+    }
+
+    private function removeAccommodationCategories(array $accommodationCategories): void
+    {
+        $allAccommodationCategories = AccommodationCategory::find()->all();
+
+        foreach ($allAccommodationCategories as $category) {
+            if (!in_array($category->id, $accommodationCategories)) {
+                Craft::$app->elements->deleteElement($category);
+            }
+        }
+    }
+
+    private function removePackageSpecificationCategories(array $packageSpecificationCategories): void
+    {
+        $allPackageSpecificationCategories = PackageSpecificationCategory::find()->all();
+
+        foreach ($allPackageSpecificationCategories as $category) {
+            if (!in_array($category->id, $packageSpecificationCategories)) {
+                Craft::$app->elements->deleteElement($category);
             }
         }
     }
