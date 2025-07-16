@@ -223,7 +223,9 @@ class Import extends Component
                 continue;
             }
 
+
             $translatedAccommodations[$locale] = array_map(function ($accommodation) {
+
                 return [
                     'id' => $accommodation['id'],
                     'title' => $accommodation['title'],
@@ -244,12 +246,15 @@ class Import extends Component
 
                 switch ($locale) {
                     case 'de':
+                        $existingAccommodation->titleDe = $accommodationData['title'];
                         $existingAccommodation->slugDe = $accommodationData['slug'];
                         break;
                     case 'en':
+                        $existingAccommodation->titleEn = $accommodationData['title'];
                         $existingAccommodation->slugEn = $accommodationData['slug'];
                         break;
                     case 'fr':
+                        $existingAccommodation->titleFr = $accommodationData['title'];
                         $existingAccommodation->slugFr = $accommodationData['slug'];
                         break;
                 }

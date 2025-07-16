@@ -11,6 +11,9 @@ use craft\base\Model;
 class Accommodation extends Model
 {
     public string $title;
+    public string|null $titleDe = '';
+    public string|null $titleEn = '';
+    public string|null $titleFr = '';
     public string $slug;
     public string|null $slugDe = '';
     public string|null $slugEn = '';
@@ -22,7 +25,7 @@ class Accommodation extends Model
         return array_merge(parent::defineRules(), [
             [['recranetBookingId', 'title', 'slug'], 'required'],
             [['recranetBookingId'], 'integer'],
-            [['slug', 'slugDe', 'slugEn', 'slugFr'], 'match', 'pattern' => '/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
+            [['slug', 'slugDe', 'slugEn', 'slugFr', 'titleDe', 'titleEn', 'titleFr'], 'match', 'pattern' => '/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
             ['title', 'string', 'max' => 255],
         ]);
     }

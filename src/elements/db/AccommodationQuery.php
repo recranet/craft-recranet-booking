@@ -14,6 +14,9 @@ class AccommodationQuery extends ElementQuery
     public ?string $slugDe = '';
     public ?string $slugEn = '';
     public ?string $slugFr = '';
+    public ?string $titleDe = '';
+    public ?string $titleEn = '';
+    public ?string $titleFr = '';
 
     public function __construct(string $elementType = null, array $config = [])
     {
@@ -44,12 +47,27 @@ class AccommodationQuery extends ElementQuery
             $this->subQuery->andWhere(['slugFr' => $this->slugFr]);
         }
 
+        if ($this->titleDe) {
+            $this->subQuery->andWhere(['titleDe' => $this->titleDe]);
+        }
+
+        if ($this->titleEn) {
+            $this->subQuery->andWhere(['titleEn' => $this->titleEn]);
+        }
+
+        if ($this->titleFr) {
+            $this->subQuery->andWhere(['titleFr' => $this->titleFr]);
+        }
+
         $this->query->select([
             '_recranet-booking_accommodations.title',
             '_recranet-booking_accommodations.slug',
             '_recranet-booking_accommodations.slugDe',
             '_recranet-booking_accommodations.slugEn',
             '_recranet-booking_accommodations.slugFr',
+            '_recranet-booking_accommodations.titleDe',
+            '_recranet-booking_accommodations.titleEn',
+            '_recranet-booking_accommodations.titleFr',
             '_recranet-booking_accommodations.dateCreated',
             '_recranet-booking_accommodations.dateUpdated',
             '_recranet-booking_accommodations.recranetBookingId',
@@ -79,6 +97,24 @@ class AccommodationQuery extends ElementQuery
     public function slugFr($value): self
     {
         $this->slugFr = $value;
+        return $this;
+    }
+
+    public function titleDe($value): self
+    {
+        $this->titleDe = $value;
+        return $this;
+    }
+
+    public function titleEn($value): self
+    {
+        $this->titleEn = $value;
+        return $this;
+    }
+
+    public function titleFr($value): self
+    {
+        $this->titleFr = $value;
         return $this;
     }
 }

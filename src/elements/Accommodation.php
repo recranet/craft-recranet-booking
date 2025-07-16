@@ -24,6 +24,9 @@ class Accommodation extends Element
     public null|string $slugDe = '';
     public null|string $slugEn = '';
     public null|string $slugFr = '';
+    public null|string $titleDe = '';
+    public null|string $titleEn = '';
+    public null|string $titleFr = '';
 
     public function searchKeywords(string $attribute): string
     {
@@ -32,7 +35,7 @@ class Accommodation extends Element
 
     protected static function defineSearchableAttributes(): array
     {
-        return ['title', 'slug', 'slugDe', 'slugEn', 'slugFr'];
+        return ['title', 'slug', 'slugDe', 'slugEn', 'slugFr', 'titleDe', 'titleEn', 'titleFr'];
     }
 
     public static function displayName(): string
@@ -151,6 +154,9 @@ class Accommodation extends Element
             'slugDe' => ['label' => Craft::t('app', 'Slug (DE)')],
             'slugEn' => ['label' => Craft::t('app', 'Slug (EN)')],
             'slugFr' => ['label' => Craft::t('app', 'Slug (FR)')],
+            'titleDe' => ['label' => Craft::t('app', 'Title (DE)')],
+            'titleEn' => ['label' => Craft::t('app', 'Title (EN)')],
+            'titleFr' => ['label' => Craft::t('app', 'Title (FR)')],
             'uri' => ['label' => Craft::t('app', 'URI')],
             'link' => ['label' => Craft::t('app', 'Link'), 'icon' => 'world'],
             'id' => ['label' => Craft::t('app', 'ID')],
@@ -170,6 +176,10 @@ class Accommodation extends Element
             'slug',
             'slugDe',
             'slugEn',
+            'slugFr',
+            'titleDe',
+            'titleEn',
+            'titleFr',
         ];
     }
 
@@ -291,6 +301,10 @@ class Accommodation extends Element
             $record->slugDe = $this->slugDe;
             $record->slugEn = $this->slugEn;
             $record->slugFr = $this->slugFr;
+
+            $record->titleDe = $this->titleDe;
+            $record->titleEn = $this->titleEn;
+            $record->titleFr = $this->titleFr;
 
             $record->save();
         }
