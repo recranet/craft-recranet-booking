@@ -78,6 +78,7 @@ class RecranetBooking extends Plugin
         $this->_registerElementTypes();
         $this->_registerTwigVariables();
         $this->_registerFields();
+        $this->_registerSiteUrlRules();
 
         if ($this->getSettings()->sitemapEnabled) {
             $this->_registerSitemapUrlRule();
@@ -160,6 +161,21 @@ class RecranetBooking extends Plugin
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules['sitemap-accommodations.xml'] = '_recranet-booking/sitemap';
         });
+    }
+
+    private function _registerSiteUrlRules(): void
+    {
+
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                $pageBook = RecranetBooking::getInstance()->getSettings()->getBookPageEntry();
+
+                $event->rules[$pageBook->uri . '/<slug:[^/]+>'] = '_recranet-booking/accommodations-routing/accommodation';
+                $event->rules[$pageBook->uri . '/<slug:[^/]+>/<page:[^/]+>'] = '_recranet-booking/accommodations-routing';
+            }
+        );
     }
 
     private function _registerTemplateRoots(): void

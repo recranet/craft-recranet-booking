@@ -38,6 +38,15 @@
                 elements: settings.getBookPageEntry() ? [settings.getBookPageEntry()] : [],
                 errors: settings.getErrors('bookPageEntry'),
             }) }}
+
+            {{ forms.autosuggestField({
+                label: "Book page template path"|t("_recranet-booking"),
+                id: "bookPageEntryTemplate",
+                required: true,
+                name: "bookPageEntryTemplate",
+                value: settings.bookPageEntryTemplate ?? '',
+                errors: settings.getErrors('bookPageEntryTemplate'),
+            }) }}
         {% endnamespace %}
     </div>
     <div id="sitemap" class="hidden">
