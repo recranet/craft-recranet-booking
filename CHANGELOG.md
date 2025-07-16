@@ -51,3 +51,7 @@ All notable changes to this project will be documented in this file.
 ## [5.1.1] - 2025-07-10
 ### Fixed
 - Made translated slugs nullable if not available in the API response.
+
+## [5.1.2] - 2025-07-16
+### Fixed
+- Fixed that unused elements were not being deleted. Unused elements are now deleted on every command run.
