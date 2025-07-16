@@ -64,7 +64,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Added translated title fields
 
-## [5.1.4] - 2025-07-16
+## [5.1.5] - 2025-07-16
 ### Added
 - Added import and delete all command
 - Refactor commands
