@@ -55,3 +55,11 @@ All notable changes to this project will be documented in this file.
 ## [5.1.2] - 2025-07-16
 ### Fixed
 - Fixed that unused elements were not being deleted. Unused elements are now deleted on every command run.
+
+## [5.1.3] - 2025-07-16
+### Added
+- Add routing for Recranet Booking
+
+## [5.1.4] - 2025-07-16
+### Added
+- Added translated title fields
