@@ -20,6 +20,27 @@ This plugin requires Craft CMS 5.7.0 or later, and PHP 8.2 or later.
 composer require recranet/craft-recranet-booking && php craft plugin/install _recranet-booking
 ```
 
+## Setup
+Create a new file inside `config/` called `_recranet-booking.php`. Below values can be overridden in this file. 
+```php
+<?php
+
+return [
+    '*' => [
+        'showCpNav' => true,
+    ],
+    'dev' => [
+        'showCpNav' => true,
+    ],
+    'staging' => [
+        'showCpNav' => false,
+    ],
+    'production' => [
+        'showCpNav' => false,
+    ],
+];
+```
+
 ## Commands
 
 You can run the following command to synchronize the different sources:

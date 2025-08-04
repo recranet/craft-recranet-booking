@@ -89,6 +89,12 @@ class RecranetBooking extends Plugin
     {
         $navItem = parent::getCpNavItem();
 
+        $showCp = Craft::$app->config->getConfigFromFile('_recranet-booking')['showCpNav'] ?? true;
+
+        if (!$showCp) {
+            return null;
+        }
+
         $navItem['label'] = Craft::t('_recranet-booking', 'Recranet Booking');
         $navItem['url'] = 'recranet-booking/settings';
         $navItem['icon'] = '@recranet/craftrecranetbooking/icon-dashboard.svg';
