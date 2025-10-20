@@ -3,7 +3,6 @@
 namespace recranet\craftrecranetbooking\controllers;
 
 use Craft;
-use craft\helpers\App;
 use craft\web\Controller;
 use recranet\craftrecranetbooking\RecranetBooking;
 use yii\web\Response;
