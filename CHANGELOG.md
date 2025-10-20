@@ -68,3 +68,14 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Added import and delete all command
 - Refactor commands
+
+## [5.1.6] - 2025-08-04
+### Fixed
+- Fixed control panel navigation submenu behavior to keep menu expanded when navigating between sections
+
+## [5.1.7] - 2025-10-20
+### Fixed
+- Fixed issue with importing the wrong title property
+- Fixed issue when subnav was closed on selecting an item
+- Remove unused import
+
