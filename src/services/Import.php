@@ -223,12 +223,11 @@ class Import extends Component
                 continue;
             }
 
-
             $translatedAccommodations[$locale] = array_map(function ($accommodation) {
 
                 return [
                     'id' => $accommodation['id'],
-                    'title' => $accommodation['title'],
+                    'title' => $accommodation['content']['title'],
                     'slug' => $accommodation['slug'] ?? ElementHelper::generateSlug($accommodation['title']),
                 ];
             }, $accommodations);
