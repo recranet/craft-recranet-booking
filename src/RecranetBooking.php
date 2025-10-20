@@ -96,7 +96,7 @@ class RecranetBooking extends Plugin
         }
 
         $navItem['label'] = Craft::t('_recranet-booking', 'Recranet Booking');
-        $navItem['url'] = 'recranet-booking/settings';
+        $navItem['url'] = 'recranet-booking';
         $navItem['icon'] = '@recranet/craftrecranetbooking/icon-dashboard.svg';
         $navItem['subnav'] = [
             'accommodations' => [
@@ -107,26 +107,26 @@ class RecranetBooking extends Plugin
             'facilities' => [
                 'url' => 'recranet-booking/facilities',
                 'badgeCount' => Facility::find()->count(),
-                'label' => Craft::t('_recranet-booking', 'Facilities'),
+                'label' => Craft::t('_recranet-booking', 'Facilities')
             ],
             'accommodation-categories' => [
                 'url' => 'recranet-booking/accommodation-categories',
                 'badgeCount' => AccommodationCategory::find()->count(),
-                'label' => Craft::t('_recranet-booking', 'Types'),
+                'label' => Craft::t('_recranet-booking', 'Types')
             ],
             'locality-categories' => [
                 'url' => 'recranet-booking/locality-categories',
                 'badgeCount' => LocalityCategory::find()->count(),
-                'label' => Craft::t('_recranet-booking', 'Localities'),
+                'label' => Craft::t('_recranet-booking', 'Localities')
             ],
             'package-specification-categories' => [
                 'url' => 'recranet-booking/package-specification-categories',
                 'badgeCount' => PackageSpecificationCategory::find()->count(),
-                'label' => Craft::t('_recranet-booking', 'Package groups'),
+                'label' => Craft::t('_recranet-booking', 'Package groups')
             ],
             'settings' => [
                 'url' => 'recranet-booking/settings',
-                'label' => Craft::t('_recranet-booking', 'Settings'),
+                'label' => Craft::t('_recranet-booking', 'Settings')
             ],
         ];
 
