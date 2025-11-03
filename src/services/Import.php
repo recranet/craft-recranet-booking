@@ -33,27 +33,26 @@ class Import extends Component
         $updatedFacilities = [];
 
         foreach ($facilities as $facilityData) {
-            $existingFacility = Facility::find()
+            $facility = Facility::find()
                 ->recranetBookingId($facilityData['facilitySpecification']['id'])
                 ->one();
 
-            if ($existingFacility) {
-                continue;
-            }
-
-            $facility = new FacilityModel([
+            $facilityModel = new FacilityModel([
                 'title' => $facilityData['facilitySpecification']['name'],
                 'recranetBookingId' => $facilityData['facilitySpecification']['id'],
             ]);
 
-            $facility->validate();
+            $facilityModel->validate();
 
-            $facilityElement = new Facility();
-            $facilityElement->title = $facility->title;
-            $facilityElement->recranetBookingId = $facility->recranetBookingId;
+            if (!$facility) {
+                $facility = new Facility();
+                $facility->recranetBookingId = $facilityModel->recranetBookingId;
+            }
 
-            Craft::$app->elements->saveElement($facilityElement);
-            $updatedFacilities[] = $facilityElement->id;
+            $facility->title = $facilityModel->title;
+
+            Craft::$app->elements->saveElement($facility);
+            $updatedFacilities[] = $facility->id;
         }
 
         $this->removeFacilities($updatedFacilities);
@@ -70,27 +69,26 @@ class Import extends Component
         $updatedAccommodationCategories = [];
 
         foreach ($accommodationCategories as $categoryData) {
-            $existingCategory = AccommodationCategory::find()
+            $accommodationCategory = AccommodationCategory::find()
                 ->recranetBookingId($categoryData['id'])
                 ->one();
 
-            if ($existingCategory) {
-                continue;
-            }
-
-            $accommodationCategory = new AccommodationCategoryModel([
+            $accommodationCategoryModel = new AccommodationCategoryModel([
                 'title' => $categoryData['displayName'],
                 'recranetBookingId' => $categoryData['id'],
             ]);
 
-            $accommodationCategory->validate();
+            $accommodationCategoryModel->validate();
 
-            $categoryElement = new AccommodationCategory();
-            $categoryElement->title = $accommodationCategory->title;
-            $categoryElement->recranetBookingId = $accommodationCategory->recranetBookingId;
+            if (!$accommodationCategory) {
+                $accommodationCategory = new AccommodationCategory();
+                $accommodationCategory->recranetBookingId = $accommodationCategoryModel->recranetBookingId;
+            }
 
-            Craft::$app->elements->saveElement($categoryElement);
-            $updatedAccommodationCategories[] = $categoryElement->id;
+            $accommodationCategory->title = $accommodationCategoryModel->title;
+
+            Craft::$app->elements->saveElement($accommodationCategory);
+            $updatedAccommodationCategories[] = $accommodationCategory->id;
         }
 
         $this->removeAccommodationCategories($updatedAccommodationCategories);
@@ -107,27 +105,26 @@ class Import extends Component
         $updatedLocalityCategories = [];
 
         foreach ($localityCategories as $categoryData) {
-            $existingCategory = LocalityCategory::find()
+            $localityCategory = LocalityCategory::find()
                 ->recranetBookingId($categoryData['id'])
                 ->one();
 
-            if ($existingCategory) {
-                continue;
-            }
-
-            $localityCategory = new LocalityCategoryModel([
+            $localityCategoryModel = new LocalityCategoryModel([
                 'title' => $categoryData['displayName'],
                 'recranetBookingId' => $categoryData['id'],
             ]);
 
-            $localityCategory->validate();
+            $localityCategoryModel->validate();
 
-            $categoryElement = new LocalityCategory();
-            $categoryElement->title = $localityCategory->title;
-            $categoryElement->recranetBookingId = $localityCategory->recranetBookingId;
+            if (!$localityCategory) {
+                $localityCategory = new LocalityCategory();
+                $localityCategory->recranetBookingId = $localityCategoryModel->recranetBookingId;
+            }
 
-            Craft::$app->elements->saveElement($categoryElement);
-            $updatedLocalityCategories[] = $categoryElement->id;
+            $localityCategory->title = $localityCategoryModel->title;
+
+            Craft::$app->elements->saveElement($localityCategory);
+            $updatedLocalityCategories[] = $localityCategory->id;
         }
 
         $this->removeLocalityCategories($updatedLocalityCategories);
@@ -144,27 +141,26 @@ class Import extends Component
         $updatedPackageSpecificationCategories = [];
 
         foreach ($packageSpecificationCategories as $categoryData) {
-            $existingCategory = PackageSpecificationCategory::find()
+            $packageSpecificationCategory = PackageSpecificationCategory::find()
                 ->recranetBookingId($categoryData['id'])
                 ->one();
 
-            if ($existingCategory) {
-                continue;
-            }
-
-            $packageSpecificationCategory = new PackageSpecificationCategoryModel([
+            $packageSpecificationCategoryModel = new PackageSpecificationCategoryModel([
                 'title' => $categoryData['description'],
                 'recranetBookingId' => $categoryData['id'],
             ]);
 
-            $packageSpecificationCategory->validate();
+            $packageSpecificationCategoryModel->validate();
 
-            $packageSpecificationElement = new PackageSpecificationCategory();
-            $packageSpecificationElement->title = $packageSpecificationCategory['title'];
-            $packageSpecificationElement->recranetBookingId = $packageSpecificationCategory['recranetBookingId'];
+            if (!$packageSpecificationCategory) {
+                $packageSpecificationCategory = new PackageSpecificationCategory();
+                $packageSpecificationCategory->recranetBookingId = $packageSpecificationCategoryModel->recranetBookingId;
+            }
 
-            Craft::$app->elements->saveElement($packageSpecificationElement);
-            $updatedPackageSpecificationCategories[] = $packageSpecificationElement->id;
+            $packageSpecificationCategory->title = $packageSpecificationCategoryModel->title;
+
+            Craft::$app->elements->saveElement($packageSpecificationCategory);
+            $updatedPackageSpecificationCategories[] = $packageSpecificationCategory->id;
         }
 
         $this->removePackageSpecificationCategories($updatedPackageSpecificationCategories);
