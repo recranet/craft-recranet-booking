@@ -67,6 +67,14 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
+        $this->createTable('{{%_recranet-booking_organizations}}', [
+            'id' => $this->primaryKey(),
+            'organizationId' => $this->integer()->notNull(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+        ]);
+
         return true;
     }
 
@@ -80,6 +88,7 @@ class Install extends Migration
         $this->dropTableIfExists('{{%_recranet-booking_accommodation_categories}}');
         $this->dropTableIfExists('{{%_recranet-booking_locality_categories}}');
         $this->dropTableIfExists('{{%_recranet-booking_package_specification_categories}}');
+        $this->dropTableIfExists('{{%_recranet-booking_organizations}}');
         return true;
     }
 }

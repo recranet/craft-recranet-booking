@@ -17,6 +17,7 @@ use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
+use recranet\craftrecranetbooking\elements\Organization;
 use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
 use recranet\craftrecranetbooking\elements\db\AccommodationQuery;
 use recranet\craftrecranetbooking\fields\AccommodationCategorySelect;
@@ -25,8 +26,8 @@ use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\fields\LocalityCategorySelect;
 use recranet\craftrecranetbooking\fields\PackageSpecificationCategorySelect;
 use recranet\craftrecranetbooking\models\Settings;
-use recranet\craftrecranetbooking\services\AccommodationCategory as AccommodationCategoryService;
 use recranet\craftrecranetbooking\services\Accommodation as AccommodationService;
+use recranet\craftrecranetbooking\services\AccommodationCategory as AccommodationCategoryService;
 use recranet\craftrecranetbooking\services\Facility as FacilityService;
 use recranet\craftrecranetbooking\services\Import;
 use recranet\craftrecranetbooking\services\LocalityCategory as LocalityCategoryService;
@@ -96,9 +97,14 @@ class RecranetBooking extends Plugin
         }
 
         $navItem['label'] = Craft::t('_recranet-booking', 'Recranet Booking');
-        $navItem['url'] = 'recranet-booking';
+        $navItem['url'] = 'recranet-booking/accommodations';
         $navItem['icon'] = '@recranet/craftrecranetbooking/icon-dashboard.svg';
         $navItem['subnav'] = [
+            'organizations' => [
+                'url' => 'recranet-booking/organizations',
+                'badgeCount' => Organization::find()->count(),
+                'label' => Craft::t('_recranet-booking', 'Organizations'),
+            ],
             'accommodations' => [
                 'url' => 'recranet-booking/accommodations',
                 'badgeCount' => Accommodation::find()->count(),
@@ -159,6 +165,9 @@ class RecranetBooking extends Plugin
             $event->rules['recranet-booking/settings'] = ['template' => '_recranet-booking/_settings.twig'];
             $event->rules['actions/_recranet-booking/settings/save-settings'] = '_recranet-booking/settings/save-settings';
             $event->rules['recranet-booking/package-specification-categories'] = ['template' => '_recranet-booking/package-specification-categories/_index.twig'];
+            $event->rules['recranet-booking/organizations'] = ['template' => '_recranet-booking/organizations/_index.twig'];
+            $event->rules['recranet-booking/organizations/new'] = '_recranet-booking/organizations/edit';
+            $event->rules['recranet-booking/organizations/<elementId:\d+>'] = '_recranet-booking/organizations/edit';
         });
     }
 
@@ -221,6 +230,7 @@ class RecranetBooking extends Plugin
             $event->types[] = AccommodationCategory::class;
             $event->types[] = LocalityCategory::class;
             $event->types[] = Facility::class;
+            $event->types[] = Organization::class;
         });
     }
 }

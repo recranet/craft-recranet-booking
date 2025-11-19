@@ -1,0 +1,8 @@
+{% extends '_layouts/elementindex' %}
+{% set title = 'Organizations'|t('app') %}
+{% set elementType = 'recranet\\craftrecranetbooking\\elements\\Organization' %}
+{% set canHaveDrafts = true %}
+
+{% block actionButton %}
+    <a href="{{ cpUrl('recranet-booking/organizations/new') }}" class="btn submit add icon">{{ 'New organization'|t('_recranet-booking') }}</a>
+{% endblock %}
