@@ -5,7 +5,9 @@ namespace recranet\craftrecranetbooking\migrations;
 use Craft;
 use craft\db\Migration;
 use craft\db\Query;
+use craft\helpers\App;
 use craft\helpers\StringHelper;
+use recranet\craftrecranetbooking\RecranetBooking;
 
 /**
  * m251119_143706_add_organization_to_accommodations migration.
@@ -22,10 +24,16 @@ class m251119_143706_add_organization_to_accommodations extends Migration
         $defaultOrgId = null;
 
         if ($hasExistingData) {
+            $organizationId = App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
+
+            if (!$organizationId) {
+                $organizationId = 0;
+            }
+            
             // Create a default organization for existing accommodations
             $this->insert('{{%_recranet-booking_organizations}}', [
                 'title' => 'Default Organization',
-                'organizationId' => 0,
+                'organizationId' => $organizationId,
                 'dateCreated' => date('Y-m-d H:i:s'),
                 'dateUpdated' => date('Y-m-d H:i:s'),
                 'uid' => StringHelper::UUID(),
