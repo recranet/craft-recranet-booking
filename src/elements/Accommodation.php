@@ -20,6 +20,7 @@ use yii\web\Response;
 class Accommodation extends Element
 {
     public int $recranetBookingId = 0;
+    public int $organizationId = 0;
     public null|string $slug = '';
     public null|string $slugDe = '';
     public null|string $slugEn = '';
@@ -296,6 +297,7 @@ class Accommodation extends Element
 
             $record->title = $this->title;
             $record->recranetBookingId = $this->recranetBookingId;
+            $record->organizationId = $this->organizationId;
 
             $record->slug = $this->slug;
             $record->slugDe = $this->slugDe;

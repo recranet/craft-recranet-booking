@@ -3,11 +3,15 @@
 namespace recranet\craftrecranetbooking\services;
 
 use Craft;
+use craft\helpers\App;
 use craft\helpers\ElementHelper;
+use yii\base\Exception;
+use yii\db\IntegrityException;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
+use recranet\craftrecranetbooking\elements\Organization;
 use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
 use recranet\craftrecranetbooking\RecranetBooking;
 use yii\base\Component;
@@ -168,7 +172,18 @@ class Import extends Component
 
     public function importAccommodations(): void
     {
-        $accommodations = RecranetBooking::getInstance()->recranetBookingClient->fetchAccommodations('nl');
+        // TODO: Add foreach organization
+        $organizationId = App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
+
+        $organization = Organization::find()->organizationId($organizationId)->one();
+        if (!$organization) {
+            $organization = new Organization();
+            $organization->organizationId = $organizationId;
+
+            Craft::$app->elements->saveElement($organization);
+        }
+
+        $accommodations = RecranetBooking::getInstance()->recranetBookingClient->fetchAccommodations('nl', $organizationId);
 
         if (!$accommodations) {
             return;
@@ -181,10 +196,12 @@ class Import extends Component
                 ->recranetBookingId($accommodationData['id'])
                 ->one();
 
+            // TODO add organizationId to the model
             $accommodationModel = new AccommodationModel([
                 'title' => $accommodationData['title'],
                 'slug' => $accommodationData['slug'] ?? ElementHelper::generateSlug($accommodationData['title']),
                 'recranetBookingId' => $accommodationData['id'],
+                'organizationId' => $organization->id,
             ]);
 
             $accommodationModel->validate();
@@ -196,31 +213,47 @@ class Import extends Component
             $accommodation->title = $accommodationModel->title;
             $accommodation->slug = $accommodationModel->slug;
             $accommodation->recranetBookingId = $accommodationModel->recranetBookingId;
+            $accommodation->organizationId = $accommodationModel->organizationId;
 
-            Craft::$app->elements->saveElement($accommodation);
+            try {
+                Craft::$app->elements->saveElement($accommodation);
+            } catch (IntegrityException $e) {
+                // Check if this is a foreign key constraint violation for organizationId
+                if (str_contains($e->getMessage(), 'organizationId')) {
+                    throw new Exception(
+                        "Failed to save accommodation '{$accommodationModel->title}' (ID: {$accommodationModel->recranetBookingId}). " .
+                        "Organization with ID {$organizationId} not found. " .
+                        "Please create the organization in the Control Panel at " .
+                        "/admin/recranet-booking/organizations/new before importing accommodations.",
+                        0,
+                        $e
+                    );
+                }
+                // Re-throw if it's a different integrity constraint violation
+                throw $e;
+            }
 
             // I need to keep track of the imported accommodations
             $updatedAccommodations[] = $accommodation->id;
         }
 
-        $this->importTranslatedAccommodationSlugs();
+        $this->importTranslatedAccommodationSlugs($organization);
         $this->removeAccommodations($updatedAccommodations);
     }
 
-    public function importTranslatedAccommodationSlugs(): void
+    public function importTranslatedAccommodationSlugs(Organization $organization): void
     {
         $locales = ['de', 'en', 'fr'];
         $translatedAccommodations = [];
 
         foreach ($locales as $locale) {
-            $accommodations = RecranetBooking::getInstance()->recranetBookingClient->fetchAccommodations($locale);
+            $accommodations = RecranetBooking::getInstance()->recranetBookingClient->fetchAccommodations($locale, $organization->organizationId);
 
             if (!$accommodations) {
                 continue;
             }
 
             $translatedAccommodations[$locale] = array_map(function ($accommodation) {
-
                 return [
                     'id' => $accommodation['id'],
                     'title' => $accommodation['content']['title'],

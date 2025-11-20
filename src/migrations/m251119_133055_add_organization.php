@@ -17,6 +17,7 @@ class m251119_133055_add_organization extends Migration
     {
         $this->createTable('{{%_recranet-booking_organizations}}', [
             'id' => $this->primaryKey(),
+            'title' => $this->string()->notNull(),
             'organizationId' => $this->integer()->notNull(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),

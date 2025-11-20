@@ -89,9 +89,8 @@ class RecranetBookingClient extends Component
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function fetchAccommodations(string $locale): ?array
+    public function fetchAccommodations(string $locale, int $organizationId): ?array
     {
-        $organizationId = App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
 
         if (!$organizationId) {
             return [];
