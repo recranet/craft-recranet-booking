@@ -1,10 +1,10 @@
 {% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 
-{% set title = element.title ?? "Create a new download"|t('craft-gated-downloads') %}
+{% set title = element.title ?? "Create a new organization"|t('_recranet-booking') %}
 
 {% set crumbs = [
-    { label: "Downloads"|t('craft-gated-downloads'), url: cpUrl('elloro-gated-downloads/downloads') }
+    { label: "Organizations"|t('_recranet-booking'), url: cpUrl('recranet-booking/organizations') }
 ] %}
 
 {% set fullPageForm = true %}
@@ -24,23 +24,11 @@
                     </a>
                 </li>
                 <li>
-                    <a class="formsubmit" data-redirect="{{ cpUrl('elloro-gated-downloads/downloads/new')|hash }}">
+                    <a class="formsubmit" data-redirect="{{ cpUrl('recranet-booking/organizations/new')|hash }}">
                         {{ "Save and add another"|t('app') }}
                     </a>
                 </li>
             </ul>
-            {% if not isNew %}
-                <hr>
-                <ul>
-                    <li>
-                        <a class="formsubmit error" data-action="craft-gated-downloads/downloads/delete"
-                           data-confirm="{{ 'Are you sure you want to delete this download?'|t('craft-gated-downloads') }}"
-                           data-redirect="{{ cpUrl('elloro-gated-downloads/downloads')|hash }}">
-                            {{ 'Delete'|t('app') }}
-                        </a>
-                    </li>
-                </ul>
-            {% endif %}
         </div>
     </div>
 {% endblock %}
@@ -64,11 +52,12 @@
             required: true
         }) }}
 
-        {{ forms.textField({
+        {{ forms.autosuggestField({
             label: "Organization ID"|t('app'),
             id: 'organizationId',
             name: 'organizationId',
             value: element.organizationId,
+            suggestEnvVars: true,
             errors: element.getErrors('organizationId'),
             first: true,
             autofocus: true,

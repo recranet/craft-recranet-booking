@@ -24,7 +24,7 @@ class OrganizationsController extends Controller
             ;
 
             if (!$element) {
-                throw new NotFoundHttpExceptionAlias('Download not found');
+                throw new NotFoundHttpExceptionAlias('Organization not found');
             }
         }
 
@@ -59,7 +59,7 @@ class OrganizationsController extends Controller
         }
 
         $element->title = $request->getBodyParam('title');
-        $element->organizationId = $request->getBodyParam('organizationId');
+        $element->organizationId = (int) $request->getBodyParam('organizationId');
 
         // Save the element
         if (!Craft::$app->getElements()->saveElement($element)) {
