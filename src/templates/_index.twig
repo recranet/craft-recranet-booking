@@ -1,0 +1,25 @@
+{% extends "_layouts/cp.twig" %}
+{% set title = 'Recranet Booking'|t('app') %}
+
+{% block content %}
+    <div>
+        <h2>{{ 'Configure organizations'|t }}</h2>
+        <ul>
+            <li><a href="recranet-booking/organizations">{{ 'Organizations'|t }}</a></li>
+        </ul>
+
+        <h2>{{ 'View imported entities'|t }}</h2>
+        <ul>
+            <li><a href="recranet-booking/accommodations">{{ 'Stays'|t }}</a></li>
+            <li><a href="recranet-booking/facilities">{{ 'Facilities'|t }}</a></li>
+            <li><a href="recranet-booking/accommodation-categories">{{ 'Types'|t }}</a></li>
+            <li><a href="recranet-booking/locality-categories">{{ 'Localities'|t }}</a></li>
+            <li><a href="recranet-booking/package-specification-categories">{{ 'Package groups'|t }}</a></li>
+        </ul>
+
+        <h2>{{ 'View imported entities'|t }}</h2>
+        <ul>
+            <li><a href="recranet-booking/settings">{{ 'Settings'|t }}</a></li>
+        </ul>
+    </div>
+{% endblock %}

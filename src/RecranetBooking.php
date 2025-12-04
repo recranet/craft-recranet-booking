@@ -97,7 +97,7 @@ class RecranetBooking extends Plugin
         }
 
         $navItem['label'] = Craft::t('_recranet-booking', 'Recranet Booking');
-        $navItem['url'] = 'recranet-booking/accommodations';
+        $navItem['url'] = 'recranet-booking';
         $navItem['icon'] = '@recranet/craftrecranetbooking/icon-dashboard.svg';
         $navItem['subnav'] = [
             'organizations' => [
