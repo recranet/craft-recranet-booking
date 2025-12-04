@@ -3,6 +3,7 @@
 namespace recranet\craftrecranetbooking\controllers;
 
 use Craft;
+use craft\helpers\App;
 use craft\web\Controller;
 use recranet\craftrecranetbooking\elements\Organization;
 use yii\web\Response;
@@ -59,7 +60,7 @@ class OrganizationsController extends Controller
         }
 
         $element->title = $request->getBodyParam('title');
-        $element->organizationId = (int) $request->getBodyParam('organizationId');
+        $element->organizationId = (int) App::parseEnv($request->getBodyParam('organizationId'));
 
         // Save the element
         if (!Craft::$app->getElements()->saveElement($element)) {
