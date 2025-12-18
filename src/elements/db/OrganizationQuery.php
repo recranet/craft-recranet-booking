@@ -23,7 +23,9 @@ class OrganizationQuery extends ElementQuery
         $this->query->select([
             '_recranet-booking_organizations.dateCreated',
             '_recranet-booking_organizations.dateUpdated',
-            '_recranet-booking_organizations.organizationId',
+            '_recranet-booking_organizations.recranetBookingId',
+            '_recranet-booking_organizations.bookPageEntry',
+            '_recranet-booking_organizations.bookPageEntryTemplate',
         ]);
 
         return parent::beforePrepare();

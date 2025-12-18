@@ -21,6 +21,7 @@ use recranet\craftrecranetbooking\models\LocalityCategory as LocalityCategoryMod
 class LocalityCategory extends Element
 {
     public int $recranetBookingId = 0;
+    public ?int $organizationId = null;
 
     public static function displayName(): string
     {
@@ -259,6 +260,7 @@ class LocalityCategory extends Element
 
             $record->title = $this->title;
             $record->recranetBookingId = $this->recranetBookingId;
+            $record->organizationId = $this->organizationId;
 
             $record->save();
         }

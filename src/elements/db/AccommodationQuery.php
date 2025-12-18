@@ -88,6 +88,12 @@ class AccommodationQuery extends ElementQuery
         return $this;
     }
 
+    public function organizationId($value): self
+    {
+        $this->organizationId = $value;
+        return $this;
+    }
+
     public function slugDe($value): self
     {
         $this->slugDe = $value;

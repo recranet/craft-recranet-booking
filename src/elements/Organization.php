@@ -4,6 +4,7 @@ namespace recranet\craftrecranetbooking\elements;
 
 use Craft;
 use craft\base\Element;
+use craft\elements\Entry;
 use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
@@ -19,7 +20,23 @@ use recranet\craftrecranetbooking\records\Organization as OrganizationRecord;
  */
 class Organization extends Element
 {
-    public int $organizationId = 0;
+    public ?int $recranetBookingId = null;
+    public int|null $bookPageEntry = null;
+    public string $bookPageEntryTemplate = '';
+
+    public function getBookPageEntry(): ?Entry
+    {
+        if (!$this->bookPageEntry) {
+            return null;
+        }
+
+        return Craft::$app->entries->getEntryById($this->bookPageEntry, Craft::$app->getSites()->getCurrentSite()->getId());
+    }
+
+    public function getBookPageEntryTemplate(): string
+    {
+        return $this->bookPageEntryTemplate ?: '';
+    }
 
     public static function displayName(): string
     {
@@ -130,7 +147,9 @@ class Organization extends Element
     protected static function defineTableAttributes(): array
     {
         return [
-            'organizationId' => ['label' => Craft::t('app', 'Recranet Booking organization ID')],
+            'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking organization ID')],
+            'bookPageEntry' => ['label' => Craft::t('app', 'Book page entry')],
+            'bookPageEntryTemplate' => ['label' => Craft::t('app', 'Book page entry template')],
         ];
     }
 
@@ -138,7 +157,9 @@ class Organization extends Element
     {
         return [
             'title',
-            'organizationId'
+            'recranetBookingId',
+            'bookPageEntry',
+            'bookPageEntryTemplate',
         ];
     }
 
@@ -247,7 +268,9 @@ class Organization extends Element
             }
 
             $record->title = $this->title;
-            $record->organizationId = $this->organizationId;
+            $record->recranetBookingId = $this->recranetBookingId;
+            $record->bookPageEntry = $this->bookPageEntry;
+            $record->bookPageEntryTemplate = $this->bookPageEntryTemplate;
 
             $record->save();
         }
@@ -260,7 +283,7 @@ class Organization extends Element
         parent::afterDelete();
 
         Craft::$app->db->createCommand()
-            ->delete('{{%_recranet-booking_organizations}}', ['organizationId' => $this->organizationId])
+            ->delete('{{%_recranet-booking_organizations}}', ['recranetBookingId' => $this->recranetBookingId])
             ->execute();
     }
 }

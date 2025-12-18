@@ -24,15 +24,15 @@ class SitemapController extends Controller
     {
         $accommodations = Accommodation::find()->all();
         $currentSite = Craft::$app->getSites()->getCurrentSite();
-        $pageBook = RecranetBooking::getInstance()->getSettings()->getBookPageEntry();
+        $bookPage = RecranetBooking::getInstance()->getSettings()->getBookPageEntry();
 
-        $pageBookEntry = Entry::find()
+        $bookPageEntry = Entry::find()
             ->section('*')
             ->site($currentSite)
-            ->id($pageBook->id)
+            ->id($bookPage->id)
             ->one();
 
-        if (!$pageBookEntry) {
+        if (!$bookPageEntry) {
             return $this->asJson('Failed to find the booking page entry.');
         }
 
@@ -41,7 +41,7 @@ class SitemapController extends Controller
 
         return $this->renderTemplate('_recranet-booking/sitemap/_accommodations', [
             'accommodations' => $accommodations,
-            'baseUrl' => $pageBookEntry,
+            'baseUrl' => $bookPageEntry,
         ]);
     }
 }

@@ -20,6 +20,7 @@ use recranet\craftrecranetbooking\records\Facility as FacilityRecord;
 class Facility extends Element
 {
     public int $recranetBookingId = 0;
+    public ?int $organizationId = null;
 
     public static function displayName(): string
     {
@@ -256,6 +257,7 @@ class Facility extends Element
 
             $record->title = $this->title;
             $record->recranetBookingId = $this->recranetBookingId;
+            $record->organizationId = $this->organizationId;
 
             $record->save();
         }

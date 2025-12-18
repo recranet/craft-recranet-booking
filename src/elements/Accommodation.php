@@ -20,7 +20,7 @@ use yii\web\Response;
 class Accommodation extends Element
 {
     public int $recranetBookingId = 0;
-    public int $organizationId = 0;
+    public ?int $organizationId = null;
     public null|string $slug = '';
     public null|string $slugDe = '';
     public null|string $slugEn = '';

@@ -4,6 +4,7 @@ namespace recranet\craftrecranetbooking\console\controllers;
 
 use Craft;
 use craft\console\Controller;
+use recranet\craftrecranetbooking\elements\Organization;
 use recranet\craftrecranetbooking\RecranetBooking;
 use yii\console\ExitCode;
 
@@ -12,6 +13,16 @@ use yii\console\ExitCode;
  */
 class ImportController extends Controller
 {
+    public ?string $organizationId = null;
+
+    public function options($actionID): array
+    {
+        $options = parent::options($actionID);
+        $options[] = 'organizationId';
+
+        return $options;
+    }
+
     public function actionIndex(): int
     {
         $this->actionAccommodations();
@@ -29,17 +40,17 @@ class ImportController extends Controller
      */
     public function actionAccommodations(): int
     {
-        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+        $organization = $this->getOrganization();
 
-        if (!$organizationId) {
-            $this->stderr('Organization ID is not set in the plugin settings.', ExitCode::UNSPECIFIED_ERROR);
+        if (!$organization || $organization->recranetBookingId) {
+            $this->stderr('No valid Organization ID provided.', ExitCode::UNSPECIFIED_ERROR);
+
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $this->stdout("Importing all accommodations...\n");
 
-
-        RecranetBooking::getInstance()->import->importAccommodations();
+        RecranetBooking::getInstance()->import->importAccommodations($organization);
 
         return ExitCode::OK;
     }
@@ -50,16 +61,17 @@ class ImportController extends Controller
      */
     public function actionAccommodationCategories(): int
     {
-        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+        $organization = $this->getOrganization();
 
-        if (!$organizationId) {
-            $this->stderr('Organization ID is not set in the plugin settings.', ExitCode::UNSPECIFIED_ERROR);
+        if (!$organization || $organization->recranetBookingId) {
+            $this->stderr('No valid Organization ID provided.', ExitCode::UNSPECIFIED_ERROR);
+
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $this->stdout("Importing all accommodation categories...\n");
 
-        RecranetBooking::getInstance()->import->importAccommodationCategories();
+        RecranetBooking::getInstance()->import->importAccommodationCategories($organization);
 
         return ExitCode::OK;
     }
@@ -70,16 +82,17 @@ class ImportController extends Controller
      */
     public function actionLocalityCategories(): int
     {
-        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+        $organization = $this->getOrganization();
 
-        if (!$organizationId) {
-            $this->stderr('Organization ID is not set in the plugin settings.', ExitCode::UNSPECIFIED_ERROR);
+        if (!$organization || $organization->recranetBookingId) {
+            $this->stderr('No valid Organization ID provided.', ExitCode::UNSPECIFIED_ERROR);
+
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $this->stdout("Importing all locality categories...\n");
 
-        RecranetBooking::getInstance()->import->importLocalityCategories();
+        RecranetBooking::getInstance()->import->importLocalityCategories($organization);
 
         return ExitCode::OK;
     }
@@ -90,16 +103,17 @@ class ImportController extends Controller
      */
     public function actionPackageSpecificationCategories(): int
     {
-        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+        $organization = $this->getOrganization();
 
-        if (!$organizationId) {
-            $this->stderr('Organization ID is not set in the plugin settings.', ExitCode::UNSPECIFIED_ERROR);
+        if (!$organization || $organization->recranetBookingId) {
+            $this->stderr('No valid Organization ID provided.', ExitCode::UNSPECIFIED_ERROR);
+
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $this->stdout("Importing all package specification categories...\n");
 
-        RecranetBooking::getInstance()->import->importPackageSpecificationCategories();
+        RecranetBooking::getInstance()->import->importPackageSpecificationCategories($organization);
 
         return ExitCode::OK;
     }
@@ -110,17 +124,27 @@ class ImportController extends Controller
      */
     public function actionFacilities(): int
     {
-        $organizationId = RecranetBooking::getInstance()->getSettings()->organizationId;
+        $organization = $this->getOrganization();
 
-        if (!$organizationId) {
-            $this->stderr('Organization ID is not set in the plugin settings.', ExitCode::UNSPECIFIED_ERROR);
+        if (!$organization || $organization->recranetBookingId) {
+            $this->stderr('No valid Organization ID provided.', ExitCode::UNSPECIFIED_ERROR);
+
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $this->stdout("Importing all facilities...\n");
 
-        RecranetBooking::getInstance()->import->importFacilities();
+        RecranetBooking::getInstance()->import->importFacilities($organization);
 
         return ExitCode::OK;
+    }
+
+    private function getOrganization(): ?Organization
+    {
+        if ($this->organizationId) {
+            return Organization::findOne(['recranetBookingId' => $this->organizationId]);
+        }
+
+        return null;
     }
 }

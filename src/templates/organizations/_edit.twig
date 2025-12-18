@@ -54,16 +54,46 @@
 
         {{ forms.autosuggestField({
             label: "Organization ID"|t('app'),
-            id: 'organizationId',
-            name: 'organizationId',
-            value: element.organizationId,
-            suggestEnvVars: true,
-            errors: element.getErrors('organizationId'),
+            id: 'recranetBookingId',
+            name: 'recranetBookingId',
+            value: element.recranetBookingId,
+            errors: element.getErrors('recranetBookingId'),
             first: true,
             autofocus: true,
             required: true
         }) }}
 
+        {{ forms.elementSelectField({
+            label: "Book page"|t("_recranet-booking"),
+            id: 'bookPageEntry',
+            name: 'bookPageEntry',
+            elementType: 'craft\\elements\\Entry',
+            selectionLabel: "Choose an entry"|t("_recranet-booking"),
+            required: true,
+            limit: 1,
+            elements: element.getBookPageEntry() ? [element.getBookPageEntry()] : [],
+            errors: element.getErrors('bookPageEntry'),
+        }) }}
+
+        {{ forms.autosuggestField({
+            label: "Book page template path"|t("_recranet-booking"),
+            id: 'bookPageEntryTemplate',
+            required: true,
+            name: 'bookPageEntryTemplate',
+            value: element.bookPageEntryTemplate ?? '',
+            errors: element.getErrors('bookPageEntryTemplate'),
+        }) }}
+
+        {{ forms.select({
+            label: "Site"|t('app'),
+            id: 'siteId',
+            name: 'siteId',
+            value: value ?? '',
+            required: true,
+            options: [
+                { label: 'Choose a site'|t('app'), value: '' },
+            ]|merge(sites),
+        }) }}
     </div>
 {% endblock %}
 

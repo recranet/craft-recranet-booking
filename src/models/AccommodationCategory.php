@@ -12,12 +12,13 @@ class AccommodationCategory extends Model
 {
     public string $title;
     public int $recranetBookingId;
+    public int $organizationId;
 
     protected function defineRules(): array
     {
         return array_merge(parent::defineRules(), [
-            [['recranetBookingId', 'title'], 'required'],
-            [['recranetBookingId'], 'integer'],
+            [['recranetBookingId', 'organizationId', 'title'], 'required'],
+            [['recranetBookingId', 'organizationId'], 'integer'],
             [['title'], 'string', 'max' => 255],
         ]);
     }

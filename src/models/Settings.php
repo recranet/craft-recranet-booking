@@ -11,9 +11,9 @@ use craft\elements\Entry;
  */
 class Settings extends Model
 {
-    public string $organizationId = '';
+    public string|null $organizationId = null;
     public int|null $bookPageEntry = null;
-    public string $bookPageEntryTemplate = '';
+    public string|null $bookPageEntryTemplate = null;
     public bool $sitemapEnabled = true;
 
     public function getBookPageEntry(): ?Entry
@@ -21,16 +21,15 @@ class Settings extends Model
         return $this->bookPageEntry ? Craft::$app->entries->getEntryById($this->bookPageEntry) : null;
     }
 
-    public function getBookPageEntryTemplate(): string
+    public function getBookPageEntryTemplate(): ?string
     {
-        return $this->bookPageEntryTemplate ?: '';
+        return $this->bookPageEntryTemplate;
     }
 
     public function rules(): array
     {
         return [
-            [['bookPageEntry', 'organizationId', 'bookPageEntryTemplate'], 'required'],
-            [['bookPageEntry'], 'integer'],
+            [['bookPageEntry', 'organizationId'], 'integer'],
             [['sitemapEnabled'], 'boolean'],
             [['sitemapEnabled'], 'default', 'value' => true],
         ];

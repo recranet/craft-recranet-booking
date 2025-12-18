@@ -24,9 +24,11 @@ use recranet\craftrecranetbooking\fields\AccommodationCategorySelect;
 use recranet\craftrecranetbooking\fields\AccommodationSelect;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\fields\LocalityCategorySelect;
+use recranet\craftrecranetbooking\fields\OrganizationSelect;
 use recranet\craftrecranetbooking\fields\PackageSpecificationCategorySelect;
 use recranet\craftrecranetbooking\models\Settings;
 use recranet\craftrecranetbooking\services\Accommodation as AccommodationService;
+use recranet\craftrecranetbooking\services\Organization as OrganizationService;
 use recranet\craftrecranetbooking\services\AccommodationCategory as AccommodationCategoryService;
 use recranet\craftrecranetbooking\services\Facility as FacilityService;
 use recranet\craftrecranetbooking\services\Import;
@@ -47,6 +49,7 @@ use yii\base\Event;
  * @property-read AccommodationCategoryService $accommodationCategoryService
  * @property-read FacilityService $facilityService
  * @property-read LocalityCategoryService $localityCategoryService
+ * @property-read OrganizationService $organizationService
  * @property-read PackageSpecificationCategoryService $packageSpecificationCategoryService
  */
 class RecranetBooking extends Plugin
@@ -65,6 +68,7 @@ class RecranetBooking extends Plugin
                 'accommodationCategoryService' => AccommodationCategoryService::class,
                 'facilityService' => FacilityService::class,
                 'localityCategoryService' => LocalityCategoryService::class,
+                'organizationService' => OrganizationService::class,
                 'packageSpecificationCategoryService' => PackageSpecificationCategoryService::class
             ],
         ];
@@ -180,15 +184,19 @@ class RecranetBooking extends Plugin
 
     private function _registerSiteUrlRules(): void
     {
-
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
-                $pageBook = RecranetBooking::getInstance()->getSettings()->getBookPageEntry();
+                $organization = $this->organizationService->getOrganizationBySite();
+                $bookPage = $organization?->getBookPageEntry();
 
-                $event->rules[$pageBook->uri . '/<slug:[^/]+>'] = '_recranet-booking/accommodations-routing/accommodation';
-                $event->rules[$pageBook->uri . '/<slug:[^/]+>/<page:[^/]+>'] = '_recranet-booking/accommodations-routing';
+                if (!$bookPage) {
+                    return;
+                }
+
+                $event->rules[$bookPage->uri . '/<slug:[^/]+>'] = '_recranet-booking/accommodations-routing/accommodation';
+                $event->rules[$bookPage->uri . '/<slug:[^/]+>/<page:[^/]+>'] = '_recranet-booking/accommodations-routing';
             }
         );
     }
@@ -207,6 +215,7 @@ class RecranetBooking extends Plugin
             $event->types[] = LocalityCategorySelect::class;
             $event->types[] = AccommodationCategorySelect::class;
             $event->types[] = AccommodationSelect::class;
+            $event->types[] = OrganizationSelect::class;
             $event->types[] = PackageSpecificationCategorySelect::class;
         });
     }
@@ -232,5 +241,20 @@ class RecranetBooking extends Plugin
             $event->types[] = Facility::class;
             $event->types[] = Organization::class;
         });
+    }
+
+    public function install(): void
+    {
+        $fieldsService = Craft::$app->fields;
+
+        $field = new OrganizationSelect([
+            'name' => 'Organization',
+            'handle' => 'siteOrganization',
+        ]);
+
+        $fieldsService->saveField($field);
+
+
+        parent::install();
     }
 }

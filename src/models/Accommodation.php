@@ -24,7 +24,7 @@ class Accommodation extends Model
     protected function defineRules(): array
     {
         return array_merge(parent::defineRules(), [
-            [['recranetBookingId', 'title', 'slug', 'organizationId'], 'required'],
+            [['recranetBookingId', 'organizationId', 'title', 'slug'], 'required'],
             [['recranetBookingId', 'organizationId'], 'integer'],
             [['slug', 'slugDe', 'slugEn', 'slugFr', 'titleDe', 'titleEn', 'titleFr'], 'match', 'pattern' => '/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
             ['title', 'string', 'max' => 255],

@@ -34,6 +34,7 @@ class OrganizationsController extends Controller
         }
 
         $variables = [
+            'sites' => $this->getSites(),
             'element' => $element,
             'isNew' => !$element->id,
             'continueEditingUrl' => '_recranet-booking/organizations/' . $element->id
@@ -50,24 +51,30 @@ class OrganizationsController extends Controller
         $elementId = $request->getBodyParam('elementId');
 
         if ($elementId) {
-            $element = Organization::find()->id($elementId)->one();
+            $organization = Organization::find()->id($elementId)->one();
 
-            if (!$element) {
+            if (!$organization) {
                 throw new NotFoundHttpExceptionAlias('Organization not found');
             }
         } else {
-            $element = new Organization();
+            $organization = new Organization();
         }
 
-        $element->title = $request->getBodyParam('title');
-        $element->organizationId = (int) App::parseEnv($request->getBodyParam('organizationId'));
+        $organization->title = $request->getBodyParam('title');
+        $organization->recranetBookingId = (int) $request->getBodyParam('recranetBookingId');
+        $organization->bookPageEntry = (int) $request->getBodyParam('bookPageEntry');
+        $organization->bookPageEntryTemplate = $request->getBodyParam('bookPageEntryTemplate');
+
+        $site = Craft::$app->getSites()->getCurrentSite();
+        $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
+        $globalSet?->setFieldValue('organizationId', $organization->getId());
 
         // Save the element
-        if (!Craft::$app->getElements()->saveElement($element)) {
+        if (!Craft::$app->getElements()->saveElement($organization)) {
             Craft::$app->getSession()->setError(Craft::t('_recranet-booking', 'Could not save organization.'));
 
             Craft::$app->getUrlManager()->setRouteParams([
-                'element' => $element,
+                'element' => $organization,
             ]);
 
             return null;
@@ -75,7 +82,7 @@ class OrganizationsController extends Controller
 
         Craft::$app->getSession()->setNotice(Craft::t('_recranet-booking', 'Organization saved.'));
 
-        return $this->redirectToPostedUrl($element);
+        return $this->redirectToPostedUrl($organization);
     }
 
     public function actionDelete(): Response
@@ -96,5 +103,19 @@ class OrganizationsController extends Controller
 
         Craft::$app->getSession()->setNotice(Craft::t('_recranet-booking', 'Organization deleted.'));
         return $this->asJson(['success' => true]);
+    }
+
+    /**
+     * Retrieves all sites in an id, name pair, suitable for the underlying options display.
+     */
+    private function getSites()
+    {
+        $sites = [];
+
+        foreach (Craft::$app->getSites()->getAllSites() as $site) {
+            $sites[$site->uid] = Craft::t('site', $site->name);
+        }
+
+        return $sites;
     }
 }

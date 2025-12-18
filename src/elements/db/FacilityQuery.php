@@ -11,6 +11,7 @@ use craft\elements\db\ElementQuery;
 class FacilityQuery extends ElementQuery
 {
     public int $recranetBookingId = 0;
+    public int $organizationId = 0;
 
     protected function beforePrepare(): bool
     {
@@ -20,10 +21,15 @@ class FacilityQuery extends ElementQuery
             $this->subQuery->andWhere(['recranetBookingId' => $this->recranetBookingId]);
         }
 
+        if ($this->organizationId) {
+            $this->subQuery->andWhere(['organizationId' => $this->organizationId]);
+        }
+
         $this->query->select([
             '_recranet-booking_facilities.dateCreated',
             '_recranet-booking_facilities.dateUpdated',
             '_recranet-booking_facilities.recranetBookingId',
+            '_recranet-booking_facilities.organizationId',
         ]);
 
         return parent::beforePrepare();
@@ -32,6 +38,12 @@ class FacilityQuery extends ElementQuery
     public function recranetBookingId($value): self
     {
         $this->recranetBookingId = $value;
+        return $this;
+    }
+
+    public function organizationId($value): self
+    {
+        $this->organizationId = $value;
         return $this;
     }
 }

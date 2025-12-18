@@ -9,6 +9,14 @@ use craft\db\Migration;
  */
 class Install extends Migration
 {
+    public const ENTITIES = [
+        'accommodations',
+        'accommodation_categories',
+        'facilities',
+        'locality_categories',
+        'package_specification_categories',
+    ];
+
     /**
      * @inheritdoc
      */
@@ -18,6 +26,7 @@ class Install extends Migration
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
+            'organizationId' => $this->integer()->notNull(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
@@ -27,6 +36,7 @@ class Install extends Migration
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
+            'organizationId' => $this->integer()->notNull(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
@@ -36,6 +46,7 @@ class Install extends Migration
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
+            'organizationId' => $this->integer()->notNull(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
@@ -45,11 +56,11 @@ class Install extends Migration
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
+            'organizationId' => $this->integer()->notNull(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
         ]);
-
 
         $this->createTable('{{%_recranet-booking_accommodations}}', [
             'id' => $this->primaryKey(),
@@ -62,6 +73,7 @@ class Install extends Migration
             'titleDe' => $this->string(),
             'titleFr' => $this->string(),
             'recranetBookingId' => $this->integer()->notNull(),
+            'organizationId' => $this->integer()->notNull(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
@@ -70,11 +82,26 @@ class Install extends Migration
         $this->createTable('{{%_recranet-booking_organizations}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
-            'organizationId' => $this->integer()->notNull(),
+            'recranetBookingId' => $this->integer()->notNull(),
+            'bookPageEntry' => $this->integer()->notNull(),
+            'bookPageEntryTemplate' => $this->string()->notNull(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
         ]);
+
+        foreach (self::ENTITIES as $entity) {
+
+            $this->addForeignKey(
+                "{$entity}_organizationId",
+                "{{%_recranet-booking_$entity}}",
+                'organizationId',
+                '{{%_recranet-booking_organizations}}',
+                'id',
+                'CASCADE',
+                'CASCADE'
+            );
+        }
 
         return true;
     }
@@ -84,12 +111,14 @@ class Install extends Migration
      */
     public function safeDown(): bool
     {
-        $this->dropTableIfExists('{{%_recranet-booking_facilities}}');
-        $this->dropTableIfExists('{{%_recranet-booking_accommodations}}');
-        $this->dropTableIfExists('{{%_recranet-booking_accommodation_categories}}');
-        $this->dropTableIfExists('{{%_recranet-booking_locality_categories}}');
-        $this->dropTableIfExists('{{%_recranet-booking_package_specification_categories}}');
-        $this->dropTableIfExists('{{%_recranet-booking_organizations}}');
+        $entities = self::ENTITIES;
+        $entities[] = '_recranet-booking_organizations';
+
+        foreach ($entities as $entity) {
+            $this->dropAllForeignKeysToTable("{{%_recranet-booking_$entity}}");
+            $this->dropTableIfExists("{{%_recranet-booking_$entity}}");
+        }
+
         return true;
     }
 }
