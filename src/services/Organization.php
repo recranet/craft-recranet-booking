@@ -4,6 +4,7 @@ namespace recranet\craftrecranetbooking\services;
 
 use Craft;
 use craft\elements\Entry;
+use craft\errors\InvalidFieldException;
 use craft\helpers\App;
 use craft\models\Site;
 use yii\base\Component;
@@ -22,7 +23,7 @@ class Organization extends Component
             try {
                 Craft::$app->elements->deleteElement($organization);
             } catch (\Throwable $e) {
-                Craft::error("Failed to delete accommodation with ID {$organization->id}: " . $e->getMessage(), __METHOD__);
+                Craft::error("Failed to delete accommodation with ID $organization->id: " . $e->getMessage(), __METHOD__);
             }
         }
     }
@@ -37,7 +38,38 @@ class Organization extends Component
 
         $organizationId = $globalSet?->getFieldValue('organizationId');
 
+        if (!$organizationId) {
+            return null;
+        }
+
         return OrganizationElement::find()->id($organizationId)->one();
+    }
+
+    /**
+     * @param OrganizationElement $organization
+     * @return Site[]
+     * @throws InvalidFieldException
+     */
+    public function getSitesByOrganization(OrganizationElement $organization): array
+    {
+        $sites = [];
+
+        foreach(Craft::$app->getSites()->getAllSites() as $site) {
+            $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
+
+            dd();
+            if (empty($globalSet->getFieldValues(['organizationId']))) {
+                continue;
+            }
+
+            $organizationId = $globalSet->getFieldValue('organizationId');
+
+            if ($organizationId && $organizationId === $organization->id) {
+                $sites[] = $site;
+            }
+        }
+
+        return $sites;
     }
 
     public function getBookPageEntryBySite(Site $site = null): ?Entry
@@ -45,5 +77,18 @@ class Organization extends Component
         $organization = $this->getOrganizationBySite($site);
 
         return $organization?->getBookPageEntry();
+    }
+
+    public function getUnlinkedSites(): array
+    {
+        $unlinkedSites = [];
+
+        foreach (Craft::$app->getSites()->getAllSites() as $site) {
+            if (is_null($this->getOrganizationBySite($site))) {
+                $unlinkedSites[] = $site;
+            }
+        }
+
+        return $unlinkedSites;
     }
 }

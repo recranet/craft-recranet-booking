@@ -3,16 +3,22 @@
 namespace recranet\craftrecranetbooking\migrations;
 
 use Craft;
+use craft\base\Field;
 use craft\db\Migration;
 use craft\db\Query;
+use craft\elements\GlobalSet;
+use craft\fieldlayoutelements\CustomField;
 use craft\helpers\App;
 use craft\helpers\StringHelper;
+use craft\models\FieldLayout;
+use craft\models\FieldLayoutTab;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
 use recranet\craftrecranetbooking\elements\Organization as OrganizationElement;
 use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
+use recranet\craftrecranetbooking\fields\OrganizationDropdown;
 use recranet\craftrecranetbooking\RecranetBooking;
 
 /**
@@ -28,6 +34,8 @@ class m251119_133055_add_organization extends Migration
         'package_specification_categories' => PackageSpecificationCategory::class,
     ];
 
+    private ?int $defaultOrganizationId = null;
+
     public function safeUp(): bool
     {
         $this->createTable('{{%_recranet-booking_organizations}}', [
@@ -41,9 +49,11 @@ class m251119_133055_add_organization extends Migration
             'uid' => $this->uid(),
         ]);
 
-        $organizationId = App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
+        $organizationId = (int) App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
         $bookPageEntry = RecranetBooking::getInstance()->getSettings()->bookPageEntry;
         $bookPageEntryTemplate = RecranetBooking::getInstance()->getSettings()->bookPageEntryTemplate;
+
+        $this->configureGlobalSet();
 
         if ($organizationId) {
             $this->insert('{{%_recranet-booking_organizations}}', [
@@ -59,7 +69,7 @@ class m251119_133055_add_organization extends Migration
             $defaultSite = Craft::$app->getSites()->getPrimarySite();
 
             $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $defaultSite->id);
-            $globalSet?->setFieldValue('organizationId', $organizationId);
+            $globalSet->setFieldValue('organizationId', $organizationId);
         }
 
         foreach (array_keys(self::ENTITIES) as $entity) {
@@ -75,15 +85,9 @@ class m251119_133055_add_organization extends Migration
     public function safeDown(): bool
     {
         $defaultSite = Craft::$app->getSites()->getPrimarySite();
-        $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $defaultSite->id);
-        $defaultOrganizationId = $globalSet?->getFieldValue('organizationId');
-
-        if ($defaultOrganizationId) {
-            $defaultOrganization = OrganizationElement::findOne(['recranetBookingId' => $defaultOrganizationId]);
-            RecranetBooking::getInstance()->getSettings()->organizationId = $defaultOrganization->recranetBookingId;
-            RecranetBooking::getInstance()->getSettings()->bookPageEntry = $defaultOrganization->getBookPageEntry()->getId();
-            RecranetBooking::getInstance()->getSettings()->bookPageEntryTemplate = $defaultOrganization->getBookPageEntryTemplate();
-        }
+        $defaultSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $defaultSite->id);
+        Craft::$app->getGlobals()->deleteSet($defaultSet);
+        $this->defaultOrganizationId = $defaultSet?->getFieldValue('organizationId');
 
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
             if ($site->getId() === $defaultSite->getId()) {
@@ -97,18 +101,23 @@ class m251119_133055_add_organization extends Migration
             }
 
             $organizationId = $globalSet->getFieldValue('organizationId');
-            $organization = OrganizationElement::findOne(['recranetBookingId' => $organizationId]);
+
+            if (!$organizationId) {
+                continue;
+            }
+
+            $organization = OrganizationElement::findOne()->recranetBookingId = $organizationId;
 
             foreach (self::ENTITIES as $entity) {
                 $this->deleteEntities($entity, $organizationId);
             }
 
-            Craft::$app->getGlobals()->deleteGlobalSetById($globalSet->id);
+            Craft::$app->getGlobals()->deleteSet($globalSet);
             Craft::$app->elements->deleteElement($organization);
         }
 
-        if ($globalSet) {
-            Craft::$app->getGlobals()->deleteGlobalSetById($globalSet->id);
+        if ($defaultSet) {
+            Craft::$app->getGlobals()->deleteSet($defaultSet);
         }
 
         foreach (array_keys(self::ENTITIES) as $entity) {
@@ -119,6 +128,57 @@ class m251119_133055_add_organization extends Migration
         $this->dropTableIfExists('{{%_recranet-booking_organizations}}');
 
         return true;
+    }
+
+    protected function afterDown(): void
+    {
+        if ($this->defaultOrganizationId) {
+            $defaultOrganization = OrganizationElement::findOne(['recranetBookingId' => $this->defaultOrganizationId]);
+            RecranetBooking::getInstance()->getSettings()->organizationId = $defaultOrganization->recranetBookingId;
+            RecranetBooking::getInstance()->getSettings()->bookPageEntry = $defaultOrganization->getBookPageEntry()->getId();
+            RecranetBooking::getInstance()->getSettings()->bookPageEntryTemplate = $defaultOrganization->getBookPageEntryTemplate();
+        }
+    }
+
+    private function configureGlobalSet()
+    {
+        $fieldsService = Craft::$app->fields;
+
+        $field = $fieldsService->getFieldByHandle('organizationId');
+        if (!$field) {
+            $field = new OrganizationDropdown([
+                'name' => 'Organization',
+                'handle' => 'organizationId',
+                'translationMethod' => Field::TRANSLATION_METHOD_SITE,
+            ]);
+
+            $fieldsService->saveField($field);
+        }
+
+        foreach (Craft::$app->getSites()->getAllSites() as $site) {
+            Craft::$app->getGlobals()->saveSet(new GlobalSet([
+                'name' => 'Site organization',
+                'handle' => 'siteOrganization',
+            ]));
+
+            $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
+
+            $fieldLayout = new FieldLayout(['type' => GlobalSet::class]);
+            $fieldsService->saveLayout($fieldLayout);
+
+            $tab = new FieldLayoutTab([
+                'name' => 'Content',
+                'layout' => $fieldLayout,
+            ]);
+
+            $tab->setElements([new CustomField($field)]);
+
+            $fieldLayout->setTabs([$tab]);
+
+            $globalSet->setFieldLayout($fieldLayout);
+
+            Craft::$app->getGlobals()->saveSet($globalSet);
+        }
     }
 
     /**

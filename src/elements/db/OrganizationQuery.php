@@ -10,7 +10,7 @@ use craft\elements\db\ElementQuery;
  */
 class OrganizationQuery extends ElementQuery
 {
-    public int $organizationId = 0;
+    public int $recranetBookingId = 0;
 
     protected function beforePrepare(): bool
     {

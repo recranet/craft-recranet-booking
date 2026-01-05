@@ -24,7 +24,7 @@ use recranet\craftrecranetbooking\fields\AccommodationCategorySelect;
 use recranet\craftrecranetbooking\fields\AccommodationSelect;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\fields\LocalityCategorySelect;
-use recranet\craftrecranetbooking\fields\OrganizationSelect;
+use recranet\craftrecranetbooking\fields\OrganizationDropdown;
 use recranet\craftrecranetbooking\fields\PackageSpecificationCategorySelect;
 use recranet\craftrecranetbooking\models\Settings;
 use recranet\craftrecranetbooking\services\Accommodation as AccommodationService;
@@ -143,6 +143,11 @@ class RecranetBooking extends Plugin
         return $navItem;
     }
 
+    public function getOrganizationService(): OrganizationService
+    {
+        return $this->organizationService;
+    }
+
     protected function createSettingsModel(): ?Model
     {
         return Craft::createObject(Settings::class);
@@ -215,7 +220,7 @@ class RecranetBooking extends Plugin
             $event->types[] = LocalityCategorySelect::class;
             $event->types[] = AccommodationCategorySelect::class;
             $event->types[] = AccommodationSelect::class;
-            $event->types[] = OrganizationSelect::class;
+            $event->types[] = OrganizationDropdown::class;
             $event->types[] = PackageSpecificationCategorySelect::class;
         });
     }
@@ -253,7 +258,6 @@ class RecranetBooking extends Plugin
         ]);
 
         $fieldsService->saveField($field);
-
 
         parent::install();
     }

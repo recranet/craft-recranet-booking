@@ -1,7 +1,6 @@
 <?php
 namespace recranet\craftrecranetbooking\controllers;
 
-use Craft;
 use craft\web\Controller;
 use recranet\craftrecranetbooking\RecranetBooking;
 use yii\web\Response;

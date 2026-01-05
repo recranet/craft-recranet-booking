@@ -2,7 +2,14 @@
 
 namespace recranet\craftrecranetbooking\migrations;
 
+use Craft;
+use craft\base\Field;
 use craft\db\Migration;
+use craft\elements\GlobalSet;
+use craft\fieldlayoutelements\CustomField;
+use craft\models\FieldLayout;
+use craft\models\FieldLayoutTab;
+use recranet\craftrecranetbooking\fields\OrganizationDropdown;
 
 /**
  * Install migration.
@@ -91,7 +98,6 @@ class Install extends Migration
         ]);
 
         foreach (self::ENTITIES as $entity) {
-
             $this->addForeignKey(
                 "{$entity}_organizationId",
                 "{{%_recranet-booking_$entity}}",
@@ -103,6 +109,44 @@ class Install extends Migration
             );
         }
 
+        $fieldsService = Craft::$app->fields;
+
+        $field = $fieldsService->getFieldByHandle('organizationId');
+        if (!$field) {
+            $field = new OrganizationDropdown([
+                'name' => 'Organization',
+                'handle' => 'organizationId',
+                'translationMethod' => Field::TRANSLATION_METHOD_SITE,
+            ]);
+
+            $fieldsService->saveField($field);
+        }
+
+        foreach (Craft::$app->getSites()->getAllSites() as $site) {
+            Craft::$app->getGlobals()->saveSet(new GlobalSet([
+                'name' => 'Site organization',
+                'handle' => 'siteOrganization',
+            ]));
+
+            $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
+
+            $fieldLayout = new FieldLayout(['type' => GlobalSet::class]);
+            $fieldsService->saveLayout($fieldLayout);
+
+            $tab = new FieldLayoutTab([
+                'name' => 'Content',
+                'layout' => $fieldLayout,
+            ]);
+
+            $tab->setElements([new CustomField($field)]);
+
+            $fieldLayout->setTabs([$tab]);
+
+            $globalSet->setFieldLayout($fieldLayout);
+
+            Craft::$app->getGlobals()->saveSet($globalSet);
+        }
+
         return true;
     }
 
@@ -111,6 +155,19 @@ class Install extends Migration
      */
     public function safeDown(): bool
     {
+        $fieldsService = Craft::$app->fields;
+        $fieldsService->deleteFieldsByHandle('organizationId');
+
+        foreach (Craft::$app->getSites()->getAllSites() as $site) {
+            $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
+
+            if (!$globalSet) {
+                continue;
+            }
+
+            Craft::$app->getGlobals()->deleteSet($globalSet);
+        }
+
         $entities = self::ENTITIES;
         $entities[] = '_recranet-booking_organizations';
 

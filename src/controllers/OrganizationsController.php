@@ -3,11 +3,12 @@
 namespace recranet\craftrecranetbooking\controllers;
 
 use Craft;
-use craft\helpers\App;
+use craft\elements\GlobalSet;
+use craft\errors\ElementNotFoundException;
 use craft\web\Controller;
 use recranet\craftrecranetbooking\elements\Organization;
 use yii\web\Response;
-use yii\web\NotFoundHttpException as NotFoundHttpExceptionAlias;
+use recranet\craftrecranetbooking\RecranetBooking;
 
 /**
  * Organization controller
@@ -25,7 +26,7 @@ class OrganizationsController extends Controller
             ;
 
             if (!$element) {
-                throw new NotFoundHttpExceptionAlias('Organization not found');
+                throw new ElementNotFoundException('Organization not found');
             }
         }
 
@@ -33,8 +34,13 @@ class OrganizationsController extends Controller
             $element = new Organization();
         }
 
+        $organizationService = RecranetBooking::getInstance()->organizationService;
+
+        $linkedSites = $organizationService->getSitesByOrganization($element);
+
         $variables = [
             'sites' => $this->getSites(),
+            'linkedSites' => $linkedSites,
             'element' => $element,
             'isNew' => !$element->id,
             'continueEditingUrl' => '_recranet-booking/organizations/' . $element->id
@@ -54,7 +60,7 @@ class OrganizationsController extends Controller
             $organization = Organization::find()->id($elementId)->one();
 
             if (!$organization) {
-                throw new NotFoundHttpExceptionAlias('Organization not found');
+                throw new ElementNotFoundException('Organization not found');
             }
         } else {
             $organization = new Organization();
@@ -62,14 +68,9 @@ class OrganizationsController extends Controller
 
         $organization->title = $request->getBodyParam('title');
         $organization->recranetBookingId = (int) $request->getBodyParam('recranetBookingId');
-        $organization->bookPageEntry = (int) $request->getBodyParam('bookPageEntry');
         $organization->bookPageEntryTemplate = $request->getBodyParam('bookPageEntryTemplate');
+        $organization->bookPageEntry = (int) $request->getBodyParam('bookPageEntry')[0] ?? null;
 
-        $site = Craft::$app->getSites()->getCurrentSite();
-        $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
-        $globalSet?->setFieldValue('organizationId', $organization->getId());
-
-        // Save the element
         if (!Craft::$app->getElements()->saveElement($organization)) {
             Craft::$app->getSession()->setError(Craft::t('_recranet-booking', 'Could not save organization.'));
 
@@ -78,6 +79,11 @@ class OrganizationsController extends Controller
             ]);
 
             return null;
+        }
+
+        $siteId = $request->getBodyParam('siteId');
+        if ($siteId) {
+            $this->saveSiteForOrganization($organization, (int) $siteId);
         }
 
         Craft::$app->getSession()->setNotice(Craft::t('_recranet-booking', 'Organization saved.'));
@@ -93,7 +99,7 @@ class OrganizationsController extends Controller
         $element = Organization::find()->id($elementId)->one();
 
         if (!$element) {
-            throw new NotFoundHttpExceptionAlias('Organization not found');
+            throw new ElementNotFoundException('Organization not found');
         }
 
         if (!Craft::$app->getElements()->deleteElement($element)) {
@@ -105,17 +111,42 @@ class OrganizationsController extends Controller
         return $this->asJson(['success' => true]);
     }
 
-    /**
-     * Retrieves all sites in an id, name pair, suitable for the underlying options display.
-     */
     private function getSites()
     {
         $sites = [];
 
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
-            $sites[$site->uid] = Craft::t('site', $site->name);
+            $sites[$site->getId()] = Craft::t('site', $site->name);
         }
 
         return $sites;
+    }
+
+    private function saveSiteForOrganization(Organization $organization, ?int $siteId = null): void
+    {
+        $site = Craft::$app->getSites()->getSiteById($siteId);
+        $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
+
+        if (!$globalSet) {
+            $globalSet = new GlobalSet([
+                'name' => 'Site organization',
+                'handle' => 'siteOrganization',
+            ]);
+
+            if (!Craft::$app->getGlobals()->saveSet($globalSet)) {
+                Craft::$app->getSession()->setError(Craft::t('_recranet-booking', 'Could not create site organization global set.'));
+
+                return;
+            }
+
+            $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
+        }
+
+        $globalSet->setFieldValue('organizationId', $organization->getId());
+
+        if (!Craft::$app->getElements()->saveElement($globalSet)) {
+            Craft::error('Could not save global set with organization ID', __METHOD__);
+            Craft::$app->getSession()->setError(Craft::t('_recranet-booking', 'Could not link organization to site.'));
+        }
     }
 }
