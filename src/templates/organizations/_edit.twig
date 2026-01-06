@@ -41,7 +41,6 @@
     {% endif %}
 
     <div id="fields">
-        {{ dump(linkedSites) }}
         {{ forms.textField({
             label: "Title"|t('app'),
             id: 'title',
@@ -85,18 +84,28 @@
             errors: element.getErrors('bookPageEntryTemplate'),
         }) }}
 
-        <div>
-            {{ forms.select({
-                label: "Site"|t('app'),
-                id: 'siteId',
-                name: 'siteId',
-                value: 2 > linkedSites|length and linkedSites|length > 0 ? linkedSites.0 : '',
-                required: true,
-                options: [
-                    { label: 'Choose a site'|t('app'), value: '' },
-                ]|merge(sites),
-            }) }}
-        </div>
+        {% if element.id is not null %}
+            <div class="field">
+                <div class="heading">
+                    <label>Linked sites</label>
+                </div>
+
+                {% if linkedSites %}
+                    <ul>
+                        {% for site in linkedSites %}
+                            <li>{{ site.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div>
+                        <p>
+                            {{ 'This organization is not linked to any sites.'|t }}<br>
+                            <a href="/admin/globals/siteOrganization">{{ 'Link an organization to a site...'|t }}</a>
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 

@@ -26,11 +26,6 @@ class OrganizationDropdown extends Dropdown
         return '@recranet/craftrecranetbooking/icon-dashboard.svg';
     }
 
-    public static function phpType(): string
-    {
-        return 'int|null';
-    }
-
     public static function dbType(): string
     {
         return Schema::TYPE_INTEGER;
@@ -53,7 +48,13 @@ class OrganizationDropdown extends Dropdown
         // Dynamically generate options from Organization elements
         $organizations = Organization::find()->all();
 
-        $options = [];
+        $options = [
+            [
+                'label' => '',
+                'value' => null,
+                'default' => false,
+            ]
+        ];
         foreach ($organizations as $organization) {
             $options[] = [
                 'label' => $organization->title,
@@ -68,26 +69,12 @@ class OrganizationDropdown extends Dropdown
     /**
      * @inheritdoc
      */
-    public function normalizeValue(mixed $value, ?ElementInterface $element = null): mixed
-    {
-        // Ensure we always return int|null, never SingleOptionFieldData
-        if ($value instanceof SingleOptionFieldData) {
-            return $value->value ? (int)$value->value : null;
-        }
-
-        if ($value === '' || $value === null) {
-            return null;
-        }
-
-        return (int)$value;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function serializeValue(mixed $value, ?ElementInterface $element = null): mixed
     {
-        // Store as integer in database
-        return $value ? (int)$value : null;
+        // Let parent extract the value from SingleOptionFieldData, then convert to int
+        $serialized = parent::serializeValue($value, $element);
+
+        // Convert to integer for database storage
+        return $serialized !== null && $serialized !== '' ? (int)$serialized : null;
     }
 }

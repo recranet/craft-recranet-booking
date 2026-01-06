@@ -135,6 +135,7 @@ class LocalityCategory extends Element
     {
         return [
             'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
+            'organizationId' => ['label' => Craft::t('app', 'Organization')],
             'slug' => ['label' => Craft::t('app', 'Slug')],
             'uri' => ['label' => Craft::t('app', 'URI')],
             'link' => ['label' => Craft::t('app', 'Link'), 'icon' => 'world'],
@@ -152,6 +153,7 @@ class LocalityCategory extends Element
             'dateCreated',
             'dateUpdated',
             'recranetBookingId',
+            'organizationId',
         ];
     }
 

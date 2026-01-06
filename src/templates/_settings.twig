@@ -5,7 +5,6 @@
 {% import "_includes/forms.twig" as forms %}
 
 {% set tabs = {
-    "general": { label: "General"|t('_recranet-booking'), url: "#general" },
     "sitemap": { label: "Sitemap"|t('_recranet-booking'), url: "#sitemap" },
 } %}
 
@@ -15,20 +14,8 @@
     {% set recranetBookingPlugin = craft.app.plugins.getPlugin('_recranet-booking') %}
     {% set settings = recranetBookingPlugin.getSettings() %}
     {% set organizationService = recranetBookingPlugin.getOrganizationService %}
-    {% set unlinkedSites = organizationService.getUnlinkedSites() %}
 
-    <div id="general">
-        {% namespace 'general' %}
-            {# @TODO: Show unlinked sites  #}
-            {% for site in craft.app.sites.allSites() %}
-                {{ dump(craft.app.globals().getSetByHandle('siteOrganization', site.id)) }}
-            {% endfor %}
-            {% for unlinkedSite in unlinkedSites %}
-                {{ unlinkedSite }}
-            {% endfor %}
-        {% endnamespace %}
-    </div>
-    <div id="sitemap" class="hidden">
+    <div id="sitemap">
         {% namespace 'sitemap' %}
             {{ forms.lightswitchField({
                 label: "Generate accommodations sitemap"|t("_recruitee"),

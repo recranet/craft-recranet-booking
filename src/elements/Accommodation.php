@@ -151,6 +151,7 @@ class Accommodation extends Element
     {
         return [
             'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
+            'organizationId' => ['label' => Craft::t('app', 'Organization')],
             'slug' => ['label' => Craft::t('app', 'Slug')],
             'slugDe' => ['label' => Craft::t('app', 'Slug (DE)')],
             'slugEn' => ['label' => Craft::t('app', 'Slug (EN)')],
@@ -164,7 +165,6 @@ class Accommodation extends Element
             'uid' => ['label' => Craft::t('app', 'UID')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
-            // ...
         ];
     }
 
@@ -174,6 +174,7 @@ class Accommodation extends Element
             'dateCreated',
             'dateUpdated',
             'recranetBookingId',
+            'organizationId',
             'slug',
             'slugDe',
             'slugEn',

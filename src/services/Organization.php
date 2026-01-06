@@ -4,8 +4,6 @@ namespace recranet\craftrecranetbooking\services;
 
 use Craft;
 use craft\elements\Entry;
-use craft\errors\InvalidFieldException;
-use craft\helpers\App;
 use craft\models\Site;
 use yii\base\Component;
 use recranet\craftrecranetbooking\elements\Organization as OrganizationElement;
@@ -36,11 +34,12 @@ class Organization extends Component
 
         $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
 
-        $organizationId = $globalSet?->getFieldValue('organizationId');
-
-        if (!$organizationId) {
+        $behavior = $globalSet->getBehavior('customFields');
+        if (!$behavior->canGetProperty('organizationId') || !$behavior->organizationId) {
             return null;
         }
+
+        $organizationId = $behavior->organizationId;
 
         return OrganizationElement::find()->id($organizationId)->one();
     }
@@ -48,7 +47,6 @@ class Organization extends Component
     /**
      * @param OrganizationElement $organization
      * @return Site[]
-     * @throws InvalidFieldException
      */
     public function getSitesByOrganization(OrganizationElement $organization): array
     {
@@ -57,12 +55,12 @@ class Organization extends Component
         foreach(Craft::$app->getSites()->getAllSites() as $site) {
             $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
 
-            dd();
-            if (empty($globalSet->getFieldValues(['organizationId']))) {
+            $behavior = $globalSet->getBehavior('customFields');
+            if (!$behavior->canGetProperty('organizationId') || !$behavior->organizationId) {
                 continue;
             }
 
-            $organizationId = $globalSet->getFieldValue('organizationId');
+            $organizationId = $behavior->organizationId;
 
             if ($organizationId && $organizationId === $organization->id) {
                 $sites[] = $site;
@@ -77,18 +75,5 @@ class Organization extends Component
         $organization = $this->getOrganizationBySite($site);
 
         return $organization?->getBookPageEntry();
-    }
-
-    public function getUnlinkedSites(): array
-    {
-        $unlinkedSites = [];
-
-        foreach (Craft::$app->getSites()->getAllSites() as $site) {
-            if (is_null($this->getOrganizationBySite($site))) {
-                $unlinkedSites[] = $site;
-            }
-        }
-
-        return $unlinkedSites;
     }
 }

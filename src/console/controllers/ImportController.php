@@ -43,7 +43,7 @@ class ImportController extends Controller
     {
         $organization = $this->getOrganization();
 
-        if (!$organization || $organization->recranetBookingId) {
+        if (!$organization || !$organization->recranetBookingId) {
             $this->stderr('No valid Organization ID provided.', self::EXIT_CODE_UNSPECIFIED_ERROR);
 
             return self::EXIT_CODE_UNSPECIFIED_ERROR;
@@ -64,7 +64,7 @@ class ImportController extends Controller
     {
         $organization = $this->getOrganization();
 
-        if (!$organization || $organization->recranetBookingId) {
+        if (!$organization || !$organization->recranetBookingId) {
             $this->stderr('No valid Organization ID provided.', self::EXIT_CODE_UNSPECIFIED_ERROR);
 
             return self::EXIT_CODE_UNSPECIFIED_ERROR;
@@ -85,7 +85,7 @@ class ImportController extends Controller
     {
         $organization = $this->getOrganization();
 
-        if (!$organization || $organization->recranetBookingId) {
+        if (!$organization || !$organization->recranetBookingId) {
             $this->stderr('No valid Organization ID provided.', self::EXIT_CODE_UNSPECIFIED_ERROR);
 
             return self::EXIT_CODE_UNSPECIFIED_ERROR;
@@ -106,7 +106,7 @@ class ImportController extends Controller
     {
         $organization = $this->getOrganization();
 
-        if (!$organization || $organization->recranetBookingId) {
+        if (!$organization || !$organization->recranetBookingId) {
             $this->stderr('No valid Organization ID provided.', self::EXIT_CODE_UNSPECIFIED_ERROR);
 
             return self::EXIT_CODE_UNSPECIFIED_ERROR;
@@ -127,7 +127,7 @@ class ImportController extends Controller
     {
         $organization = $this->getOrganization();
 
-        if (!$organization || $organization->recranetBookingId) {
+        if (!$organization || !$organization->recranetBookingId) {
             $this->stderr('No valid Organization ID provided.', self::EXIT_CODE_UNSPECIFIED_ERROR);
 
             return self::EXIT_CODE_UNSPECIFIED_ERROR;
@@ -143,7 +143,7 @@ class ImportController extends Controller
     private function getOrganization(): ?Organization
     {
         if ($this->organizationId) {
-            return Organization::findOne(['recranetBookingId' => $this->organizationId]);
+            return Organization::findOne(['recranetBookingId' => (int) $this->organizationId]);
         }
 
         return null;

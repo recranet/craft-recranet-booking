@@ -39,7 +39,6 @@ class OrganizationsController extends Controller
         $linkedSites = $organizationService->getSitesByOrganization($element);
 
         $variables = [
-            'sites' => $this->getSites(),
             'linkedSites' => $linkedSites,
             'element' => $element,
             'isNew' => !$element->id,
@@ -71,6 +70,10 @@ class OrganizationsController extends Controller
         $organization->bookPageEntryTemplate = $request->getBodyParam('bookPageEntryTemplate');
         $organization->bookPageEntry = (int) $request->getBodyParam('bookPageEntry')[0] ?? null;
 
+        if (!$organization->validate()) {
+            return null;
+        }
+
         if (!Craft::$app->getElements()->saveElement($organization)) {
             Craft::$app->getSession()->setError(Craft::t('_recranet-booking', 'Could not save organization.'));
 
@@ -81,14 +84,17 @@ class OrganizationsController extends Controller
             return null;
         }
 
-        $siteId = $request->getBodyParam('siteId');
-        if ($siteId) {
-            $this->saveSiteForOrganization($organization, (int) $siteId);
-        }
-
         Craft::$app->getSession()->setNotice(Craft::t('_recranet-booking', 'Organization saved.'));
 
-        return $this->redirectToPostedUrl($organization);
+        if ($elementId) {
+            return $this->redirectToPostedUrl($organization);
+        }
+
+        Craft::$app->getUrlManager()->setRouteParams([
+            'element' => $organization,
+        ]);
+
+        return null;
     }
 
     public function actionDelete(): Response
@@ -116,37 +122,12 @@ class OrganizationsController extends Controller
         $sites = [];
 
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
-            $sites[$site->getId()] = Craft::t('site', $site->name);
+            $sites[] = [
+                'label' => Craft::t('site', $site->name),
+                'value' => $site->getId(),
+            ];
         }
 
         return $sites;
-    }
-
-    private function saveSiteForOrganization(Organization $organization, ?int $siteId = null): void
-    {
-        $site = Craft::$app->getSites()->getSiteById($siteId);
-        $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
-
-        if (!$globalSet) {
-            $globalSet = new GlobalSet([
-                'name' => 'Site organization',
-                'handle' => 'siteOrganization',
-            ]);
-
-            if (!Craft::$app->getGlobals()->saveSet($globalSet)) {
-                Craft::$app->getSession()->setError(Craft::t('_recranet-booking', 'Could not create site organization global set.'));
-
-                return;
-            }
-
-            $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
-        }
-
-        $globalSet->setFieldValue('organizationId', $organization->getId());
-
-        if (!Craft::$app->getElements()->saveElement($globalSet)) {
-            Craft::error('Could not save global set with organization ID', __METHOD__);
-            Craft::$app->getSession()->setError(Craft::t('_recranet-booking', 'Could not link organization to site.'));
-        }
     }
 }

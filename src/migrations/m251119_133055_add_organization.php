@@ -35,6 +35,8 @@ class m251119_133055_add_organization extends Migration
     ];
 
     private ?int $defaultOrganizationId = null;
+    private ?int $defaultBookPageEntryId = null;
+    private ?string $defaultBookPageEntryTemplate = null;
 
     public function safeUp(): bool
     {
@@ -49,16 +51,16 @@ class m251119_133055_add_organization extends Migration
             'uid' => $this->uid(),
         ]);
 
-        $organizationId = (int) App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
+        $recranetBookingId = (int) App::parseEnv(RecranetBooking::getInstance()->getSettings()->organizationId);
         $bookPageEntry = RecranetBooking::getInstance()->getSettings()->bookPageEntry;
         $bookPageEntryTemplate = RecranetBooking::getInstance()->getSettings()->bookPageEntryTemplate;
 
         $this->configureGlobalSet();
 
-        if ($organizationId) {
+        if ($recranetBookingId) {
             $this->insert('{{%_recranet-booking_organizations}}', [
                 'title' => 'Default Organization',
-                'recranetBookingId' => $organizationId,
+                'recranetBookingId' => $recranetBookingId,
                 'bookPageEntry' => $bookPageEntry,
                 'bookPageEntryTemplate' => $bookPageEntryTemplate,
                 'dateCreated' => date('Y-m-d H:i:s'),
@@ -66,10 +68,12 @@ class m251119_133055_add_organization extends Migration
                 'uid' => StringHelper::UUID(),
             ]);
 
+            $organizationId = $this->getDb()->lastInsertID;
             $defaultSite = Craft::$app->getSites()->getPrimarySite();
-
             $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $defaultSite->id);
             $globalSet->setFieldValue('organizationId', $organizationId);
+
+            Craft::$app->getElements()->saveElement($globalSet);
         }
 
         foreach (array_keys(self::ENTITIES) as $entity) {
@@ -85,9 +89,19 @@ class m251119_133055_add_organization extends Migration
     public function safeDown(): bool
     {
         $defaultSite = Craft::$app->getSites()->getPrimarySite();
+
         $defaultSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $defaultSite->id);
+        $behavior = $defaultSet->getBehavior('customFields');
+
+        if ($behavior->canGetProperty('organizationId') && $behavior->organizationId) {
+            $organization = OrganizationElement::find()->id($behavior->organizationId)->one();
+
+            $this->defaultOrganizationId = $organization?->recranetBookingId;
+            $this->defaultBookPageEntryId = $organization?->getBookPageEntry()?->getId();
+            $this->defaultBookPageEntryTemplate = $organization?->getBookPageEntryTemplate();
+        }
+
         Craft::$app->getGlobals()->deleteSet($defaultSet);
-        $this->defaultOrganizationId = $defaultSet?->getFieldValue('organizationId');
 
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
             if ($site->getId() === $defaultSite->getId()) {
@@ -96,7 +110,7 @@ class m251119_133055_add_organization extends Migration
 
             $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
 
-            if (!$globalSet) {
+            if (!$globalSet || !$globalSet->getFieldLayout()->getFieldByHandle('organizationId')) {
                 continue;
             }
 
@@ -133,10 +147,15 @@ class m251119_133055_add_organization extends Migration
     protected function afterDown(): void
     {
         if ($this->defaultOrganizationId) {
-            $defaultOrganization = OrganizationElement::findOne(['recranetBookingId' => $this->defaultOrganizationId]);
-            RecranetBooking::getInstance()->getSettings()->organizationId = $defaultOrganization->recranetBookingId;
-            RecranetBooking::getInstance()->getSettings()->bookPageEntry = $defaultOrganization->getBookPageEntry()->getId();
-            RecranetBooking::getInstance()->getSettings()->bookPageEntryTemplate = $defaultOrganization->getBookPageEntryTemplate();
+            RecranetBooking::getInstance()->getSettings()->organizationId = $this->defaultOrganizationId;
+        }
+
+        if ($this->defaultBookPageEntryId) {
+            RecranetBooking::getInstance()->getSettings()->bookPageEntry = $this->defaultBookPageEntryId;
+        }
+
+        if ($this->defaultBookPageEntryTemplate) {
+            RecranetBooking::getInstance()->getSettings()->bookPageEntryTemplate = $this->defaultBookPageEntryTemplate;
         }
     }
 

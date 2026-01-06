@@ -23,7 +23,7 @@ class RecranetBookingClient extends Component
         try {
             $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/accommodations', [
                 'query' => [
-                    'organizationId' => $organization->recranetBookingId,
+                    'organization' => $organization->recranetBookingId,
                     'locale' => $locale
                 ],
             ]);
@@ -42,7 +42,7 @@ class RecranetBookingClient extends Component
 
         try {
             $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/accommodation_categories', [
-                'query' => ['organizationId' => $organization->recranetBookingId],
+                'query' => ['organization' => $organization->recranetBookingId],
             ]);
         } catch (Throwable $e) {
             return [];
@@ -59,7 +59,7 @@ class RecranetBookingClient extends Component
 
         try {
             $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/facilities', [
-                'query' => ['organizationId' => $organization->recranetBookingId],
+                'query' => ['organization' => $organization->recranetBookingId],
             ]);
         } catch (Throwable $e) {
             return [];
@@ -76,7 +76,7 @@ class RecranetBookingClient extends Component
 
         try {
             $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/locality_categories', [
-                'query' => ['organizationId' => $organization->recranetBookingId],
+                'query' => ['organization' => $organization->recranetBookingId],
             ]);
         } catch (Throwable $e) {
             return [];
@@ -93,7 +93,7 @@ class RecranetBookingClient extends Component
 
         try {
             $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/package_specification_categories', [
-                'query' => ['organizationId' => $organization->recranetBookingId],
+                'query' => ['organization' => $organization->recranetBookingId],
             ]);
         } catch (Throwable $e) {
             return [];
