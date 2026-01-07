@@ -16,8 +16,8 @@ class OrganizationQuery extends ElementQuery
     {
         $this->joinElementTable('_recranet-booking_organizations');
 
-        if ($this->organizationId) {
-            $this->subQuery->andWhere(['organizationId' => $this->organizationId]);
+        if ($this->recranetBookingId) {
+            $this->subQuery->andWhere(['recranetBookingId' => $this->recranetBookingId]);
         }
 
         $this->query->select([
@@ -31,9 +31,9 @@ class OrganizationQuery extends ElementQuery
         return parent::beforePrepare();
     }
 
-    public function organizationId($value): self
+    public function recranetBookingId($value): self
     {
-        $this->organizationId = $value;
+        $this->recranetBookingId = $value;
         return $this;
     }
 }
