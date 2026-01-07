@@ -34,8 +34,8 @@ class Organization extends Component
 
         $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
 
-        $behavior = $globalSet->getBehavior('customFields');
-        if (!$behavior->canGetProperty('organizationId') || !$behavior->organizationId) {
+        $behavior = $globalSet?->getBehavior('customFields');
+        if (!$behavior || !$behavior->canGetProperty('organizationId') || !$behavior->organizationId) {
             return null;
         }
 

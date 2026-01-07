@@ -22,9 +22,11 @@ class SitemapController extends Controller
      */
     public function actionIndex(): Response
     {
-        $accommodations = Accommodation::find()->all();
+        $organizationService = RecranetBooking::$organizationService;
         $currentSite = Craft::$app->getSites()->getCurrentSite();
-        $bookPage = RecranetBooking::getInstance()->getSettings()->getBookPageEntry();
+
+        $accommodations = Accommodation::find()->where(['organizationId' => $organizationService->getOrganizationBySite()->getId()])->all();
+        $bookPage = $organizationService->getOrganizationBySite()->getBookPageEntry();
 
         $bookPageEntry = Entry::find()
             ->section('*')
