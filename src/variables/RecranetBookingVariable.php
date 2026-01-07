@@ -8,6 +8,6 @@ class RecranetBookingVariable
 {
     public function getOrganizationId() : string
     {
-        return RecranetBooking::getInstance()->getOrganizationService()->getOrganizationBySite()->recranetBookingId;
+        return RecranetBooking::getInstance()->getOrganizationService()->getOrganizationBySite()?->recranetBookingId;
     }
 }

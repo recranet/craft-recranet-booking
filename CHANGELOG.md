@@ -83,5 +83,4 @@ All notable changes to this project will be documented in this file.
 ### Refactored
 - Refactored plugin to support configuring multiple organizations
 - Each organization can be linked to a Site
-- 
 

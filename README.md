@@ -71,6 +71,7 @@ ddev php craft _recranet-booking/delete/package-specification-category
 
 You can run the use the following variables in your templates to access the data:
 
+This will output the organizationId linked to the current site, or null when no organization is linked to the current site.
 ```twig
 {{ craft.recranetBooking.organizationId }}
 ```
