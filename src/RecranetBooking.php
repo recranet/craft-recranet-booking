@@ -252,7 +252,7 @@ class RecranetBooking extends Plugin
     {
         $fieldsService = Craft::$app->fields;
 
-        $field = new OrganizationSelect([
+        $field = new OrganizationDropdown([
             'name' => 'Organization',
             'handle' => 'siteOrganization',
         ]);

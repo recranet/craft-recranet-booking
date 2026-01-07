@@ -155,24 +155,19 @@ class Install extends Migration
      */
     public function safeDown(): bool
     {
-        $fieldsService = Craft::$app->fields;
-        $fieldsService->deleteFieldsByHandle('organizationId');
-
-        foreach (Craft::$app->getSites()->getAllSites() as $site) {
-            $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
-
-            if (!$globalSet) {
-                continue;
-            }
-
+        $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization');
+        if ($globalSet) {
             Craft::$app->getGlobals()->deleteSet($globalSet);
         }
 
         $entities = self::ENTITIES;
-        $entities[] = '_recranet-booking_organizations';
+        $entities[] = 'organizations';
 
         foreach ($entities as $entity) {
             $this->dropAllForeignKeysToTable("{{%_recranet-booking_$entity}}");
+        }
+
+        foreach ($entities as $entity) {
             $this->dropTableIfExists("{{%_recranet-booking_$entity}}");
         }
 
