@@ -3,7 +3,7 @@
 namespace recranet\craftrecranetbooking\services;
 
 use Craft;
-use yii\base\Component;
+use craft\base\Component;
 use recranet\craftrecranetbooking\elements\Facility as FacilityElement;
 
 /**

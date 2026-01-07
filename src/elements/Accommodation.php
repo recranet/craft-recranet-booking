@@ -20,6 +20,7 @@ use yii\web\Response;
 class Accommodation extends Element
 {
     public int $recranetBookingId = 0;
+    public ?int $organizationId = null;
     public null|string $slug = '';
     public null|string $slugDe = '';
     public null|string $slugEn = '';
@@ -150,6 +151,7 @@ class Accommodation extends Element
     {
         return [
             'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
+            'organizationId' => ['label' => Craft::t('app', 'Organization')],
             'slug' => ['label' => Craft::t('app', 'Slug')],
             'slugDe' => ['label' => Craft::t('app', 'Slug (DE)')],
             'slugEn' => ['label' => Craft::t('app', 'Slug (EN)')],
@@ -163,7 +165,6 @@ class Accommodation extends Element
             'uid' => ['label' => Craft::t('app', 'UID')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
-            // ...
         ];
     }
 
@@ -173,6 +174,7 @@ class Accommodation extends Element
             'dateCreated',
             'dateUpdated',
             'recranetBookingId',
+            'organizationId',
             'slug',
             'slugDe',
             'slugEn',
@@ -296,6 +298,7 @@ class Accommodation extends Element
 
             $record->title = $this->title;
             $record->recranetBookingId = $this->recranetBookingId;
+            $record->organizationId = $this->organizationId;
 
             $record->slug = $this->slug;
             $record->slugDe = $this->slugDe;

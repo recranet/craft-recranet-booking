@@ -21,6 +21,7 @@ use recranet\craftrecranetbooking\models\LocalityCategory as LocalityCategoryMod
 class LocalityCategory extends Element
 {
     public int $recranetBookingId = 0;
+    public ?int $organizationId = null;
 
     public static function displayName(): string
     {
@@ -134,6 +135,7 @@ class LocalityCategory extends Element
     {
         return [
             'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
+            'organizationId' => ['label' => Craft::t('app', 'Organization')],
             'slug' => ['label' => Craft::t('app', 'Slug')],
             'uri' => ['label' => Craft::t('app', 'URI')],
             'link' => ['label' => Craft::t('app', 'Link'), 'icon' => 'world'],
@@ -151,6 +153,7 @@ class LocalityCategory extends Element
             'dateCreated',
             'dateUpdated',
             'recranetBookingId',
+            'organizationId',
         ];
     }
 
@@ -259,6 +262,7 @@ class LocalityCategory extends Element
 
             $record->title = $this->title;
             $record->recranetBookingId = $this->recranetBookingId;
+            $record->organizationId = $this->organizationId;
 
             $record->save();
         }

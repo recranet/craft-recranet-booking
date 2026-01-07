@@ -79,3 +79,8 @@ All notable changes to this project will be documented in this file.
 - Fixed issue when subnav was closed on selecting an item
 - Remove unused import
 
+## [5.2.0] - 2025-12-20
+### Refactored
+- Refactored plugin to support configuring multiple organizations
+- Each organization can be linked to a Site
+

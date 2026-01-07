@@ -1,7 +1,6 @@
 <?php
 namespace recranet\craftrecranetbooking\controllers;
 
-use Craft;
 use craft\web\Controller;
 use recranet\craftrecranetbooking\RecranetBooking;
 use yii\web\Response;
@@ -13,34 +12,34 @@ class AccommodationsRoutingController extends Controller
 
     public function actionIndex(string|null $slug, string|null $page): Response
     {
-        $pageBook = RecranetBooking::getInstance()->getSettings()->getBookPageEntry();
+        $organization = RecranetBooking::getInstance()->organizationService->getOrganizationBySite();
+        $bookPage = $organization?->getBookPageEntry();
+        $bookPageEntryTemplate = $organization?->getBookPageEntryTemplate();
 
-        if (!$pageBook) {
+        if (!$bookPage || !$bookPageEntryTemplate) {
             return $this->asJson('Failed to find the booking page entry.');
         }
 
-        $pageBookEntryTemplate = RecranetBooking::getInstance()->getSettings()->getBookPageEntryTemplate();
-
-        return $this->renderTemplate($pageBookEntryTemplate, [
+        return $this->renderTemplate($bookPageEntryTemplate, [
             'slug' => $slug ?? null,
             'page' => $page ?? null,
-            'entry' => $pageBook,
+            'entry' => $bookPage,
         ]);
     }
 
     public function actionAccommodation(string $slug): Response
     {
-        $pageBook = RecranetBooking::getInstance()->getSettings()->getBookPageEntry();
+        $organization = RecranetBooking::getInstance()->organizationService->getOrganizationBySite();
+        $bookPage = $organization?->getBookPageEntry();
+        $bookPageEntryTemplate = $organization?->getBookPageEntryTemplate();
 
-        if (!$pageBook) {
+        if (!$bookPage || !$bookPageEntryTemplate) {
             return $this->asJson('Failed to find the booking page entry.');
         }
 
-        $pageBookEntryTemplate = RecranetBooking::getInstance()->getSettings()->getBookPageEntryTemplate();
-
-        return $this->renderTemplate($pageBookEntryTemplate, [
+        return $this->renderTemplate($bookPageEntryTemplate, [
             'slug' => $slug,
-            'entry' => $pageBook,
+            'entry' => $bookPage,
         ]);
     }
 }

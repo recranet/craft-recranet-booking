@@ -17,16 +17,19 @@ use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
+use recranet\craftrecranetbooking\elements\Organization;
 use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
 use recranet\craftrecranetbooking\elements\db\AccommodationQuery;
 use recranet\craftrecranetbooking\fields\AccommodationCategorySelect;
 use recranet\craftrecranetbooking\fields\AccommodationSelect;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\fields\LocalityCategorySelect;
+use recranet\craftrecranetbooking\fields\OrganizationDropdown;
 use recranet\craftrecranetbooking\fields\PackageSpecificationCategorySelect;
 use recranet\craftrecranetbooking\models\Settings;
-use recranet\craftrecranetbooking\services\AccommodationCategory as AccommodationCategoryService;
 use recranet\craftrecranetbooking\services\Accommodation as AccommodationService;
+use recranet\craftrecranetbooking\services\Organization as OrganizationService;
+use recranet\craftrecranetbooking\services\AccommodationCategory as AccommodationCategoryService;
 use recranet\craftrecranetbooking\services\Facility as FacilityService;
 use recranet\craftrecranetbooking\services\Import;
 use recranet\craftrecranetbooking\services\LocalityCategory as LocalityCategoryService;
@@ -46,6 +49,7 @@ use yii\base\Event;
  * @property-read AccommodationCategoryService $accommodationCategoryService
  * @property-read FacilityService $facilityService
  * @property-read LocalityCategoryService $localityCategoryService
+ * @property-read OrganizationService $organizationService
  * @property-read PackageSpecificationCategoryService $packageSpecificationCategoryService
  */
 class RecranetBooking extends Plugin
@@ -64,6 +68,7 @@ class RecranetBooking extends Plugin
                 'accommodationCategoryService' => AccommodationCategoryService::class,
                 'facilityService' => FacilityService::class,
                 'localityCategoryService' => LocalityCategoryService::class,
+                'organizationService' => OrganizationService::class,
                 'packageSpecificationCategoryService' => PackageSpecificationCategoryService::class
             ],
         ];
@@ -99,6 +104,11 @@ class RecranetBooking extends Plugin
         $navItem['url'] = 'recranet-booking';
         $navItem['icon'] = '@recranet/craftrecranetbooking/icon-dashboard.svg';
         $navItem['subnav'] = [
+            'organizations' => [
+                'url' => 'recranet-booking/organizations',
+                'badgeCount' => Organization::find()->count(),
+                'label' => Craft::t('_recranet-booking', 'Organizations'),
+            ],
             'accommodations' => [
                 'url' => 'recranet-booking/accommodations',
                 'badgeCount' => Accommodation::find()->count(),
@@ -133,6 +143,11 @@ class RecranetBooking extends Plugin
         return $navItem;
     }
 
+    public function getOrganizationService(): OrganizationService
+    {
+        return $this->organizationService;
+    }
+
     protected function createSettingsModel(): ?Model
     {
         return Craft::createObject(Settings::class);
@@ -159,6 +174,9 @@ class RecranetBooking extends Plugin
             $event->rules['recranet-booking/settings'] = ['template' => '_recranet-booking/_settings.twig'];
             $event->rules['actions/_recranet-booking/settings/save-settings'] = '_recranet-booking/settings/save-settings';
             $event->rules['recranet-booking/package-specification-categories'] = ['template' => '_recranet-booking/package-specification-categories/_index.twig'];
+            $event->rules['recranet-booking/organizations'] = ['template' => '_recranet-booking/organizations/_index.twig'];
+            $event->rules['recranet-booking/organizations/new'] = '_recranet-booking/organizations/edit';
+            $event->rules['recranet-booking/organizations/<elementId:\d+>'] = '_recranet-booking/organizations/edit';
         });
     }
 
@@ -171,15 +189,19 @@ class RecranetBooking extends Plugin
 
     private function _registerSiteUrlRules(): void
     {
-
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
-                $pageBook = RecranetBooking::getInstance()->getSettings()->getBookPageEntry();
+                $organization = $this->organizationService->getOrganizationBySite();
+                $bookPage = $organization?->getBookPageEntry();
 
-                $event->rules[$pageBook->uri . '/<slug:[^/]+>'] = '_recranet-booking/accommodations-routing/accommodation';
-                $event->rules[$pageBook->uri . '/<slug:[^/]+>/<page:[^/]+>'] = '_recranet-booking/accommodations-routing';
+                if (!$bookPage) {
+                    return;
+                }
+
+                $event->rules[$bookPage->uri . '/<slug:[^/]+>'] = '_recranet-booking/accommodations-routing/accommodation';
+                $event->rules[$bookPage->uri . '/<slug:[^/]+>/<page:[^/]+>'] = '_recranet-booking/accommodations-routing';
             }
         );
     }
@@ -198,6 +220,7 @@ class RecranetBooking extends Plugin
             $event->types[] = LocalityCategorySelect::class;
             $event->types[] = AccommodationCategorySelect::class;
             $event->types[] = AccommodationSelect::class;
+            $event->types[] = OrganizationDropdown::class;
             $event->types[] = PackageSpecificationCategorySelect::class;
         });
     }
@@ -221,6 +244,21 @@ class RecranetBooking extends Plugin
             $event->types[] = AccommodationCategory::class;
             $event->types[] = LocalityCategory::class;
             $event->types[] = Facility::class;
+            $event->types[] = Organization::class;
         });
+    }
+
+    public function install(): void
+    {
+        $fieldsService = Craft::$app->fields;
+
+        $field = new OrganizationDropdown([
+            'name' => 'Organization',
+            'handle' => 'siteOrganization',
+        ]);
+
+        $fieldsService->saveField($field);
+
+        parent::install();
     }
 }

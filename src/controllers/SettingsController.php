@@ -3,6 +3,7 @@
 namespace recranet\craftrecranetbooking\controllers;
 
 use Craft;
+use craft\models\Site;
 use craft\web\Controller;
 use recranet\craftrecranetbooking\RecranetBooking;
 use yii\web\Response;
@@ -24,9 +25,6 @@ class SettingsController extends Controller
 
         $settings = $plugin->getSettings();
 
-        $settings->organizationId = !empty($body['general']['organizationId']) ? $body['general']['organizationId'] : null;
-        $settings->bookPageEntry = isset($body['general']['bookPageEntry'][0]) ? (int) $body['general']['bookPageEntry'][0] : null;
-        $settings->bookPageEntryTemplate = !empty($body['general']['bookPageEntryTemplate']) ? $body['general']['bookPageEntryTemplate'] : null;
         $settings->sitemapEnabled = (bool) ($body['sitemap']['sitemapEnabled'] ?? false);
 
         if (!$settings->validate()) {

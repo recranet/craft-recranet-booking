@@ -11,6 +11,7 @@ use recranet\craftrecranetbooking\elements\Accommodation;
 class AccommodationQuery extends ElementQuery
 {
     public int $recranetBookingId = 0;
+    public int $organizationId = 0;
     public ?string $slugDe = '';
     public ?string $slugEn = '';
     public ?string $slugFr = '';
@@ -33,6 +34,10 @@ class AccommodationQuery extends ElementQuery
 
         if ($this->recranetBookingId) {
             $this->subQuery->andWhere(['recranetBookingId' => $this->recranetBookingId]);
+        }
+
+        if ($this->organizationId) {
+            $this->subQuery->andWhere(['organizationId' => $this->organizationId]);
         }
 
         if ($this->slugDe) {
@@ -71,6 +76,7 @@ class AccommodationQuery extends ElementQuery
             '_recranet-booking_accommodations.dateCreated',
             '_recranet-booking_accommodations.dateUpdated',
             '_recranet-booking_accommodations.recranetBookingId',
+            '_recranet-booking_accommodations.organizationId',
         ]);
 
         return parent::beforePrepare();
@@ -79,6 +85,12 @@ class AccommodationQuery extends ElementQuery
     public function recranetBookingId($value): self
     {
         $this->recranetBookingId = $value;
+        return $this;
+    }
+
+    public function organizationId($value): self
+    {
+        $this->organizationId = $value;
         return $this;
     }
 

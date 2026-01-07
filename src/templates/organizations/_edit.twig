@@ -1,0 +1,117 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = element.title ?? "Create a new organization"|t('_recranet-booking') %}
+
+{% set crumbs = [
+    { label: "Organizations"|t('_recranet-booking'), url: cpUrl('recranet-booking/organizations') }
+] %}
+
+{% set fullPageForm = true %}
+{% set saveShortcutRedirect = continueEditingUrl %}
+
+{% block actionButton %}
+    <div class="btngroup">
+        <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
+
+        <div class="btn submit menubtn"></div>
+        <div class="menu">
+            <ul>
+                <li>
+                    <a class="formsubmit" data-redirect="{{ continueEditingUrl|hash }}">
+                        {{ "Save and continue editing"|t('app') }}
+                        {{ forms.optionShortcutLabel('S') }}
+                    </a>
+                </li>
+                <li>
+                    <a class="formsubmit" data-redirect="{{ cpUrl('recranet-booking/organizations/new')|hash }}">
+                        {{ "Save and add another"|t('app') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <input type="hidden" name="action" value="_recranet-booking/organizations/save">
+    {{ redirectInput('recranet-booking/organizations') }}
+    {% if element.id %}
+        <input type="hidden" name="elementId" value="{{ element.id }}">
+    {% endif %}
+
+    <div id="fields">
+        {{ forms.textField({
+            label: "Title"|t('app'),
+            id: 'title',
+            name: 'title',
+            value: element.title,
+            errors: element.getErrors('title'),
+            first: true,
+            autofocus: true,
+            required: true
+        }) }}
+
+        {{ forms.autosuggestField({
+            label: "Organization ID"|t('app'),
+            id: 'recranetBookingId',
+            name: 'recranetBookingId',
+            value: element.recranetBookingId,
+            errors: element.getErrors('recranetBookingId'),
+            first: true,
+            autofocus: true,
+            required: true
+        }) }}
+
+        {{ forms.elementSelectField({
+            label: "Book page"|t("_recranet-booking"),
+            id: 'bookPageEntry',
+            name: 'bookPageEntry',
+            elementType: 'craft\\elements\\Entry',
+            selectionLabel: "Choose an entry"|t("_recranet-booking"),
+            required: true,
+            limit: 1,
+            elements: element.getBookPageEntry() ? [element.getBookPageEntry()] : [],
+            errors: element.getErrors('bookPageEntry'),
+        }) }}
+
+        {{ forms.autosuggestField({
+            label: "Book page template path"|t("_recranet-booking"),
+            id: 'bookPageEntryTemplate',
+            required: true,
+            name: 'bookPageEntryTemplate',
+            value: element.bookPageEntryTemplate ?? '',
+            errors: element.getErrors('bookPageEntryTemplate'),
+        }) }}
+
+        {% if element.id is not null %}
+            <div class="field">
+                <div class="heading">
+                    <label>Linked sites</label>
+                </div>
+
+                {% if linkedSites %}
+                    <ul>
+                        {% for site in linkedSites %}
+                            <li>{{ site.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div>
+                        <p>
+                            {{ 'This organization is not linked to any sites.'|t }}<br>
+                        </p>
+                    </div>
+                {% endif %}
+
+                <a href="/admin/globals/siteOrganization">{{ 'Link an organization to a site...'|t }}</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% if not element.slug %}
+    {% js %}
+        new Craft.SlugGenerator('#title', '#slug');
+    {% endjs %}
+{% endif %}

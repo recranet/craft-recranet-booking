@@ -5,7 +5,6 @@
 {% import "_includes/forms.twig" as forms %}
 
 {% set tabs = {
-    "general": { label: "General"|t('_recranet-booking'), url: "#general" },
     "sitemap": { label: "Sitemap"|t('_recranet-booking'), url: "#sitemap" },
 } %}
 
@@ -14,42 +13,9 @@
 
     {% set recranetBookingPlugin = craft.app.plugins.getPlugin('_recranet-booking') %}
     {% set settings = recranetBookingPlugin.getSettings() %}
+    {% set organizationService = recranetBookingPlugin.getOrganizationService %}
 
-    <div id="general">
-        {% namespace 'general' %}
-            {{ forms.autosuggestField({
-                label: "Organization ID"|t("_recranet-booking"),
-                id: "organizationId",
-                required: true,
-                name: "organizationId",
-                value: settings.organizationId ?? '',
-                suggestEnvVars: true,
-                errors: settings.getErrors('organizationId'),
-            }) }}
-
-            {{ forms.elementSelectField({
-                label: "Book page"|t("_recranet-booking"),
-                id: "bookPageEntry",
-                name: "bookPageEntry",
-                elementType: 'craft\\elements\\Entry',
-                selectionLabel: "Choose an entry"|t("_recranet-booking"),
-                required: true,
-                limit: 1,
-                elements: settings.getBookPageEntry() ? [settings.getBookPageEntry()] : [],
-                errors: settings.getErrors('bookPageEntry'),
-            }) }}
-
-            {{ forms.autosuggestField({
-                label: "Book page template path"|t("_recranet-booking"),
-                id: "bookPageEntryTemplate",
-                required: true,
-                name: "bookPageEntryTemplate",
-                value: settings.bookPageEntryTemplate ?? '',
-                errors: settings.getErrors('bookPageEntryTemplate'),
-            }) }}
-        {% endnamespace %}
-    </div>
-    <div id="sitemap" class="hidden">
+    <div id="sitemap">
         {% namespace 'sitemap' %}
             {{ forms.lightswitchField({
                 label: "Generate accommodations sitemap"|t("_recruitee"),

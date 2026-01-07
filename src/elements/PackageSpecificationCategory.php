@@ -20,6 +20,7 @@ use recranet\craftrecranetbooking\records\PackageSpecificationCategory as Packag
 class PackageSpecificationCategory extends Element
 {
     public int $recranetBookingId = 0;
+    public ?int $organizationId = null;
 
     public static function displayName(): string
     {
@@ -133,6 +134,7 @@ class PackageSpecificationCategory extends Element
     {
         return [
             'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
+            'organizationId' => ['label' => Craft::t('app', 'Organization')],
             'slug' => ['label' => Craft::t('app', 'Slug')],
             'uri' => ['label' => Craft::t('app', 'URI')],
             'id' => ['label' => Craft::t('app', 'ID')],
@@ -148,6 +150,7 @@ class PackageSpecificationCategory extends Element
             'dateCreated',
             'dateUpdated',
             'recranetBookingId',
+            'organizationId',
         ];
     }
 
@@ -258,6 +261,7 @@ class PackageSpecificationCategory extends Element
 
             $record->title = $this->title;
             $record->recranetBookingId = $this->recranetBookingId;
+            $record->organizationId = $this->organizationId;
 
             $record->save();
         }

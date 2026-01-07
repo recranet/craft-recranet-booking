@@ -4,13 +4,14 @@ namespace recranet\craftrecranetbooking\console\controllers;
 
 use craft\console\Controller;
 use recranet\craftrecranetbooking\RecranetBooking;
-use yii\console\ExitCode;
 
 /**
  * Delete controller
  */
 class DeleteController extends Controller
 {
+    public const EXIT_CODE_OK = 0;
+    public const EXIT_CODE_UNSPECIFIED_ERROR = 1;
 
     public function actionIndex(): int
     {
@@ -20,7 +21,7 @@ class DeleteController extends Controller
         $this->actionLocalityCategories();
         $this->actionPackageSpecificationCategories();
 
-        return ExitCode::OK;
+        return self::EXIT_CODE_OK;
     }
 
     /**
@@ -33,7 +34,7 @@ class DeleteController extends Controller
 
         RecranetBooking::getInstance()->accommodationService->deleteAll();
 
-        return ExitCode::OK;
+        return self::EXIT_CODE_OK;
     }
 
     /**
@@ -46,7 +47,7 @@ class DeleteController extends Controller
 
         RecranetBooking::getInstance()->accommodationCategoryService->deleteAll();
 
-        return ExitCode::OK;
+        return self::EXIT_CODE_OK;
     }
 
     /**
@@ -59,7 +60,7 @@ class DeleteController extends Controller
 
         RecranetBooking::getInstance()->localityCategoryService->deleteAll();
 
-        return ExitCode::OK;
+        return self::EXIT_CODE_OK;
     }
 
     /**
@@ -72,7 +73,7 @@ class DeleteController extends Controller
 
         RecranetBooking::getInstance()->packageSpecificationCategoryService->deleteAll();
 
-        return ExitCode::OK;
+        return self::EXIT_CODE_OK;
     }
 
     /**
@@ -85,6 +86,6 @@ class DeleteController extends Controller
 
         RecranetBooking::getInstance()->facilityService->deleteAll();
 
-        return ExitCode::OK;
+        return self::EXIT_CODE_OK;
     }
 }

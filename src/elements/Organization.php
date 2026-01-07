@@ -4,47 +4,63 @@ namespace recranet\craftrecranetbooking\elements;
 
 use Craft;
 use craft\base\Element;
+use craft\elements\Entry;
 use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
-use recranet\craftrecranetbooking\elements\conditions\FacilityCondition;
-use recranet\craftrecranetbooking\elements\db\FacilityQuery;
+use recranet\craftrecranetbooking\elements\conditions\OrganizationCondition;
+use recranet\craftrecranetbooking\elements\db\OrganizationQuery;
 use yii\web\Response;
-use recranet\craftrecranetbooking\records\Facility as FacilityRecord;
+use recranet\craftrecranetbooking\records\Organization as OrganizationRecord;
 
 /**
- * Facility element type
+ * Organization element type
  */
-class Facility extends Element
+class Organization extends Element
 {
-    public int $recranetBookingId = 0;
-    public ?int $organizationId = null;
+    public ?int $recranetBookingId = null;
+    public int|null $bookPageEntry = null;
+    public string $bookPageEntryTemplate = '';
+
+    public function getBookPageEntry(): ?Entry
+    {
+        if (!$this->bookPageEntry) {
+            return null;
+        }
+
+        return Craft::$app->entries->getEntryById($this->bookPageEntry, Craft::$app->getSites()->getCurrentSite()->getId());
+    }
+
+    public function getBookPageEntryTemplate(): string
+    {
+        return $this->bookPageEntryTemplate ?: '';
+    }
 
     public static function displayName(): string
     {
-        return Craft::t('_recranet-booking', 'Facility');
+        return Craft::t('_recranet-booking', 'Organization');
     }
 
     public static function lowerDisplayName(): string
     {
-        return Craft::t('_recranet-booking', 'facility');
+        return Craft::t('_recranet-booking', 'organization');
     }
 
     public static function pluralDisplayName(): string
     {
-        return Craft::t('_recranet-booking', 'Facilities');
+        return Craft::t('_recranet-booking', 'Organizations');
     }
 
     public static function pluralLowerDisplayName(): string
     {
-        return Craft::t('_recranet-booking', 'facilities');
+        return Craft::t('_recranet-booking', 'organizations');
     }
 
     public static function refHandle(): ?string
     {
-        return 'facility';
+        return 'organization';
     }
 
     public static function trackChanges(): bool
@@ -59,7 +75,7 @@ class Facility extends Element
 
     public static function hasUris(): bool
     {
-        return false;
+        return true;
     }
 
     public static function isLocalized(): bool
@@ -74,12 +90,12 @@ class Facility extends Element
 
     public static function find(): ElementQueryInterface
     {
-        return new FacilityQuery(static::class);
+        return new OrganizationQuery(static::class);
     }
 
     public static function createCondition(): ElementConditionInterface
     {
-        return Craft::createObject(FacilityCondition::class, [static::class]);
+        return Craft::createObject(OrganizationCondition::class, [static::class]);
     }
 
     protected static function defineSources(string $context): array
@@ -87,7 +103,7 @@ class Facility extends Element
         return [
             [
                 'key' => '*',
-                'label' => Craft::t('_recranet-booking', 'All facilities'),
+                'label' => Craft::t('_recranet-booking', 'All organizations'),
             ],
         ];
     }
@@ -107,8 +123,6 @@ class Facility extends Element
     {
         return [
             'title' => Craft::t('app', 'Title'),
-            'slug' => Craft::t('app', 'Slug'),
-            'uri' => Craft::t('app', 'URI'),
             [
                 'label' => Craft::t('app', 'Date Created'),
                 'orderBy' => 'elements.dateCreated',
@@ -133,24 +147,19 @@ class Facility extends Element
     protected static function defineTableAttributes(): array
     {
         return [
-            'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
-            'organizationId' => ['label' => Craft::t('app', 'Organization')],
-            'slug' => ['label' => Craft::t('app', 'Slug')],
-            'uri' => ['label' => Craft::t('app', 'URI')],
-            'id' => ['label' => Craft::t('app', 'ID')],
-            'uid' => ['label' => Craft::t('app', 'UID')],
-            'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
-            'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
+            'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking organization ID')],
+            'bookPageEntry' => ['label' => Craft::t('app', 'Book page entry')],
+            'bookPageEntryTemplate' => ['label' => Craft::t('app', 'Book page entry template')],
         ];
     }
 
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
-            'dateCreated',
-            'dateUpdated',
+            'title',
             'recranetBookingId',
-            'organizationId',
+            'bookPageEntry',
+            'bookPageEntryTemplate',
         ];
     }
 
@@ -163,6 +172,7 @@ class Facility extends Element
 
     public function getUriFormat(): ?string
     {
+        // If organizations should have URLs, define their URI format here
         return null;
     }
 
@@ -192,7 +202,7 @@ class Facility extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('viewFacilities');
+        return $user->can('viewOrganizations');
     }
 
     public function canSave(User $user): bool
@@ -201,7 +211,7 @@ class Facility extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('saveFacilities');
+        return $user->can('saveOrganizations');
     }
 
     public function canDuplicate(User $user): bool
@@ -210,7 +220,7 @@ class Facility extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('saveFacilities');
+        return $user->can('saveOrganizations');
     }
 
     public function canDelete(User $user): bool
@@ -219,7 +229,7 @@ class Facility extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('deleteFacilities');
+        return $user->can('deleteOrganizations');
     }
 
     public function canCreateDrafts(User $user): bool
@@ -229,12 +239,12 @@ class Facility extends Element
 
     protected function cpEditUrl(): ?string
     {
-        return null;
+        return sprintf('recranet-booking/organizations/%s', $this->getCanonicalId());
     }
 
     public function getPostEditUrl(): ?string
     {
-        return UrlHelper::cpUrl('facilities');
+        return UrlHelper::cpUrl('organizations');
     }
 
     public function prepareEditScreen(Response $response, string $containerId): void
@@ -243,7 +253,7 @@ class Facility extends Element
         $response->crumbs([
             [
                 'label' => self::pluralDisplayName(),
-                'url' => UrlHelper::cpUrl('facilities'),
+                'url' => UrlHelper::cpUrl('organizations'),
             ],
         ]);
     }
@@ -251,15 +261,16 @@ class Facility extends Element
     public function afterSave(bool $isNew): void
     {
         if (!$this->propagating) {
-            $record = FacilityRecord::findOne($this->id);
+            $record = OrganizationRecord::findOne($this->id);
             if (!$record) {
-                $record = new FacilityRecord();
+                $record = new OrganizationRecord();
                 $record->id = $this->id;
             }
 
             $record->title = $this->title;
             $record->recranetBookingId = $this->recranetBookingId;
-            $record->organizationId = $this->organizationId;
+            $record->bookPageEntry = $this->bookPageEntry;
+            $record->bookPageEntryTemplate = $this->bookPageEntryTemplate;
 
             $record->save();
         }
@@ -272,7 +283,7 @@ class Facility extends Element
         parent::afterDelete();
 
         Craft::$app->db->createCommand()
-            ->delete('{{%_recranet-booking_facilities}}', ['recranetBookingId' => $this->recranetBookingId])
+            ->delete('{{%_recranet-booking_organizations}}', ['recranetBookingId' => $this->recranetBookingId])
             ->execute();
     }
 }
