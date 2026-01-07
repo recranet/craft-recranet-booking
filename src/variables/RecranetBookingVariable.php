@@ -6,7 +6,7 @@ use recranet\craftrecranetbooking\RecranetBooking;
 
 class RecranetBookingVariable
 {
-    public function getOrganizationId() : string
+    public function getOrganizationId(): ?string
     {
         return RecranetBooking::getInstance()->getOrganizationService()->getOrganizationBySite()?->recranetBookingId;
     }

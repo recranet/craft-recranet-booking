@@ -24,8 +24,8 @@ class SitemapController extends Controller
     {
         $organizationService = RecranetBooking::getInstance()->getOrganizationService();
 
-        $accommodations = Accommodation::find()->where(['organizationId' => $organizationService->getOrganizationBySite()->getId()])->all();
-        $bookPage = $organizationService->getOrganizationBySite()->getBookPageEntry();
+        $accommodations = Accommodation::find()->where(['organizationId' => $organizationService->getOrganizationBySite()?->getId()])->all();
+        $bookPage = $organizationService->getOrganizationBySite()?->getBookPageEntry();
 
         if (!$bookPage) {
             return $this->asJson('Failed to find the booking page entry.');
