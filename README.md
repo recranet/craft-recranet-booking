@@ -22,7 +22,7 @@ composer require recranet/craft-recranet-booking && php craft plugin/install _re
 ## Update
 Update by performing:
 ```bash
-ddev composer require recranet/craft-recranet-booking
+ddev composer update recranet/craft-recranet-booking
 ddev php craft migrate/up --plugin=_recranet-booking
 ddev php craft clear-caches/all
 ```
