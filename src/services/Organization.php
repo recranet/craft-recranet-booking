@@ -72,10 +72,11 @@ class Organization extends Component
     }
 
     /**
-     * @return Iterator
+     * @return OrganizationElement[]
      */
-    public function getLinkedOrganizations(): Iterator
+    public function getLinkedOrganizations(): array
     {
+        $organizations = [];
         foreach(Craft::$app->getSites()->getAllSites() as $site) {
             $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
 
@@ -84,8 +85,12 @@ class Organization extends Component
                 continue;
             }
 
-            yield OrganizationElement::find()->id($behavior->organizationId)->one();
+            if (!isset($organizations[$behavior->organizationId])) {
+                $organizations[$behavior->organizationId] = OrganizationElement::find()->id($behavior->organizationId)->one();
+            }
         }
+
+        return $organizations;
     }
 
     public function getBookPageEntryBySite(Site $site = null): ?Entry
