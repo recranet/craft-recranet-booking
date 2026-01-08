@@ -4,14 +4,13 @@ namespace recranet\craftrecranetbooking\fields;
 
 use Craft;
 use craft\elements\ElementCollection;
-use craft\fields\BaseRelationField;
 use recranet\craftrecranetbooking\elements\db\LocalityCategoryQuery;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
 
 /**
  * Locality Category Select field type
  */
-class LocalityCategorySelect extends BaseRelationField
+class LocalityCategorySelect extends RecranetSelectWithOrganizationFilter
 {
     public static function displayName(): string
     {

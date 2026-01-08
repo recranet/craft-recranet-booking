@@ -2,7 +2,6 @@
 
 namespace recranet\craftrecranetbooking\elements\db;
 
-use Craft;
 use craft\elements\db\ElementQuery;
 
 /**

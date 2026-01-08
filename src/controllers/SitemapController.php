@@ -3,7 +3,6 @@
 namespace recranet\craftrecranetbooking\controllers;
 
 use Craft;
-use craft\elements\Entry;
 use craft\web\Controller;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\RecranetBooking;

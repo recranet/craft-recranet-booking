@@ -2,7 +2,6 @@
 
 namespace recranet\craftrecranetbooking\models;
 
-use Craft;
 use craft\base\Model;
 
 /**

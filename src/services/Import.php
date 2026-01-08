@@ -13,12 +13,12 @@ use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
 use recranet\craftrecranetbooking\elements\Organization;
 use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
-use recranet\craftrecranetbooking\RecranetBooking;
-use recranet\craftrecranetbooking\models\Facility as FacilityModel;
 use recranet\craftrecranetbooking\models\Accommodation as AccommodationModel;
 use recranet\craftrecranetbooking\models\AccommodationCategory as AccommodationCategoryModel;
+use recranet\craftrecranetbooking\models\Facility as FacilityModel;
 use recranet\craftrecranetbooking\models\LocalityCategory as LocalityCategoryModel;
 use recranet\craftrecranetbooking\models\PackageSpecificationCategory as PackageSpecificationCategoryModel;
+use recranet\craftrecranetbooking\RecranetBooking;
 
 /**
  * Import service

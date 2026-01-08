@@ -4,9 +4,9 @@ namespace recranet\craftrecranetbooking\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\User;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
 use recranet\craftrecranetbooking\elements\conditions\AccommodationCondition;

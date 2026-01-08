@@ -5,6 +5,7 @@ namespace recranet\craftrecranetbooking\models;
 use Craft;
 use craft\base\Model;
 use craft\elements\Entry;
+use craft\helpers\Cp;
 use craft\models\Site;
 
 /**
@@ -23,9 +24,9 @@ class Organization extends Model
             return null;
         }
 
-        $currentSiteId = Craft::$app->getSites()->getCurrentSite()->getId();
+        $currentSite = Cp::requestedSite() ?: Craft::$app->getSites()->getCurrentSite();
 
-        return Craft::$app->entries->getEntryById($this->bookPageEntry, $currentSiteId);
+        return Craft::$app->entries->getEntryById($this->bookPageEntry, $currentSite->getId());
     }
 
     public function getBookPageEntryTemplate(): string

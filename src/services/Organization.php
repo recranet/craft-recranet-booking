@@ -4,10 +4,10 @@ namespace recranet\craftrecranetbooking\services;
 
 use Craft;
 use craft\elements\Entry;
+use craft\helpers\Cp;
 use craft\models\Site;
-use Iterator;
-use yii\base\Component;
 use recranet\craftrecranetbooking\elements\Organization as OrganizationElement;
+use yii\base\Component;
 
 /**
  * Organization service
@@ -30,7 +30,7 @@ class Organization extends Component
     public function getOrganizationBySite(Site $site = null): ?OrganizationElement
     {
         if ($site === null) {
-            $site = Craft::$app->getSites()->getCurrentSite();
+            $site = Cp::requestedSite() ?: Craft::$app->getSites()->getCurrentSite();
         }
 
         $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);

@@ -2,7 +2,6 @@
 
 namespace recranet\craftrecranetbooking\records;
 
-use Craft;
 use craft\db\ActiveRecord;
 
 /**

@@ -3,12 +3,11 @@
 namespace recranet\craftrecranetbooking\controllers;
 
 use Craft;
-use craft\elements\GlobalSet;
 use craft\errors\ElementNotFoundException;
 use craft\web\Controller;
 use recranet\craftrecranetbooking\elements\Organization;
-use yii\web\Response;
 use recranet\craftrecranetbooking\RecranetBooking;
+use yii\web\Response;
 
 /**
  * Organization controller

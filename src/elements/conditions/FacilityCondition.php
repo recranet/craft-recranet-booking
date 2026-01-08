@@ -2,7 +2,6 @@
 
 namespace recranet\craftrecranetbooking\elements\conditions;
 
-use Craft;
 use craft\elements\conditions\ElementCondition;
 
 /**

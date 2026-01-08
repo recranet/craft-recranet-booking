@@ -3,9 +3,7 @@
 namespace recranet\craftrecranetbooking\services;
 
 use Craft;
-use craft\helpers\App;
 use recranet\craftrecranetbooking\elements\Organization as OrganizationElement;
-use recranet\craftrecranetbooking\RecranetBooking;
 use Throwable;
 use yii\base\Component;
 

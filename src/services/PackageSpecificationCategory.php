@@ -3,8 +3,8 @@
 namespace recranet\craftrecranetbooking\services;
 
 use Craft;
-use yii\base\Component;
 use recranet\craftrecranetbooking\elements\PackageSpecificationCategory as PackageSpecificationCategoryElement;
+use yii\base\Component;
 
 /**
  * Package Specification Category service

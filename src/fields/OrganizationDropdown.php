@@ -3,11 +3,10 @@
 namespace recranet\craftrecranetbooking\fields;
 
 use Craft;
-use craft\fields\Dropdown;
 use craft\base\ElementInterface;
-use craft\fields\data\SingleOptionFieldData;
-use yii\db\Schema;
+use craft\fields\Dropdown;
 use recranet\craftrecranetbooking\elements\Organization;
+use yii\db\Schema;
 
 /**
  * Organization Dropdown field type

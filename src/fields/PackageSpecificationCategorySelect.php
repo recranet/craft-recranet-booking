@@ -4,14 +4,13 @@ namespace recranet\craftrecranetbooking\fields;
 
 use Craft;
 use craft\elements\ElementCollection;
-use craft\fields\BaseRelationField;
-use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
 use recranet\craftrecranetbooking\elements\db\PackageSpecificationCategoryQuery;
+use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
 
 /**
  * Package Specification Category Select field type
  */
-class PackageSpecificationCategorySelect extends BaseRelationField
+class PackageSpecificationCategorySelect extends RecranetSelectWithOrganizationFilter
 {
     public static function displayName(): string
     {

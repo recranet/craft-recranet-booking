@@ -2,7 +2,6 @@
 
 namespace recranet\craftrecranetbooking\migrations;
 
-use Craft;
 use craft\db\Migration;
 
 /**

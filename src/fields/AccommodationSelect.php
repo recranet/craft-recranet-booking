@@ -4,14 +4,13 @@ namespace recranet\craftrecranetbooking\fields;
 
 use Craft;
 use craft\elements\ElementCollection;
-use craft\fields\BaseRelationField;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\db\AccommodationQuery;
 
 /**
  * Accommodation Select field type
  */
-class AccommodationSelect extends BaseRelationField
+class AccommodationSelect extends RecranetSelectWithOrganizationFilter
 {
     public static function displayName(): string
     {

@@ -4,16 +4,17 @@ namespace recranet\craftrecranetbooking\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\elements\Entry;
-use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\Entry;
+use craft\elements\User;
+use craft\helpers\Cp;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
 use recranet\craftrecranetbooking\elements\conditions\OrganizationCondition;
 use recranet\craftrecranetbooking\elements\db\OrganizationQuery;
-use yii\web\Response;
 use recranet\craftrecranetbooking\records\Organization as OrganizationRecord;
+use yii\web\Response;
 
 /**
  * Organization element type
@@ -30,7 +31,9 @@ class Organization extends Element
             return null;
         }
 
-        return Craft::$app->entries->getEntryById($this->bookPageEntry, Craft::$app->getSites()->getCurrentSite()->getId());
+        $site = Cp::requestedSite() ?: Craft::$app->getSites()->getCurrentSite();
+
+        return Craft::$app->entries->getEntryById($this->bookPageEntry, $site->getId());
     }
 
     public function getBookPageEntryTemplate(): string

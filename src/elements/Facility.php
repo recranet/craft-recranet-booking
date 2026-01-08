@@ -4,15 +4,15 @@ namespace recranet\craftrecranetbooking\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\User;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
 use recranet\craftrecranetbooking\elements\conditions\FacilityCondition;
 use recranet\craftrecranetbooking\elements\db\FacilityQuery;
-use yii\web\Response;
 use recranet\craftrecranetbooking\records\Facility as FacilityRecord;
+use yii\web\Response;
 
 /**
  * Facility element type
@@ -134,7 +134,6 @@ class Facility extends Element
     {
         return [
             'recranetBookingId' => ['label' => Craft::t('app', 'Recranet Booking ID')],
-            'organizationId' => ['label' => Craft::t('app', 'Organization')],
             'slug' => ['label' => Craft::t('app', 'Slug')],
             'uri' => ['label' => Craft::t('app', 'URI')],
             'id' => ['label' => Craft::t('app', 'ID')],
@@ -150,7 +149,6 @@ class Facility extends Element
             'dateCreated',
             'dateUpdated',
             'recranetBookingId',
-            'organizationId',
         ];
     }
 

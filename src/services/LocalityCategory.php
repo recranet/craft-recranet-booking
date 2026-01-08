@@ -3,8 +3,8 @@
 namespace recranet\craftrecranetbooking\services;
 
 use Craft;
-use yii\base\Component;
 use recranet\craftrecranetbooking\elements\LocalityCategory as LocalityCategoryElement;
+use yii\base\Component;
 
 /**
  * Locality Category service

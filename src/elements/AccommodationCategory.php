@@ -4,15 +4,15 @@ namespace recranet\craftrecranetbooking\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\User;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
 use recranet\craftrecranetbooking\elements\conditions\AccommodationCategoryCondition;
 use recranet\craftrecranetbooking\elements\db\AccommodationCategoryQuery;
-use yii\web\Response;
 use recranet\craftrecranetbooking\records\AccommodationCategory as AccommodationCategoryRecord;
+use yii\web\Response;
 
 /**
  * Accommodation Category element type
