@@ -19,6 +19,13 @@ This plugin requires Craft CMS 5.7.0 or later, and PHP 8.2 or later.
 ```bash 
 composer require recranet/craft-recranet-booking && php craft plugin/install _recranet-booking
 ```
+## Update
+Update by performing:
+```bash
+ddev composer require recranet/craft-recranet-booking
+ddev php craft migrate/up --plugin=_recranet-booking
+ddev php craft clear-caches/all
+```
 
 ## Setup
 Create a new file inside `config/` called `_recranet-booking.php`. Below values can be overridden in this file. 
