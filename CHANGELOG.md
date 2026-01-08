@@ -84,3 +84,6 @@ All notable changes to this project will be documented in this file.
 - Refactored plugin to support configuring multiple organizations
 - Each organization can be linked to a Site
 
+## [5.2.3] - 2026-01-08
+### Bugfixes
+- Implemented various bugfixes related to v5.2.3
