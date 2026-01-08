@@ -105,7 +105,7 @@ class Import extends Component
 
             $facilityModel->validate();
 
-            $facility = $this->findOrCreateElement($data['id'], $organization, $facilityModel, Facility::class);
+            $facility = $this->findOrCreateElement($data['facilitySpecification']['id'], $organization, $facilityModel, Facility::class);
 
             Craft::$app->elements->saveElement($facility);
             $updatedFacilities[] = $facility->id;
@@ -225,7 +225,6 @@ class Import extends Component
 
     private function removeStaleEntities(Organization $organization, array $excludeEntities, string $className): void
     {
-        // @TODO: THOUROUGHLY TEST
         $allEntities = $className::find()
             ->organizationId($organization->getId())
             ->all()
