@@ -91,9 +91,9 @@ class m251119_133055_add_organization extends Migration
         $defaultSite = Craft::$app->getSites()->getPrimarySite();
 
         $defaultSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $defaultSite->id);
-        $behavior = $defaultSet->getBehavior('customFields');
+        $behavior = $defaultSet?->getBehavior('customFields');
 
-        if ($behavior->canGetProperty('organizationId') && $behavior->organizationId) {
+        if ($behavior && $behavior->canGetProperty('organizationId') && $behavior->organizationId) {
             $organization = OrganizationElement::find()->id($behavior->organizationId)->one();
 
             $this->defaultOrganizationId = $organization?->recranetBookingId;

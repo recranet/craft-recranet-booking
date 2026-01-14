@@ -56,8 +56,8 @@ class Organization extends Component
         foreach(Craft::$app->getSites()->getAllSites() as $site) {
             $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $site->id);
 
-            $behavior = $globalSet->getBehavior('customFields');
-            if (!$behavior->canGetProperty('organizationId') || !$behavior->organizationId) {
+            $behavior = $globalSet?->getBehavior('customFields');
+            if (!$behavior || !$behavior->canGetProperty('organizationId') || !$behavior->organizationId) {
                 continue;
             }
 
