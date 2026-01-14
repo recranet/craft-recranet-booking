@@ -101,7 +101,9 @@ class m251119_133055_add_organization extends Migration
             $this->defaultBookPageEntryTemplate = $organization?->getBookPageEntryTemplate();
         }
 
-        Craft::$app->getGlobals()->deleteSet($defaultSet);
+        if ($defaultSet) {
+            Craft::$app->getGlobals()->deleteSet($defaultSet);
+        }
 
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
             if ($site->getId() === $defaultSite->getId()) {
