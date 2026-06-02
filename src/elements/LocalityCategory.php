@@ -274,7 +274,7 @@ class LocalityCategory extends Element
         parent::afterDelete();
 
         Craft::$app->db->createCommand()
-            ->delete('{{%_recranet-booking_locality_categories}}', ['recranetBookingId' => $this->recranetBookingId])
+            ->delete('{{%_recranet_booking_locality_categories}}', ['recranetBookingId' => $this->recranetBookingId])
             ->execute();
     }
 }

@@ -11,6 +11,6 @@ class LocalityCategory extends ActiveRecord
 {
     public static function tableName()
     {
-        return '{{%_recranet-booking_locality_categories}}';
+        return '{{%_recranet_booking_locality_categories}}';
     }
 }

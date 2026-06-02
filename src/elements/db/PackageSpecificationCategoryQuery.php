@@ -14,7 +14,7 @@ class PackageSpecificationCategoryQuery extends ElementQuery
 
     protected function beforePrepare(): bool
     {
-        $this->joinElementTable('_recranet-booking_package_specification_categories');
+        $this->joinElementTable('_recranet_booking_package_specification_categories');
 
         if ($this->recranetBookingId) {
             $this->subQuery->andWhere(['recranetBookingId' => $this->recranetBookingId]);
@@ -25,10 +25,10 @@ class PackageSpecificationCategoryQuery extends ElementQuery
         }
 
         $this->query->select([
-            '_recranet-booking_package_specification_categories.dateCreated',
-            '_recranet-booking_package_specification_categories.dateUpdated',
-            '_recranet-booking_package_specification_categories.recranetBookingId',
-            '_recranet-booking_package_specification_categories.organizationId',
+            '_recranet_booking_package_specification_categories.dateCreated',
+            '_recranet_booking_package_specification_categories.dateUpdated',
+            '_recranet_booking_package_specification_categories.recranetBookingId',
+            '_recranet_booking_package_specification_categories.organizationId',
         ]);
 
         return parent::beforePrepare();

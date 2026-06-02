@@ -11,6 +11,6 @@ class Organization extends ActiveRecord
 {
     public static function tableName()
     {
-        return '{{%_recranet-booking_organizations}}';
+        return '{{%_recranet_booking_organizations}}';
     }
 }

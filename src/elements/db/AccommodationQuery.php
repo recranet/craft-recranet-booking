@@ -30,7 +30,7 @@ class AccommodationQuery extends ElementQuery
 
     protected function beforePrepare(): bool
     {
-        $this->joinElementTable('_recranet-booking_accommodations');
+        $this->joinElementTable('_recranet_booking_accommodations');
 
         if ($this->recranetBookingId) {
             $this->subQuery->andWhere(['recranetBookingId' => $this->recranetBookingId]);
@@ -65,18 +65,18 @@ class AccommodationQuery extends ElementQuery
         }
 
         $this->query->select([
-            '_recranet-booking_accommodations.title',
-            '_recranet-booking_accommodations.slug',
-            '_recranet-booking_accommodations.slugDe',
-            '_recranet-booking_accommodations.slugEn',
-            '_recranet-booking_accommodations.slugFr',
-            '_recranet-booking_accommodations.titleDe',
-            '_recranet-booking_accommodations.titleEn',
-            '_recranet-booking_accommodations.titleFr',
-            '_recranet-booking_accommodations.dateCreated',
-            '_recranet-booking_accommodations.dateUpdated',
-            '_recranet-booking_accommodations.recranetBookingId',
-            '_recranet-booking_accommodations.organizationId',
+            '_recranet_booking_accommodations.title',
+            '_recranet_booking_accommodations.slug',
+            '_recranet_booking_accommodations.slugDe',
+            '_recranet_booking_accommodations.slugEn',
+            '_recranet_booking_accommodations.slugFr',
+            '_recranet_booking_accommodations.titleDe',
+            '_recranet_booking_accommodations.titleEn',
+            '_recranet_booking_accommodations.titleFr',
+            '_recranet_booking_accommodations.dateCreated',
+            '_recranet_booking_accommodations.dateUpdated',
+            '_recranet_booking_accommodations.recranetBookingId',
+            '_recranet_booking_accommodations.organizationId',
         ]);
 
         return parent::beforePrepare();

@@ -29,7 +29,7 @@ class Install extends Migration
      */
     public function safeUp(): bool
     {
-        $this->createTable('{{%_recranet-booking_facilities}}', [
+        $this->createTable('{{%_recranet_booking_facilities}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
@@ -39,7 +39,7 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
-        $this->createTable('{{%_recranet-booking_accommodation_categories}}', [
+        $this->createTable('{{%_recranet_booking_accommodation_categories}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
@@ -49,7 +49,7 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
-        $this->createTable('{{%_recranet-booking_locality_categories}}', [
+        $this->createTable('{{%_recranet_booking_locality_categories}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
@@ -59,7 +59,7 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
-        $this->createTable('{{%_recranet-booking_package_specification_categories}}', [
+        $this->createTable('{{%_recranet_booking_package_specification_categories}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
@@ -69,7 +69,7 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
-        $this->createTable('{{%_recranet-booking_accommodations}}', [
+        $this->createTable('{{%_recranet_booking_accommodations}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'slug' => $this->string()->notNull(),
@@ -86,7 +86,7 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
-        $this->createTable('{{%_recranet-booking_organizations}}', [
+        $this->createTable('{{%_recranet_booking_organizations}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
@@ -100,9 +100,9 @@ class Install extends Migration
         foreach (self::ENTITIES as $entity) {
             $this->addForeignKey(
                 "{$entity}_organizationId",
-                "{{%_recranet-booking_$entity}}",
+                "{{%_recranet_booking_$entity}}",
                 'organizationId',
-                '{{%_recranet-booking_organizations}}',
+                '{{%_recranet_booking_organizations}}',
                 'id',
                 'CASCADE',
                 'CASCADE'
@@ -164,11 +164,11 @@ class Install extends Migration
         $entities[] = 'organizations';
 
         foreach ($entities as $entity) {
-            $this->dropAllForeignKeysToTable("{{%_recranet-booking_$entity}}");
+            $this->dropAllForeignKeysToTable("{{%_recranet_booking_$entity}}");
         }
 
         foreach ($entities as $entity) {
-            $this->dropTableIfExists("{{%_recranet-booking_$entity}}");
+            $this->dropTableIfExists("{{%_recranet_booking_$entity}}");
         }
 
         return true;

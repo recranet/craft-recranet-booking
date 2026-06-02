@@ -14,7 +14,7 @@ class FacilityQuery extends ElementQuery
 
     protected function beforePrepare(): bool
     {
-        $this->joinElementTable('_recranet-booking_facilities');
+        $this->joinElementTable('_recranet_booking_facilities');
 
         if ($this->recranetBookingId) {
             $this->subQuery->andWhere(['recranetBookingId' => $this->recranetBookingId]);
@@ -25,10 +25,10 @@ class FacilityQuery extends ElementQuery
         }
 
         $this->query->select([
-            '_recranet-booking_facilities.dateCreated',
-            '_recranet-booking_facilities.dateUpdated',
-            '_recranet-booking_facilities.recranetBookingId',
-            '_recranet-booking_facilities.organizationId',
+            '_recranet_booking_facilities.dateCreated',
+            '_recranet_booking_facilities.dateUpdated',
+            '_recranet_booking_facilities.recranetBookingId',
+            '_recranet_booking_facilities.organizationId',
         ]);
 
         return parent::beforePrepare();
