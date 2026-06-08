@@ -91,3 +91,7 @@ All notable changes to this project will be documented in this file.
 ## [5.2.6] - 2026-06-08
 ### Fix table names
 - Remove hyphen from table names to prevent `php craft gc` command from failing
+
+## [5.2.7] - 2026-06-08
+### Update public endpoints
+- Update base URL for public endpoints of Recranet Booking API
