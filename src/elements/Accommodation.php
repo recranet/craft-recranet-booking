@@ -320,7 +320,7 @@ class Accommodation extends Element
         parent::afterDelete();
 
         Craft::$app->db->createCommand()
-            ->delete('{{%_recranet-booking_accommodations}}', ['recranetBookingId' => $this->recranetBookingId])
+            ->delete('{{%_recranet_booking_accommodations}}', ['recranetBookingId' => $this->recranetBookingId])
             ->execute();
     }
 }

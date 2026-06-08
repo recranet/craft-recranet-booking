@@ -14,7 +14,7 @@ class m250619_083615_create_package_specification_category_table extends Migrati
      */
     public function safeUp(): bool
     {
-        $this->createTable('{{%_recranet-booking_package_specification_categories}}', [
+        $this->createTable('{{%_recranet_booking_package_specification_categories}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer()->notNull(),
@@ -31,7 +31,7 @@ class m250619_083615_create_package_specification_category_table extends Migrati
      */
     public function safeDown(): bool
     {
-        $this->dropTableIfExists('{{%_recranet-booking_package_specification_categories}}');
+        $this->dropTableIfExists('{{%_recranet_booking_package_specification_categories}}');
         return false;
     }
 }

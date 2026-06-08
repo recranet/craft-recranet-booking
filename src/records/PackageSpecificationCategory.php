@@ -11,6 +11,6 @@ class PackageSpecificationCategory extends ActiveRecord
 {
     public static function tableName()
     {
-        return '{{%_recranet-booking_package_specification_categories}}';
+        return '{{%_recranet_booking_package_specification_categories}}';
     }
 }

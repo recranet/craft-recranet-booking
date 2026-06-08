@@ -11,6 +11,6 @@ class Facility extends ActiveRecord
 {
     public static function tableName()
     {
-        return '{{%_recranet-booking_facilities}}';
+        return '{{%_recranet_booking_facilities}}';
     }
 }

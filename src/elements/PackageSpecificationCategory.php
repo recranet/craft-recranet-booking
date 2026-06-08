@@ -274,7 +274,7 @@ class PackageSpecificationCategory extends Element
         parent::afterDelete();
 
         Craft::$app->db->createCommand()
-            ->delete('{{%_recranet-booking_package_specification_categories}}', ['recranetBookingId' => $this->recranetBookingId])
+            ->delete('{{%_recranet_booking_package_specification_categories}}', ['recranetBookingId' => $this->recranetBookingId])
             ->execute();
     }
 }

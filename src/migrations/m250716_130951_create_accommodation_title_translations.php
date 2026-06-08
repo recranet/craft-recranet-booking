@@ -14,9 +14,9 @@ class m250716_130951_create_accommodation_title_translations extends Migration
      */
     public function safeUp(): bool
     {
-        $this->addColumn('{{%_recranet-booking_accommodations}}', 'titleDe', $this->string());
-        $this->addColumn('{{%_recranet-booking_accommodations}}', 'titleEn', $this->string());
-        $this->addColumn('{{%_recranet-booking_accommodations}}', 'titleFr', $this->string());
+        $this->addColumn('{{%_recranet_booking_accommodations}}', 'titleDe', $this->string());
+        $this->addColumn('{{%_recranet_booking_accommodations}}', 'titleEn', $this->string());
+        $this->addColumn('{{%_recranet_booking_accommodations}}', 'titleFr', $this->string());
 
         return true;
     }

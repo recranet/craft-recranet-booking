@@ -40,7 +40,7 @@ class m251119_133055_add_organization extends Migration
 
     public function safeUp(): bool
     {
-        $this->createTable('{{%_recranet-booking_organizations}}', [
+        $this->createTable('{{%_recranet_booking_organizations}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'recranetBookingId' => $this->integer(),
@@ -58,7 +58,7 @@ class m251119_133055_add_organization extends Migration
         $this->configureGlobalSet();
 
         if ($recranetBookingId) {
-            $this->insert('{{%_recranet-booking_organizations}}', [
+            $this->insert('{{%_recranet_booking_organizations}}', [
                 'title' => 'Default Organization',
                 'recranetBookingId' => $recranetBookingId,
                 'bookPageEntry' => $bookPageEntry,
@@ -137,11 +137,11 @@ class m251119_133055_add_organization extends Migration
         }
 
         foreach (array_keys(self::ENTITIES) as $entity) {
-            $this->dropForeignKeyIfExists("{{%_recranet-booking_$entity}}", 'organizationId');
-            $this->dropColumn("{{%_recranet-booking_$entity}}", 'organizationId');
+            $this->dropForeignKeyIfExists("{{%_recranet_booking_$entity}}", 'organizationId');
+            $this->dropColumn("{{%_recranet_booking_$entity}}", 'organizationId');
         }
 
-        $this->dropTableIfExists('{{%_recranet-booking_organizations}}');
+        $this->dropTableIfExists('{{%_recranet_booking_organizations}}');
 
         return true;
     }
@@ -210,15 +210,15 @@ class m251119_133055_add_organization extends Migration
     private function updateEntity(string $entity, ?string $organizationId): void
     {
         $hasExistingData = (new Query())
-            ->from("{{%_recranet-booking_$entity}}")
+            ->from("{{%_recranet_booking_$entity}}")
             ->exists()
         ;
 
-        $this->addColumn("{{%_recranet-booking_$entity}}", 'organizationId', $this->integer()->null());
+        $this->addColumn("{{%_recranet_booking_$entity}}", 'organizationId', $this->integer()->null());
 
         if ($hasExistingData && $organizationId) {
             $this->update(
-                "{{%_recranet-booking_$entity}}",
+                "{{%_recranet_booking_$entity}}",
                 ['organizationId' => $organizationId],
                 ['organizationId' => null]
             );
@@ -226,9 +226,9 @@ class m251119_133055_add_organization extends Migration
 
         $this->addForeignKey(
             "{$entity}_organizationId",
-            "{{%_recranet-booking_$entity}}",
+            "{{%_recranet_booking_$entity}}",
             'organizationId',
-            '{{%_recranet-booking_organizations}}',
+            '{{%_recranet_booking_organizations}}',
             'id',
             'CASCADE',
             'CASCADE'

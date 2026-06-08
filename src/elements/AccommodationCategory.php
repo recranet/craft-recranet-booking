@@ -273,7 +273,7 @@ class AccommodationCategory extends Element
         parent::afterDelete();
 
         Craft::$app->db->createCommand()
-            ->delete('{{%_recranet-booking_accommodation_categories}}', ['recranetBookingId' => $this->recranetBookingId])
+            ->delete('{{%_recranet_booking_accommodation_categories}}', ['recranetBookingId' => $this->recranetBookingId])
             ->execute();
     }
 }

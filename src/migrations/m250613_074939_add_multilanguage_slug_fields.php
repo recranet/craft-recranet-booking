@@ -14,9 +14,9 @@ class m250613_074939_add_multilanguage_slug_fields extends Migration
      */
     public function safeUp(): bool
     {
-        $this->addColumn('{{%_recranet-booking_accommodations}}', 'slugFr', $this->string()->after('slug')->null());
-        $this->addColumn('{{%_recranet-booking_accommodations}}', 'slugDe', $this->string()->after('slug')->null());
-        $this->addColumn('{{%_recranet-booking_accommodations}}', 'slugEn', $this->string()->after('slug')->null());
+        $this->addColumn('{{%_recranet_booking_accommodations}}', 'slugFr', $this->string()->after('slug')->null());
+        $this->addColumn('{{%_recranet_booking_accommodations}}', 'slugDe', $this->string()->after('slug')->null());
+        $this->addColumn('{{%_recranet_booking_accommodations}}', 'slugEn', $this->string()->after('slug')->null());
 
         return true;
     }
