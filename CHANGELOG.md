@@ -87,3 +87,7 @@ All notable changes to this project will be documented in this file.
 ## [5.2.3] - 2026-01-08
 ### Bugfixes
 - Implemented various bugfixes related to v5.2.3
+
+## [5.2.6] - 2026-06-08
+### Fix table names
+- Remove hyphen from table names to prevent `php craft gc` command from failing
