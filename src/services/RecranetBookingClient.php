@@ -12,6 +12,8 @@ use yii\base\Component;
  */
 class RecranetBookingClient extends Component
 {
+    private const BASE_URL = 'https://app.recranet.com/public/api/';
+
     public function fetchAccommodations(string $locale, OrganizationElement $organization): ?array
     {
         if (!$organization->recranetBookingId) {
@@ -19,7 +21,7 @@ class RecranetBookingClient extends Component
         }
 
         try {
-            $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/accommodations', [
+            $response = Craft::createGuzzleClient()->get(self::BASE_URL . 'accommodations', [
                 'query' => [
                     'organization' => $organization->recranetBookingId,
                     'locale' => $locale
@@ -39,7 +41,7 @@ class RecranetBookingClient extends Component
         }
 
         try {
-            $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/accommodation_categories', [
+            $response = Craft::createGuzzleClient()->get(self::BASE_URL . 'accommodation_categories', [
                 'query' => ['organization' => $organization->recranetBookingId],
             ]);
         } catch (Throwable $e) {
@@ -56,7 +58,7 @@ class RecranetBookingClient extends Component
         }
 
         try {
-            $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/facilities', [
+            $response = Craft::createGuzzleClient()->get(self::BASE_URL . 'facilities', [
                 'query' => ['organization' => $organization->recranetBookingId],
             ]);
         } catch (Throwable $e) {
@@ -73,7 +75,7 @@ class RecranetBookingClient extends Component
         }
 
         try {
-            $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/locality_categories', [
+            $response = Craft::createGuzzleClient()->get(self::BASE_URL . 'locality_categories', [
                 'query' => ['organization' => $organization->recranetBookingId],
             ]);
         } catch (Throwable $e) {
@@ -90,7 +92,7 @@ class RecranetBookingClient extends Component
         }
 
         try {
-            $response = Craft::createGuzzleClient()->get('https://app.recranet.com/api/package_specification_categories', [
+            $response = Craft::createGuzzleClient()->get(self::BASE_URL . 'package_specification_categories', [
                 'query' => ['organization' => $organization->recranetBookingId],
             ]);
         } catch (Throwable $e) {
