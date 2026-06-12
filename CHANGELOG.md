@@ -95,3 +95,7 @@ All notable changes to this project will be documented in this file.
 ## [5.2.7] - 2026-06-08
 ### Update public endpoints
 - Update base URL for public endpoints of Recranet Booking API
+
+## [5.3.0] - 2026-06-08
+### Add accommodation listings
+- Add support for accommodation listings from the Recranet Booking API
