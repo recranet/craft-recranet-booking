@@ -22,6 +22,11 @@ class Install extends Migration
         'facilities',
         'locality_categories',
         'package_specification_categories',
+        'accommodation_listings',
+    ];
+
+    public const BRIDGE_TABLES = [
+        'accommodation_listing_accommodations',
     ];
 
     /**
@@ -97,6 +102,43 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
+        $this->createTable('{{%_recranet_booking_accommodation_listings}}', [
+            'id' => $this->primaryKey(),
+            'title' => $this->string()->notNull(),
+            'locale' => $this->string()->notNull(),
+            'recranetBookingId' => $this->integer()->notNull(),
+            'organizationId' => $this->integer()->notNull(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+        ]);
+
+        $this->createTable('{{%_recranet_booking_accommodation_listing_accommodations}}', [
+            'listingId' => $this->integer()->notNull(),
+            'accommodationId' => $this->integer()->notNull(),
+            'PRIMARY KEY([[listingId]], [[accommodationId]])',
+        ]);
+
+        $this->addForeignKey(
+            'accommodation_listing_accommodations_listingId',
+            '{{%_recranet_booking_accommodation_listing_accommodations}}',
+            'listingId',
+            '{{%_recranet_booking_accommodation_listings}}',
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->addForeignKey(
+            'accommodation_listing_accommodations_accommodationId',
+            '{{%_recranet_booking_accommodation_listing_accommodations}}',
+            'accommodationId',
+            '{{%_recranet_booking_accommodations}}',
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
         foreach (self::ENTITIES as $entity) {
             $this->addForeignKey(
                 "{$entity}_organizationId",
@@ -160,7 +202,7 @@ class Install extends Migration
             Craft::$app->getGlobals()->deleteSet($globalSet);
         }
 
-        $entities = self::ENTITIES;
+        $entities = array_merge(self::ENTITIES, self::BRIDGE_TABLES);
         $entities[] = 'organizations';
 
         foreach ($entities as $entity) {

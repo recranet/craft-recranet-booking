@@ -99,3 +99,11 @@ All notable changes to this project will be documented in this file.
 ## [5.3.0] - 2026-06-08
 ### Add accommodation listings
 - Add support for accommodation listings from the Recranet Booking API
+
+## [5.3.1] - 2026-06-08
+### Bugfix in migration
+- Bugfix in migration
+
+## [5.3.2] - 2026-06-08
+### Add accommodation listings to Install
+- Add accommodation listings to Install.php
