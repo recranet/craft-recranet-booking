@@ -64,9 +64,9 @@ class m260612_000000_add_accommodation_listings extends Migration
     public function safeDown(): bool
     {
         $this->dropAllForeignKeysToTable('{{%_recranet_booking_accommodation_listing_accommodations}}');
-        $this->dropTableIfExists('{{%_recranet_booking_accommodation_listing_accommodations}}');
-
         $this->dropAllForeignKeysToTable('{{%_recranet_booking_accommodation_listings}}');
+
+        $this->dropTableIfExists('{{%_recranet_booking_accommodation_listing_accommodations}}');
         $this->dropTableIfExists('{{%_recranet_booking_accommodation_listings}}');
 
         return true;
