@@ -15,12 +15,14 @@ use craft\web\UrlManager;
 use craft\web\View;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
+use recranet\craftrecranetbooking\elements\AccommodationListing;
 use recranet\craftrecranetbooking\elements\db\AccommodationQuery;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
 use recranet\craftrecranetbooking\elements\Organization;
 use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
 use recranet\craftrecranetbooking\fields\AccommodationCategorySelect;
+use recranet\craftrecranetbooking\fields\AccommodationListingSelect;
 use recranet\craftrecranetbooking\fields\AccommodationSelect;
 use recranet\craftrecranetbooking\fields\FacilitySelect;
 use recranet\craftrecranetbooking\fields\LocalityCategorySelect;
@@ -29,6 +31,7 @@ use recranet\craftrecranetbooking\fields\PackageSpecificationCategorySelect;
 use recranet\craftrecranetbooking\models\Settings;
 use recranet\craftrecranetbooking\services\Accommodation as AccommodationService;
 use recranet\craftrecranetbooking\services\AccommodationCategory as AccommodationCategoryService;
+use recranet\craftrecranetbooking\services\AccommodationListing as AccommodationListingService;
 use recranet\craftrecranetbooking\services\Facility as FacilityService;
 use recranet\craftrecranetbooking\services\Import;
 use recranet\craftrecranetbooking\services\LocalityCategory as LocalityCategoryService;
@@ -47,6 +50,7 @@ use yii\base\Event;
  * @property-read Import $import
  * @property-read AccommodationService $accommodationService
  * @property-read AccommodationCategoryService $accommodationCategoryService
+ * @property-read AccommodationListingService $accommodationListingService
  * @property-read FacilityService $facilityService
  * @property-read LocalityCategoryService $localityCategoryService
  * @property-read OrganizationService $organizationService
@@ -54,7 +58,7 @@ use yii\base\Event;
  */
 class RecranetBooking extends Plugin
 {
-    public string $schemaVersion = '5.2.6';
+    public string $schemaVersion = '5.3.0';
     public bool $hasCpSettings = true;
     public bool $hasCpSection = true;
 
@@ -66,6 +70,7 @@ class RecranetBooking extends Plugin
                 'import' => Import::class,
                 'accommodationService' => AccommodationService::class,
                 'accommodationCategoryService' => AccommodationCategoryService::class,
+                'accommodationListingService' => AccommodationListingService::class,
                 'facilityService' => FacilityService::class,
                 'localityCategoryService' => LocalityCategoryService::class,
                 'organizationService' => OrganizationService::class,
@@ -124,6 +129,11 @@ class RecranetBooking extends Plugin
                 'badgeCount' => AccommodationCategory::find()->count(),
                 'label' => Craft::t('_recranet-booking', 'Types')
             ],
+            'accommodation-listings' => [
+                'url' => 'recranet-booking/accommodation-listings',
+                'badgeCount' => AccommodationListing::find()->count(),
+                'label' => Craft::t('_recranet-booking', 'Listings')
+            ],
             'locality-categories' => [
                 'url' => 'recranet-booking/locality-categories',
                 'badgeCount' => LocalityCategory::find()->count(),
@@ -170,6 +180,7 @@ class RecranetBooking extends Plugin
             $event->rules['recranet-booking/accommodations'] = ['template' => '_recranet-booking/accommodations/_index.twig'];
             $event->rules['recranet-booking/facilities'] = ['template' => '_recranet-booking/facilities/_index.twig'];
             $event->rules['recranet-booking/accommodation-categories'] = ['template' => '_recranet-booking/accommodation-categories/_index.twig'];
+            $event->rules['recranet-booking/accommodation-listings'] = ['template' => '_recranet-booking/accommodation-listings/_index.twig'];
             $event->rules['recranet-booking/locality-categories'] = ['template' => '_recranet-booking/locality-categories/_index.twig'];
             $event->rules['recranet-booking/settings'] = ['template' => '_recranet-booking/_settings.twig'];
             $event->rules['actions/_recranet-booking/settings/save-settings'] = '_recranet-booking/settings/save-settings';
@@ -219,6 +230,7 @@ class RecranetBooking extends Plugin
             $event->types[] = FacilitySelect::class;
             $event->types[] = LocalityCategorySelect::class;
             $event->types[] = AccommodationCategorySelect::class;
+            $event->types[] = AccommodationListingSelect::class;
             $event->types[] = AccommodationSelect::class;
             $event->types[] = OrganizationDropdown::class;
             $event->types[] = PackageSpecificationCategorySelect::class;
@@ -242,6 +254,7 @@ class RecranetBooking extends Plugin
         Event::on(Elements::class, Elements::EVENT_REGISTER_ELEMENT_TYPES, function (RegisterComponentTypesEvent $event) {
             $event->types[] = Accommodation::class;
             $event->types[] = AccommodationCategory::class;
+            $event->types[] = AccommodationListing::class;
             $event->types[] = LocalityCategory::class;
             $event->types[] = Facility::class;
             $event->types[] = Organization::class;

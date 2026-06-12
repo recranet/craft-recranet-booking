@@ -17,6 +17,7 @@ class ImportController extends Controller
     {
         $this->actionAccommodations();
         $this->actionAccommodationCategories();
+        $this->actionAccommodationListings();
         $this->actionFacilities();
         $this->actionLocalityCategories();
         $this->actionPackageSpecificationCategories();
@@ -61,6 +62,27 @@ class ImportController extends Controller
             $this->stdout("Importing all accommodation categories...\n");
 
             RecranetBooking::getInstance()->import->importAccommodationCategories($organization);
+        }
+
+        return self::EXIT_CODE_OK;
+    }
+
+    /**
+     * Imports accommodation listings
+     * Usage: ./craft import/accommodation-listings
+     */
+    public function actionAccommodationListings(): int
+    {
+        foreach (RecranetBooking::getInstance()->getOrganizationService()->getLinkedOrganizations() as $organization) {
+            if (!$organization || !$organization->recranetBookingId) {
+                $this->stderr('No valid Organization ID provided.', self::EXIT_CODE_UNSPECIFIED_ERROR);
+
+                return self::EXIT_CODE_UNSPECIFIED_ERROR;
+            }
+
+            $this->stdout("Importing all accommodation listings...\n");
+
+            RecranetBooking::getInstance()->import->importAccommodationListings($organization);
         }
 
         return self::EXIT_CODE_OK;

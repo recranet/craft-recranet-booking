@@ -97,6 +97,26 @@ class RecranetBookingClient extends Component
         return json_decode($response->getBody()->getContents(), true);
     }
 
+    public function fetchAccommodationListings(OrganizationElement $organization, string $locale = 'nl'): ?array
+    {
+        if (!$organization->recranetBookingId) {
+            return [];
+        }
+
+        try {
+            $response = $this->client->get(self::BASE_URL . 'accommodation_listings/', [
+                'query' => [
+                    'organization' => $organization->recranetBookingId,
+                    'locale' => $locale,
+                ],
+            ]);
+        } catch (Throwable $e) {
+            return [];
+        }
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
     public function fetchPackageSpecificationCategories(OrganizationElement $organization): ?array
     {
         if (!$organization->recranetBookingId) {

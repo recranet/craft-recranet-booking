@@ -9,12 +9,14 @@ use craft\base\Model;
 use craft\helpers\ElementHelper;
 use recranet\craftrecranetbooking\elements\Accommodation;
 use recranet\craftrecranetbooking\elements\AccommodationCategory;
+use recranet\craftrecranetbooking\elements\AccommodationListing as AccommodationListingElement;
 use recranet\craftrecranetbooking\elements\Facility;
 use recranet\craftrecranetbooking\elements\LocalityCategory;
 use recranet\craftrecranetbooking\elements\Organization;
 use recranet\craftrecranetbooking\elements\PackageSpecificationCategory;
 use recranet\craftrecranetbooking\models\Accommodation as AccommodationModel;
 use recranet\craftrecranetbooking\models\AccommodationCategory as AccommodationCategoryModel;
+use recranet\craftrecranetbooking\models\AccommodationListing as AccommodationListingModel;
 use recranet\craftrecranetbooking\models\Facility as FacilityModel;
 use recranet\craftrecranetbooking\models\LocalityCategory as LocalityCategoryModel;
 use recranet\craftrecranetbooking\models\PackageSpecificationCategory as PackageSpecificationCategoryModel;
@@ -84,6 +86,38 @@ class Import extends Component
         }
 
         $this->removeStaleEntities($organization, $updatedAccommodationCategories, AccommodationCategory::class);
+    }
+
+    public function importAccommodationListings(Organization $organization): void
+    {
+        $accommodationListings = RecranetBooking::getInstance()->recranetBookingClient->fetchAccommodationListings($organization);
+
+        if (!$accommodationListings) {
+            return;
+        }
+
+        $updatedAccommodationListings = [];
+
+        foreach ($accommodationListings as $data) {
+            $accommodationListingModel = new AccommodationListingModel([
+                'title' => $data['name'],
+                'locale' => $data['locale'],
+                'recranetBookingId' => $data['id'],
+                'organizationId' => $organization->getId(),
+            ]);
+
+            $accommodationListingModel->validate();
+
+            $accommodationListing = $this->findOrCreateElement($data['id'], $organization, $accommodationListingModel, AccommodationListingElement::class);
+            $accommodationListing->locale = $data['locale'];
+
+            Craft::$app->elements->saveElement($accommodationListing);
+            $updatedAccommodationListings[] = $accommodationListing->id;
+
+            $this->syncAccommodationListingAccommodations($accommodationListing, $data['accommodations'] ?? []);
+        }
+
+        $this->removeStaleEntities($organization, $updatedAccommodationListings, AccommodationListingElement::class);
     }
 
     public function importFacilities(Organization $organization): void
@@ -168,6 +202,31 @@ class Import extends Component
         }
 
         $this->removeStaleEntities($organization, $updatedPackageSpecificationCategories, PackageSpecificationCategory::class);
+    }
+
+    private function syncAccommodationListingAccommodations(AccommodationListingElement $listing, array $accommodationData): void
+    {
+        Craft::$app->db->createCommand()
+            ->delete('{{%_recranet_booking_accommodation_listing_accommodations}}', ['listingId' => $listing->id])
+            ->execute();
+
+        foreach ($accommodationData as $accommodationApiData) {
+            $accommodation = Accommodation::find()
+                ->recranetBookingId($accommodationApiData['id'])
+                ->organizationId($listing->organizationId)
+                ->one();
+
+            if (!$accommodation) {
+                continue;
+            }
+
+            Craft::$app->db->createCommand()
+                ->insert('{{%_recranet_booking_accommodation_listing_accommodations}}', [
+                    'listingId' => $listing->id,
+                    'accommodationId' => $accommodation->id,
+                ])
+                ->execute();
+        }
     }
 
     private function importTranslatedAccommodationSlugs(Organization $organization): void

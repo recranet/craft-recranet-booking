@@ -17,6 +17,7 @@ class DeleteController extends Controller
     {
         $this->actionAccommodations();
         $this->actionAccommodationCategories();
+        $this->actionAccommodationListings();
         $this->actionFacilities();
         $this->actionLocalityCategories();
         $this->actionPackageSpecificationCategories();
@@ -46,6 +47,19 @@ class DeleteController extends Controller
         $this->stdout("Deleting all accommodation categories...\n");
 
         RecranetBooking::getInstance()->accommodationCategoryService->deleteAll();
+
+        return self::EXIT_CODE_OK;
+    }
+
+    /**
+     * Deletes all accommodation listings
+     * Usage: ./craft recranet-booking/delete/accommodation-listings
+     */
+    public function actionAccommodationListings(): int
+    {
+        $this->stdout("Deleting all accommodation listings...\n");
+
+        RecranetBooking::getInstance()->accommodationListingService->deleteAll();
 
         return self::EXIT_CODE_OK;
     }
