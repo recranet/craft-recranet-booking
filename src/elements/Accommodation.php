@@ -4,6 +4,7 @@ namespace recranet\craftrecranetbooking\elements;
 
 use Craft;
 use craft\base\Element;
+use craft\elements\actions\Restore;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
@@ -111,8 +112,9 @@ class Accommodation extends Element
 
     protected static function defineActions(string $source): array
     {
-        // List any bulk element actions here
-        return [];
+        return [
+            Restore::class,
+        ];
     }
 
     protected static function includeSetStatusAction(): bool
@@ -254,7 +256,7 @@ class Accommodation extends Element
 
     public function canDelete(User $user): bool
     {
-        if (parent::canSave($user)) {
+        if (parent::canDelete($user)) {
             return true;
         }
         // todo: implement user permissions
@@ -319,8 +321,10 @@ class Accommodation extends Element
     {
         parent::afterDelete();
 
-        Craft::$app->db->createCommand()
-            ->delete('{{%_recranet_booking_accommodations}}', ['id' => $this->id])
-            ->execute();
+        if ($this->hardDelete) {
+            Craft::$app->db->createCommand()
+                ->delete('{{%_recranet_booking_accommodations}}', ['id' => $this->id])
+                ->execute();
+        }
     }
 }

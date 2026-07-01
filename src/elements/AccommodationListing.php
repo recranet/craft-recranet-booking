@@ -4,6 +4,7 @@ namespace recranet\craftrecranetbooking\elements;
 
 use Craft;
 use craft\base\Element;
+use craft\elements\actions\Restore;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
@@ -95,7 +96,9 @@ class AccommodationListing extends Element
 
     protected static function defineActions(string $source): array
     {
-        return [];
+        return [
+            Restore::class,
+        ];
     }
 
     protected static function includeSetStatusAction(): bool
@@ -211,7 +214,7 @@ class AccommodationListing extends Element
 
     public function canDelete(User $user): bool
     {
-        if (parent::canSave($user)) {
+        if (parent::canDelete($user)) {
             return true;
         }
         return $user->can('deleteAccommodationListings');
@@ -289,12 +292,14 @@ class AccommodationListing extends Element
     {
         parent::afterDelete();
 
-        Craft::$app->db->createCommand()
-            ->delete('{{%_recranet_booking_accommodation_listing_accommodations}}', ['listingId' => $this->id])
-            ->execute();
+        if ($this->hardDelete) {
+            Craft::$app->db->createCommand()
+                ->delete('{{%_recranet_booking_accommodation_listing_accommodations}}', ['listingId' => $this->id])
+                ->execute();
 
-        Craft::$app->db->createCommand()
-            ->delete('{{%_recranet_booking_accommodation_listings}}', ['id' => $this->id])
-            ->execute();
+            Craft::$app->db->createCommand()
+                ->delete('{{%_recranet_booking_accommodation_listings}}', ['id' => $this->id])
+                ->execute();
+        }
     }
 }

@@ -9,7 +9,6 @@ use craft\db\Query;
 use craft\elements\GlobalSet;
 use craft\fieldlayoutelements\CustomField;
 use craft\helpers\App;
-use craft\helpers\StringHelper;
 use craft\models\FieldLayout;
 use craft\models\FieldLayoutTab;
 use recranet\craftrecranetbooking\elements\Accommodation;
@@ -58,17 +57,18 @@ class m251119_133055_add_organization extends Migration
         $this->configureGlobalSet();
 
         if ($recranetBookingId) {
-            $this->insert('{{%_recranet_booking_organizations}}', [
+            // Create a real Craft element (not a raw table row) so its ID comes from the
+            // elements table and can never collide with another element's ID.
+            $organization = new OrganizationElement([
                 'title' => 'Default Organization',
                 'recranetBookingId' => $recranetBookingId,
                 'bookPageEntry' => $bookPageEntry,
                 'bookPageEntryTemplate' => $bookPageEntryTemplate,
-                'dateCreated' => date('Y-m-d H:i:s'),
-                'dateUpdated' => date('Y-m-d H:i:s'),
-                'uid' => StringHelper::UUID(),
             ]);
 
-            $organizationId = $this->getDb()->lastInsertID;
+            Craft::$app->getElements()->saveElement($organization);
+
+            $organizationId = $organization->getId();
             $defaultSite = Craft::$app->getSites()->getPrimarySite();
             $globalSet = Craft::$app->getGlobals()->getSetByHandle('siteOrganization', $defaultSite->id);
             $globalSet->setFieldValue('organizationId', $organizationId);
