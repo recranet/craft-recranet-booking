@@ -58,7 +58,7 @@ use yii\base\Event;
  */
 class RecranetBooking extends Plugin
 {
-    public string $schemaVersion = '5.3.2';
+    public string $schemaVersion = '5.4.0';
     public bool $hasCpSettings = true;
     public bool $hasCpSection = true;
 

@@ -107,3 +107,9 @@ All notable changes to this project will be documented in this file.
 ## [5.3.2] - 2026-06-08
 ### Add accommodation listings to Install
 - Add accommodation listings to Install.php
+
+## [5.4.0] - 2026-07-01
+### Fix element actions
+- Fix earlier migration;
+- Create patch migration;
+- Update element classes so that actions (save/delete/restore) work properly
